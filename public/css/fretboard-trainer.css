@@ -1,0 +1,15 @@
+.hide {
+  display: none;
+}
+
+.red-fill {
+  fill: #FF0000 !important;
+}
+
+.red-stroke {
+  stroke: #FF0000 !important;
+}
+
+.white-fill {
+  fill: #FFFFFF !important;
+}
