@@ -1,0 +1,14 @@
+{
+  "name": "fretboard-trainer",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "author": "James Borden <jmborden@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "freelizer": "^1.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^8.5.0"
+  }
+}
