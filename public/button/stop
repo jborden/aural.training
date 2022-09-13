@@ -1,0 +1,1 @@
+ <button hx-trigger="click" hx-get="/button/start" onClick="exports.stopAudio()" hx-swap="outerHTML">Stop</button>

@@ -3,8 +3,17 @@
 <html>
   <head>
     <script src="https://unpkg.com/htmx.org@1.8.0"></script>
+    <script>var exports = {};</script>
     <script type="module" src="js/bundle.js"></script>
     <link rel="stylesheet" href="css/fretboard-trainer.css">
-    <p hx-get="svg/guitar_notes.svg" hx-trigger="load" hx-swap="outerHTML"></p>
+    <div>
+      <button hx-get="/button/start" hx-trigger="load" hx-swap="outerHTML">Start</button>
+    </div>
+    <div>
+      <svg hx-get="svg/guitar_notes.svg" hx-trigger="load" hx-swap="outerHTML"/>
+    </div>
+    <div id="audio-event-log">
+      <p>This is always at the bottom</p>
+    </div>
   </head>
 </html>
