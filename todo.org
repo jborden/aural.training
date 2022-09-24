@@ -1,0 +1,62 @@
+# Expect this list to be groomed further!
+1. [ ] - Guitar Note Component
+   1. [ ] - make all notes disappear
+   2. [ ] - Make a single notes appear when played
+   3. [ ] - Make all notes appear when played
+   4. [ ] - put a last event status in bottom
+   5. [ ] - choose different tunings
+   6. [ ] - choose number of strings
+2. [ ] - Create YAML Lessons (ongoing)
+   1. [ ] - investigate YAML format
+   2. [ ] - investigate and integrate YAML editor
+   3. [ ] - Lessons should have
+      1. [ ] - Name
+      2. [ ] - Store in local storage
+      3. [ ] - Guitar Note Component integration
+   4. [ ] - List available lessons
+   5. [ ] - View lesson
+   6. [ ] - Fret / String choice
+   7. [ ] - how many notes to complete lesson (maybe)
+   8. [ ] - note memorization lesson
+      1. [ ] - scale memorization
+      2. [ ] - different keys
+3. [ ] - Host at https://aural.training
+   1. [ ] - automate deploy with CircleCI
+4. [ ] - user settings page
+   1. [ ] - basic profile
+   2. [ ] - save settings such as
+      1. [ ] - preferred guitar
+   3. [ ] - show a habit / git commits like-status
+      1. [ ] - show streaks like in habits
+   4. [ ] - Add create account
+      1. [ ] - add login page
+      2. [ ] - sync with local storage
+5. [ ] - "chord" playing
+   1. [ ] - detect chords by playing each note separately
+   2. [ ] - CAGED system quiz
+      1. [ ] - find chord (x) at (y) fret
+      2. [ ] - find nearest (i) chord
+   3. [ ] - Ability to play tabs
+6. [ ] - Voice Training
+   1. [ ] - determine vocal range
+      1. [ ] - save as a setting
+   2. [ ] - get music and sing along
+      1. [ ] - adjusted to comfortable pitch
+7. [ ] - component to play back tones at intervals
+8. [ ] - Interval Training
+   1. [ ] - solfege - associate notes with songs as settings
+   2. [ ] - sing interval
+   3. [ ] - sing interval, play interval on guitar
+   4. [ ] - play multiple notes in a row ("simon says")
+      1. [ ] - guitar
+      2. [ ] - voice
+      3. [ ] - play the intervals starting from different notes / string
+9. [ ] - Tuner Component
+   1. [ ] - Note within so many cents
+   2. [ ] - time frame of notes are shown like in 'Nail the Pitch'
+10. [ ] - Control the app with voice / Guitar.
+    1. [ ] - certain combo of notes are used to progress
+11. [ ] - Tab component
+    1. [ ] - read tabs from some format, possibly Muse Score 3?
+    2. [ ] - standardized tab?
+    3. [ ] - make importing tab super easy
