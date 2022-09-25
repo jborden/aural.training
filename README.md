@@ -11,7 +11,7 @@ public$ ws
 
 Watch for typescript changes
 ```
-npx tsc
+rollup -c -w
 ```
 
 # Roadmap
