@@ -37,4 +37,3 @@ export function logListener(e: any) {
     audioEventLogElem.innerHTML = `<p>frequency = ${frequency.toFixed(2)} note = ${note} octave=${octave}<p>`;
   }
 }
-

@@ -1,11 +1,12 @@
 # Expect this list to be groomed further!
 1. [ ] - Guitar Note Component
-   1. [ ] - make all notes disappear
-   2. [ ] - Make a single notes appear when played
-   3. [ ] - Make all notes appear when played
-   4. [ ] - put a last event status in bottom
-   5. [ ] - choose different tunings
-   6. [ ] - choose number of strings
+   1. [ ] - programmatically create an svg component
+   2. [ ] - make all notes disappear
+   3. [ ] - Make a single notes appear when played
+   4. [ ] - Make all notes appear when played
+   5. [ ] - put a last event status in bottom
+   6. [ ] - choose different tunings
+   7. [ ] - choose number of strings
 2. [ ] - Create YAML Lessons (ongoing)
    1. [ ] - investigate YAML format
    2. [ ] - investigate and integrate YAML editor
@@ -54,6 +55,11 @@
 9. [ ] - Tuner Component
    1. [ ] - Note within so many cents
    2. [ ] - time frame of notes are shown like in 'Nail the Pitch'
+   3. [ ] - "Give me a note" quiz, a lesson that starts with each day to
+      get you to hit a certain note so that you tune your own internal
+      reference note
+      1. [ ] - it will ask daily for you to "give it a note" a few times
+      2. [ ] - over time, it will determine what your reference note should be
 10. [ ] - Control the app with voice / Guitar.
     1. [ ] - certain combo of notes are used to progress
 11. [ ] - Tab component

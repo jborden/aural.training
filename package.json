@@ -6,9 +6,11 @@
   "author": "James Borden <jmborden@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@svgdotjs/svg.js": "^3.1.2",
     "freelizer": "^1.0.0"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^14.1.0",
     "@rollup/plugin-typescript": "^8.5.0"
   }
 }
