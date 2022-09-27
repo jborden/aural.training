@@ -1,5 +1,6 @@
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import livereload from 'rollup-plugin-livereload';
 
 
 export default {
@@ -11,5 +12,6 @@ export default {
   },
   watch: true,
   plugins: [typescript(),
-	    nodeResolve()]
+	    nodeResolve(),
+	    livereload()]
 };

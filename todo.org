@@ -1,6 +1,15 @@
 # Expect this list to be groomed further!
-1. [ ] - Guitar Note Component
-   1. [ ] - programmatically create an svg component
+1. [-] - Guitar Note Component
+   1. [-] - programmatically create an svg component
+      1. [X] - draw a line
+      2. [X] - draw the top string
+      3. [X] - draw six strings
+      4. [ ] - draw a fret
+      5. [ ] - draw the nut
+      6. [ ] - draw a circle on the string
+      7. [ ] - add note text to circle
+      8. [ ] - draw notes for a string
+      9. [ ] - draw all notes for the guitar
    2. [ ] - make all notes disappear
    3. [ ] - Make a single notes appear when played
    4. [ ] - Make all notes appear when played
