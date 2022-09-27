@@ -4,8 +4,8 @@
       1. [X] - draw a line
       2. [X] - draw the top string
       3. [X] - draw six strings
-      4. [ ] - draw a fret
-      5. [ ] - draw the nut
+      4. [X] - draw a fret
+      5. [X] - draw the nut
       6. [ ] - draw a circle on the string
       7. [ ] - add note text to circle
       8. [ ] - draw notes for a string
