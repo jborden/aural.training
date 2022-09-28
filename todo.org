@@ -8,10 +8,14 @@
       5. [X] - draw the nut
       6. [X] - draw inlays
       7. [ ] - make strings angled properly (optional)
-      8. [ ] - draw a circle on the string
-      9. [ ] - add note text to circle
-      10. [ ] - draw notes for a string
-      11. [ ] - draw all notes for the guitar
+      8. [X] - draw circles for notes for open strings
+      9. [ ] - add note text to circles
+	 1. [ ] - get formula to calculate octaves for all frets, begining with open fret
+	 2. [ ] - add CORRECT octaves to text
+	 3. [ ] - color by octaves
+	 4. [ ] - add classes for note, octave, frequency
+      10. [X] - draw notes for a string per fret
+      11. [X] - draw all notes for the guitar
    2. [ ] - make all notes disappear
    3. [ ] - Make a single notes appear when played
    4. [ ] - Make all notes appear when played
