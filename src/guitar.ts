@@ -1,4 +1,4 @@
-import { SVG, extend as SVGextend, Element as SVGElement, Svg } from '@svgdotjs/svg.js'
+import { SVG, Svg } from '@svgdotjs/svg.js'
 
 // Paul Tol colors https://personal.sron.nl/~pault/
 const paulTolColors = ["#332288", "#6699cc", "#88ccee", "#44aa99", "#117733", "#999933", "#ddcc77", "#661100", "#cc6677", "#aa4466", "#882255", "#aa4499"];
@@ -43,28 +43,27 @@ function createInlays(svg: Svg, strings = 6, frets = 22, fretSpacing: number) {
       svg.circle(diameter).move(fretSpacing * i - (fretSpacing / 4) + radius, (20 * 2) + radius)
       // bottom
       svg.circle(diameter).move(fretSpacing * i - (fretSpacing / 4) + radius, (stringHeight - (20 * 2)) + radius)
-      
     }
     // non-octave
     if (inlayVals.has(i)) {
       svg.circle(diameter).move(fretSpacing * i - (fretSpacing / 4) + radius, stringHeight / 2 + radius)
     }
-
   }
 }
 
 const semitones = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
 
-function noteColor(note: string) {
-  return paulTolColors[semitones.indexOf(note)];
+function noteColor(octave: number) {
+  //return paulTolColors[semitones.indexOf(note)];
+  return paulTolColors[((octave + 3) * 2) % 12];
 }
 
 function drawNote(svg: Svg, string: number, x: number, note: string, octave: number, diameter: number) {
   let radius = diameter / 2;
   svg.circle(diameter)
     .move(x,(diameter * string) - radius)
-    .stroke({color: noteColor(note)})
-    .fill({ color: noteColor(note)})
+    .stroke({color: noteColor(octave)})
+    .fill({ color: noteColor(octave)})
     .addClass(`note-${note}`)
     .addClass(`octave-${octave}`);
   svg.text(`${note}${octave}`)
@@ -76,17 +75,28 @@ function drawNote(svg: Svg, string: number, x: number, note: string, octave: num
     .addClass(`octave-${octave}`);
 }
 
-function createStringNotes(svg: Svg, string: number, frets: number, fretSpacing: number, openNote: string) {
+function createStringNotes(svg: Svg, string: number, frets: number, fretSpacing: number, openNote: string, openNoteOctave: number) {
   let diameter = 20;
   // draw notes for open strings
-  drawNote(svg,string,2,openNote,4,diameter);
+  drawNote(svg,string,2,openNote,openNoteOctave,diameter);
+  let currentOctave = openNoteOctave;
   for (let i = 1; i < frets + 1; i++) {
     let note = semitones[(i + semitones.indexOf(openNote)) % 12];
-    drawNote(svg,string,fretSpacing * i, note, 4, diameter)
+    if (note == "C") { currentOctave++ };
+    drawNote(svg,string,fretSpacing * i, note, currentOctave, diameter);
   }
 }
 
-export function guitarSvg(parentDiv: HTMLElement, strings = 6, frets = 22, tuning = ["E", "B", "G", "D", "A", "E"], svgWidth = 1000) {
+export function guitarSvg(parentDiv: HTMLElement,
+			  strings = 6,
+			  frets = 22,
+			  tuning = [{note: "E", octave: 4},
+				    {note: "B", octave: 3},
+				    {note: "G", octave: 3},
+				    {note: "D", octave: 3},
+				    {note: "A", octave: 2},
+				    {note: "E", octave: 2}],
+			  svgWidth = 1000) {
   let svgWidthPadding = 20;
   let fretSpacing = Math.round(svgWidth / frets)
   let svg = SVG().addTo(parentDiv).size(svgWidth + svgWidthPadding, 300)
@@ -96,9 +106,6 @@ export function guitarSvg(parentDiv: HTMLElement, strings = 6, frets = 22, tunin
   createNut(svg,strings);
   createStrings(svg,strings);
   for (let i = 0; i < tuning.length; i++){
-      createStringNotes(svg,i+1,frets,fretSpacing,tuning[i]);
+    createStringNotes(svg,i+1,frets,fretSpacing,tuning[i].note,tuning[i].octave);
   }
-
-
-
 }

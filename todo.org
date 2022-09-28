@@ -9,10 +9,10 @@
       6. [X] - draw inlays
       7. [ ] - make strings angled properly (optional)
       8. [X] - draw circles for notes for open strings
-      9. [ ] - add note text to circles
-	 1. [ ] - get formula to calculate octaves for all frets, begining with open fret
-	 2. [ ] - add CORRECT octaves to text
-	 3. [ ] - color by octaves
+      9. [-] - add note text to circles
+	 1. [X] - get formula to calculate octaves for all frets, begining with open fret
+	 2. [X] - add CORRECT octaves to text
+	 3. [X] - color by octaves
 	 4. [ ] - add classes for note, octave, frequency
       10. [X] - draw notes for a string per fret
       11. [X] - draw all notes for the guitar
