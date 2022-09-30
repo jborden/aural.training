@@ -56,15 +56,14 @@ function noteColor(octave: number) {
   return paulTolColors[((octave + 3) * 2) % 12];
 }
 
-const semitones = ["A","A#","B","C","C#","D","D#","E","F","F#","G","G#"]
-const octaveSemitones = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
+const semitones = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
 
 export function noteFreq(note: string, octave: number){
   // f = 2^(n/12)*440
   // https://pages.mtu.edu/~suits/NoteFreqCalcs.html
   // https://codepen.io/enxaneta/post/frequencies-of-musical-notes
   const Afreq = 440.0
-  let nDeltaNote =  octaveSemitones.indexOf(note) - octaveSemitones.indexOf("A");
+  let nDeltaNote =  semitones.indexOf(note) - semitones.indexOf("A");
   let nDeltaOctave = (octave - 4) * 12;
   let n = nDeltaNote + nDeltaOctave;
   return Math.pow(2,n/12)*Afreq;
@@ -72,19 +71,22 @@ export function noteFreq(note: string, octave: number){
 
 function drawNote(svg: Svg, string: number, x: number, note: string, octave: number, diameter: number) {
   let radius = diameter / 2;
+  let freq = Math.round(noteFreq(note,octave));
   svg.circle(diameter)
     .move(x,(diameter * string) - radius)
     .stroke({color: noteColor(octave)})
     .fill({ color: noteColor(octave)})
     .addClass(`note-${note}`)
-    .addClass(`octave-${octave}`);
+    .addClass(`octave-${octave}`)
+    .addClass(`freq-${freq}`);
   svg.text(`${note}${octave}`)
     .move(x,(diameter * string) - radius)
     .font({ family:   'Helvetica',
 	    size:     '0.75em',
 	    weight: 'bold'})
     .addClass(`note-${note}`)
-    .addClass(`octave-${octave}`);
+    .addClass(`octave-${octave}`)
+    .addClass(`freq-${freq}`);
 }
 
 function createStringNotes(svg: Svg, string: number, frets: number, fretSpacing: number, openNote: string, openNoteOctave: number) {
