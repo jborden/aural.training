@@ -20,8 +20,8 @@
    3. [ ] - Make a single notes appear when played
    4. [ ] - Make all notes appear when played
    5. [ ] - put a last event status in bottom
-   6. [ ] - choose different tunings
-   7. [ ] - choose number of strings
+   6. [X] - choose different tunings
+   7. [X] - choose number of strings
 2. [ ] - Create YAML Lessons (ongoing)
    1. [ ] - investigate YAML format
    2. [ ] - investigate and integrate YAML editor
