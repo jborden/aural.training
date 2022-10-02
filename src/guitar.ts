@@ -72,6 +72,7 @@ export function noteFreq(note: string, octave: number){
 function drawNote(svg: Svg, string: number, x: number, note: string, octave: number, diameter: number) {
   let radius = diameter / 2;
   let freq = Math.round(noteFreq(note,octave));
+  // note circle
   svg.circle(diameter)
     .move(x,(diameter * string) - radius)
     .stroke({color: noteColor(octave)})
@@ -79,11 +80,22 @@ function drawNote(svg: Svg, string: number, x: number, note: string, octave: num
     .addClass(`note-${note}`)
     .addClass(`octave-${octave}`)
     .addClass(`freq-${freq}`);
+  // note text
   svg.text(`${note}${octave}`)
     .move(x,(diameter * string) - radius)
     .font({ family:   'Helvetica',
 	    size:     '0.75em',
 	    weight: 'bold'})
+    .addClass(`note-${note}`)
+    .addClass(`octave-${octave}`)
+    .addClass(`freq-${freq}`);
+  // plucked note
+  svg.circle(diameter)
+    .move(x,(diameter * string) - radius)
+    .stroke({ color: "white",
+	      width: 2})
+    .fill({color: "none"})
+    .addClass(`plucked`)
     .addClass(`note-${note}`)
     .addClass(`octave-${octave}`)
     .addClass(`freq-${freq}`);

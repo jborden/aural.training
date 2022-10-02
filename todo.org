@@ -17,9 +17,9 @@
       10. [X] - draw notes for a string per fret
       11. [X] - draw all notes for the guitar
    2. [X] - make all notes disappear
-   3. [ ] - Make a single notes appear when played
-   4. [ ] - Make all notes appear when played
-   5. [ ] - put a last event status in bottom
+   3. [X] - Make a single notes appear when played
+   4. [X] - Make all notes appear when played
+   5. [X] - put a last event status in bottom
    6. [X] - choose different tunings
    7. [X] - choose number of strings
 2. [ ] - Create YAML Lessons (ongoing)
@@ -29,11 +29,22 @@
       1. [ ] - Name
       2. [ ] - Store in local storage
       3. [ ] - Guitar Note Component integration
-   4. [ ] - List available lessons
-   5. [ ] - View lesson
-   6. [ ] - Fret / String choice
-   7. [ ] - how many notes to complete lesson (maybe)
-   8. [ ] - note memorization lesson
+   4. [ ] - note memorization lesson
+      1. [ ] - select strings / frets to focus on
+      2. [ ] - choose how quickly guide note disappear
+	 1. [ ] - after time
+	 2. [ ] - after so many correct ones
+      3. [ ] - choose lesson duration (option to go infinite)
+	 1. [ ] - time interval
+	 2. [ ] - certain times asked
+	 3. [ ] - certain correct ones
+	 4. [ ] - choose how many correct answers the fret board increases
+	    1. [ ] - choose whether or not the guide notes reappear
+   5. [ ] - List available lessons
+   6. [ ] - View lesson
+   7. [ ] - Fret / String choice
+   8. [ ] - how many notes to complete lesson (maybe)
+   9. [ ] - note memorization lesson
       1. [ ] - scale memorization
       2. [ ] - different keys
 3. [ ] - Host at https://aural.training
