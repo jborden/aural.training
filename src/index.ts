@@ -1,6 +1,6 @@
 import {startAudio, stopAudio, logListener} from "./audioMonitor"
-import { guitarSvg } from "./guitar"
-import { guitarController, notePluckListener, step} from "./guitarController"
+import { guitarSvg } from "./guitar/view"
+import { guitarController, notePluckListener, step} from "./guitar/controller"
 
 // required to be exported
 exports = {startAudio, stopAudio}

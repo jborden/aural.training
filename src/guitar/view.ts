@@ -113,15 +113,17 @@ function createStringNotes(svg: Svg, string: number, frets: number, fretSpacing:
   }
 }
 
+const standardTuning = [{ note: "E", octave: 4 },
+			{ note: "B", octave: 3 },
+			{ note: "G", octave: 3 },
+			{ note: "D", octave: 3 },
+			{ note: "A", octave: 2 },
+			{ note: "E", octave: 2 }];
+
 export function guitarSvg(parentDiv: HTMLElement,
 			  strings = 6,
 			  frets = 22,
-			  tuning = [{note: "E", octave: 4},
-				    {note: "B", octave: 3},
-				    {note: "G", octave: 3},
-				    {note: "D", octave: 3},
-				    {note: "A", octave: 2},
-				    {note: "E", octave: 2}],
+			  tuning = standardTuning,
 			  svgWidth = 1000) {
   let svgWidthPadding = 20;
   let fretSpacing = Math.round(svgWidth / frets)
