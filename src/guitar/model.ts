@@ -1,6 +1,4 @@
-type Tones = string[];
-
-const tones:Tones = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
+import { tones } from "../music/western/model"
 
 interface StringTuning {
   note: string
@@ -38,7 +36,6 @@ function createStringNotes(stringTuning: StringTuning, frets: number) {
   let firstNote = createNote(stringTuning,0);
   let stringNotes = [];
   let currentOctave = stringTuning.octave;
-  console.log("frets", frets);
   stringNotes.push(firstNote);
   for (let i = 1; i < frets + 1; i++) {
     let tone = tones[(i + tones.indexOf(stringTuning.note)) % 12];
@@ -50,7 +47,7 @@ function createStringNotes(stringTuning: StringTuning, frets: number) {
   return stringNotes;
 }
 
-export function createFretboard(tuning: InstrumentTuning, frets: number): FretBoard {
+export function createFretBoard(tuning: InstrumentTuning, frets: number): FretBoard {
   let currentFretboard = []
   for (let stringTuning of tuning) {
     currentFretboard.push(createStringNotes(stringTuning, frets));

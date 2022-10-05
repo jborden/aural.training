@@ -1,9 +1,12 @@
 import { SVG, Svg } from '@svgdotjs/svg.js'
+import {standardTuning} from "./model"
+import { tones } from "../music/western/model"
+import { createFretBoard }
 
 // Paul Tol colors https://personal.sron.nl/~pault/
 const paulTolColors = ["#332288", "#6699cc", "#88ccee", "#44aa99", "#117733", "#999933", "#ddcc77", "#661100", "#cc6677", "#aa4466", "#882255", "#aa4499"];
 //const paulTolColors = ["#BBCCEE", "#CCEEFF", "#CCDDAA", "#EEEEBB", "#FFCCCC", "#DDDDDD", "#222255", "#225555", "#225522", "#666633", "#663333", "#555555"]
-function createStrings(svg: Svg, strings = 6) {
+function drawStrings(svg: Svg, strings = 6) {
 
   for (let i = 0; i < strings; i++) {
     svg.line(0, 0, 1000, 0)
@@ -12,7 +15,7 @@ function createStrings(svg: Svg, strings = 6) {
   }
 }
 
-function createFrets(svg: Svg, strings = 6, frets = 22, fretSpacing: number) {
+function drawFrets(svg: Svg, strings = 6, frets = 22, fretSpacing: number) {
   for (let i = 0; i < frets + 1; i++) {
       svg.line(0,0,0,20 * (strings - 1))
 	.move(20 + (i * fretSpacing),20)
@@ -20,13 +23,13 @@ function createFrets(svg: Svg, strings = 6, frets = 22, fretSpacing: number) {
   }
 }
 
-function createNut(svg: Svg, strings = 6) {
+function drawNut(svg: Svg, strings = 6) {
   svg.line(0,0,0,20 * (strings - 1))
     .move(25,20)
     .stroke({ color: 'grey', width: 3, linecap: 'round'})
 }
 
-function createInlays(svg: Svg, strings = 6, frets = 22, fretSpacing: number) {
+function drawInlays(svg: Svg, strings = 6, frets = 22, fretSpacing: number) {
   let stringHeight = strings * 20;
   let diameter = 10;
   let radius = diameter / 2;
@@ -52,18 +55,16 @@ function createInlays(svg: Svg, strings = 6, frets = 22, fretSpacing: number) {
 }
 
 function noteColor(octave: number) {
-  //return paulTolColors[semitones.indexOf(note)];
+  //return paulTolColors[tones.indexOf(note)];
   return paulTolColors[((octave + 3) * 2) % 12];
 }
-
-const semitones = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
 
 export function noteFreq(note: string, octave: number){
   // f = 2^(n/12)*440
   // https://pages.mtu.edu/~suits/NoteFreqCalcs.html
   // https://codepen.io/enxaneta/post/frequencies-of-musical-notes
   const Afreq = 440.0
-  let nDeltaNote =  semitones.indexOf(note) - semitones.indexOf("A");
+  let nDeltaNote =  tones.indexOf(note) - tones.indexOf("A");
   let nDeltaOctave = (octave - 4) * 12;
   let n = nDeltaNote + nDeltaOctave;
   return Math.pow(2,n/12)*Afreq;
@@ -107,32 +108,25 @@ function createStringNotes(svg: Svg, string: number, frets: number, fretSpacing:
   drawNote(svg,string,2,openNote,openNoteOctave,diameter);
   let currentOctave = openNoteOctave;
   for (let i = 1; i < frets + 1; i++) {
-    let note = semitones[(i + semitones.indexOf(openNote)) % 12];
+    let note = tones[(i + tones.indexOf(openNote)) % 12];
     if (note == "C") { currentOctave++ };
     drawNote(svg,string,fretSpacing * i, note, currentOctave, diameter);
   }
 }
 
-const standardTuning = [{ note: "E", octave: 4, string: 1},
-			{ note: "B", octave: 3, string: 2},
-			{ note: "G", octave: 3, string: 3},
-			{ note: "D", octave: 3, string: 4},
-			{ note: "A", octave: 2, string: 5},
-			{ note: "E", octave: 2, string: 6}];
-
-export function guitarSvg(parentDiv: HTMLElement,
-			  strings = 6,
-			  frets = 22,
-			  tuning = standardTuning,
-			  svgWidth = 1000) {
+export function drawGuitar(parentDiv: HTMLElement,
+			   strings = 6,
+			   frets = 22,
+			   tuning = standardTuning,
+			   svgWidth = 1000) {
   let svgWidthPadding = 20;
   let fretSpacing = Math.round(svgWidth / frets)
   let svg = SVG().addTo(parentDiv).size(svgWidth + svgWidthPadding, 300)
   // draw the guitar
-  createInlays(svg,strings,frets,fretSpacing);
-  createFrets(svg,strings,frets,fretSpacing);
-  createNut(svg,strings);
-  createStrings(svg,strings);
+  drawInlays(svg,strings,frets,fretSpacing);
+  drawFrets(svg,strings,frets,fretSpacing);
+  drawNut(svg,strings);
+  drawStrings(svg,strings);
   for (let i = 0; i < tuning.length; i++){
     createStringNotes(svg,i+1,frets,fretSpacing,tuning[i].note,tuning[i].octave);
   }
