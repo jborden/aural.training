@@ -1,58 +1,59 @@
-const tones = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
+type Tones = string[];
 
-class StringTuning {
+const tones:Tones = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
+
+interface StringTuning {
   note: string
   octave: number
   string: number
 }
 
-type InstrumentTuning = [StringTuning];
+type InstrumentTuning = StringTuning[];
 
-class Note {
+export const standardTuning = [{ note: "E", octave: 4, string: 1},
+			       { note: "B", octave: 3, string: 2},
+			       { note: "G", octave: 3, string: 3},
+			       { note: "D", octave: 3, string: 4},
+			       { note: "A", octave: 2, string: 5},
+			       { note: "E", octave: 2, string: 6}];
+
+interface Note {
   note: string
   string: number
   octave: number
   fret: number
 }
 
-type FretBoard = [Note];
+type FretBoard = Note[];
 
 function createNote(stringTuning: StringTuning, fret: number) {
-  let note = new Note()
-  note = {note: stringTuning.note,
-	  octave: stringTuning.octave,
-	  string: stringTuning.string,
-	  fret: fret}
-  return note;
+  let note:Note = {note: stringTuning.note,
+		   octave: stringTuning.octave,
+		   string: stringTuning.string,
+		   fret: fret}
+  return note
 }
 
 function createStringNotes(stringTuning: StringTuning, frets: number) {
   let firstNote = createNote(stringTuning,0);
-
   let stringNotes = [];
   let currentOctave = stringTuning.octave;
-
+  console.log("frets", frets);
   stringNotes.push(firstNote);
   for (let i = 1; i < frets + 1; i++) {
     let tone = tones[(i + tones.indexOf(stringTuning.note)) % 12];
-    if (tone == "C") { currentOctave++};
-    let note = new Note();
-    note = {note: tone,
-	    octave: currentOctave,
-	    string: stringTuning.string,
-	    fret: i};
-    stringNotes.push(note);
-  }
+    if (tone == "C")  currentOctave++
+    stringNotes.push(createNote({note: tone,
+				 octave: currentOctave,
+				 string: stringTuning.string},
+				i))};
   return stringNotes;
 }
 
-function createFretboard(tuning: Tuning, frets: Number) {
-  let currentFretboard:FretBoard;
+export function createFretboard(tuning: InstrumentTuning, frets: number): FretBoard {
+  let currentFretboard = []
   for (let stringTuning of tuning) {
     currentFretboard.push(createStringNotes(stringTuning, frets));
-    
-    
-    
   }
-  
+  return(currentFretboard.flat());
 }

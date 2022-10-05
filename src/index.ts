@@ -1,6 +1,7 @@
 import {startAudio, stopAudio, logListener} from "./audioMonitor"
 import { guitarSvg } from "./guitar/view"
 import { guitarController, notePluckListener, step} from "./guitar/controller"
+import { createFretboard, standardTuning} from "./guitar/model"
 
 // required to be exported
 exports = {startAudio, stopAudio}
@@ -26,4 +27,5 @@ const standard7String = [{note: "E", octave: 4},
 //guitarSvg(document.querySelector("#guitar"),7,12,standard7String);
 guitarSvg(document.querySelector("#guitar"),6,12);
 guitarController();
+console.log(createFretboard(standardTuning,12))
 window.requestAnimationFrame(step);
