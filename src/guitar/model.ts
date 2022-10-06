@@ -1,28 +1,37 @@
 import { tones } from "../music/western/model"
-
+import { max,map,flow } from "lodash-es"
 interface StringTuning {
   note: string
   octave: number
   string: number
 }
 
-type InstrumentTuning = StringTuning[];
+export type InstrumentTuning = StringTuning[];
 
-export const standardTuning = [{ note: "E", octave: 4, string: 1},
-			       { note: "B", octave: 3, string: 2},
-			       { note: "G", octave: 3, string: 3},
-			       { note: "D", octave: 3, string: 4},
-			       { note: "A", octave: 2, string: 5},
-			       { note: "E", octave: 2, string: 6}];
+export const standardTuning:InstrumentTuning = [{ note: "E", octave: 4, string: 1},
+						{ note: "B", octave: 3, string: 2},
+						{ note: "G", octave: 3, string: 3},
+						{ note: "D", octave: 3, string: 4},
+						{ note: "A", octave: 2, string: 5},
+						{ note: "E", octave: 2, string: 6}];
 
-interface Note {
+export interface Note {
   note: string
   string: number
   octave: number
   fret: number
 }
 
-type FretBoard = Note[];
+export type FretBoard = Note[];
+
+export function fretCount(fretBoard: FretBoard): number {
+  return(flow(x => map(x,"fret"),
+	      max)(fretBoard));
+}
+
+export function stringCount(fretBoard: FretBoard) {
+  return(new Set(fretBoard.map( note => note.string)).size);
+}
 
 function createNote(stringTuning: StringTuning, fret: number) {
   let note:Note = {note: stringTuning.note,

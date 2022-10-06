@@ -25,7 +25,7 @@ const standard7String = [{note: "E", octave: 4},
 			 {note: "E", octave: 2},
 			 {note: "B", octave:1}]
 //guitarSvg(document.querySelector("#guitar"),7,12,standard7String);
-drawGuitar(document.querySelector("#guitar"),6,12);
+drawGuitar(document.querySelector("#guitar"),createFretBoard(standardTuning,22));
 guitarController();
 console.log(createFretBoard(standardTuning,12))
 window.requestAnimationFrame(step);

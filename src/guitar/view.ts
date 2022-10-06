@@ -1,45 +1,46 @@
 import { SVG, Svg } from '@svgdotjs/svg.js'
-import {standardTuning} from "./model"
+import {fretCount, stringCount, FretBoard, Note} from "./model"
 import { tones } from "../music/western/model"
-import { createFretBoard }
+import { max,map,flow } from "lodash-es"
+
 
 // Paul Tol colors https://personal.sron.nl/~pault/
 const paulTolColors = ["#332288", "#6699cc", "#88ccee", "#44aa99", "#117733", "#999933", "#ddcc77", "#661100", "#cc6677", "#aa4466", "#882255", "#aa4499"];
-//const paulTolColors = ["#BBCCEE", "#CCEEFF", "#CCDDAA", "#EEEEBB", "#FFCCCC", "#DDDDDD", "#222255", "#225555", "#225522", "#666633", "#663333", "#555555"]
-function drawStrings(svg: Svg, strings = 6) {
+function drawStrings(svg: Svg, fretBoard: FretBoard, svgWidth: number) {
 
-  for (let i = 0; i < strings; i++) {
-    svg.line(0, 0, 1000, 0)
+  for (let i = 0; i < stringCount(fretBoard); i++) {
+    svg.line(0, 0, svgWidth, 0)
       .move(20, 20 + (i * 20))
       .stroke({ color: 'grey', width: 3, linecap: 'round' })
   }
 }
 
-function drawFrets(svg: Svg, strings = 6, frets = 22, fretSpacing: number) {
-  for (let i = 0; i < frets + 1; i++) {
-      svg.line(0,0,0,20 * (strings - 1))
+function drawFrets(svg: Svg, fretBoard: FretBoard, fretSpacing: number) {
+
+  for (let i = 0; i < fretCount(fretBoard) + 1; i++) {
+    svg.line(0,0,0,20 * (stringCount(fretBoard) - 1))
 	.move(20 + (i * fretSpacing),20)
 	.stroke({ color: 'grey', width: 3, linecap: 'round'})
   }
 }
 
-function drawNut(svg: Svg, strings = 6) {
-  svg.line(0,0,0,20 * (strings - 1))
+function drawNut(svg: Svg, fretBoard: FretBoard) {
+  svg.line(0,0,0,20 * (stringCount(fretBoard) - 1))
     .move(25,20)
     .stroke({ color: 'grey', width: 3, linecap: 'round'})
 }
 
-function drawInlays(svg: Svg, strings = 6, frets = 22, fretSpacing: number) {
-  let stringHeight = strings * 20;
-  let diameter = 10;
-  let radius = diameter / 2;
+function drawInlays(svg: Svg, fretBoard: FretBoard, fretSpacing: number) {
+  const stringHeight = stringCount(fretBoard) * 20;
+  const diameter = 10;
+  const radius = diameter / 2;
   // quick, but hacky solution
-  let inlayVals = new Set();
+  const inlayVals = new Set();
   [3, 5, 7, 9, 15, 17, 19, 21, 27, 29, 31, 33].reduce((s, e) => s.add(e), inlayVals);
-  let octaveVals = new Set();
+  const octaveVals = new Set();
   [12, 24, 36].reduce((s, e) => s.add(e), octaveVals);
   // draw inlays
-  for (let i = 0; i < frets + 1; i++) {
+  for (let i = 0; i < fretCount(fretBoard) + 1; i++) {
     // octave
     if (octaveVals.has(i)) {
       // top 
@@ -55,7 +56,6 @@ function drawInlays(svg: Svg, strings = 6, frets = 22, fretSpacing: number) {
 }
 
 function noteColor(octave: number) {
-  //return paulTolColors[tones.indexOf(note)];
   return paulTolColors[((octave + 3) * 2) % 12];
 }
 
@@ -70,9 +70,11 @@ export function noteFreq(note: string, octave: number){
   return Math.pow(2,n/12)*Afreq;
 }
 
-function drawNote(svg: Svg, string: number, x: number, note: string, octave: number, diameter: number) {
-  let radius = diameter / 2;
-  let freq = Math.round(noteFreq(note,octave));
+function drawNote(svg: Svg, currentNote:Note, fretSpacing: number, diameter: number) {
+  const {note,octave,string,fret} = currentNote;
+  const radius = diameter / 2;
+  const freq = Math.round(noteFreq(note,octave));
+  const x = fretSpacing * fret;
   // note circle
   svg.circle(diameter)
     .move(x,(diameter * string) - radius)
@@ -102,32 +104,25 @@ function drawNote(svg: Svg, string: number, x: number, note: string, octave: num
     .addClass(`freq-${freq}`);
 }
 
-function createStringNotes(svg: Svg, string: number, frets: number, fretSpacing: number, openNote: string, openNoteOctave: number) {
-  let diameter = 20;
-  // draw notes for open strings
-  drawNote(svg,string,2,openNote,openNoteOctave,diameter);
-  let currentOctave = openNoteOctave;
-  for (let i = 1; i < frets + 1; i++) {
-    let note = tones[(i + tones.indexOf(openNote)) % 12];
-    if (note == "C") { currentOctave++ };
-    drawNote(svg,string,fretSpacing * i, note, currentOctave, diameter);
-  }
+function drawNotes(svg: Svg, fretBoard: FretBoard, fretSpacing: number) {
+  const diameter = 20;
+
+  map(fretBoard,
+      currentNote => drawNote(svg,currentNote,fretSpacing,diameter))
 }
 
 export function drawGuitar(parentDiv: HTMLElement,
-			   strings = 6,
-			   frets = 22,
-			   tuning = standardTuning,
+			   fretBoard: FretBoard,
 			   svgWidth = 1000) {
-  let svgWidthPadding = 20;
-  let fretSpacing = Math.round(svgWidth / frets)
+  const svgWidthPadding = 20;
+  const frets = flow(x => map(x,"fret"),
+		     max)(fretBoard);
+  const fretSpacing = Math.round(svgWidth / frets)
   let svg = SVG().addTo(parentDiv).size(svgWidth + svgWidthPadding, 300)
   // draw the guitar
-  drawInlays(svg,strings,frets,fretSpacing);
-  drawFrets(svg,strings,frets,fretSpacing);
-  drawNut(svg,strings);
-  drawStrings(svg,strings);
-  for (let i = 0; i < tuning.length; i++){
-    createStringNotes(svg,i+1,frets,fretSpacing,tuning[i].note,tuning[i].octave);
-  }
+  drawInlays(svg,fretBoard,fretSpacing);
+  drawFrets(svg,fretBoard,fretSpacing);
+  drawNut(svg,fretBoard);
+  drawStrings(svg,fretBoard,svgWidth);
+  drawNotes(svg,fretBoard,fretSpacing);
 }
