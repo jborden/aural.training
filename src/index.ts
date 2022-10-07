@@ -2,6 +2,8 @@ import {startAudio, stopAudio, logListener} from "./audioMonitor"
 import { drawGuitar } from "./guitar/view"
 import { guitarController, notePluckListener, step} from "./guitar/controller"
 import { createFretBoard, standardTuning} from "./guitar/model"
+import { getNotes } from "./guitar-note-trainer/model"
+import { range } from "lodash-es";
 
 // required to be exported
 exports = {startAudio, stopAudio}
@@ -24,8 +26,8 @@ const standard7String = [{note: "E", octave: 4},
 			 {note: "A", octave: 2},
 			 {note: "E", octave: 2},
 			 {note: "B", octave:1}]
-//guitarSvg(document.querySelector("#guitar"),7,12,standard7String);
-drawGuitar(document.querySelector("#guitar"),createFretBoard(standardTuning,22));
+const fretBoard = createFretBoard(standardTuning, 12);
+drawGuitar(document.querySelector("#guitar"),fretBoard);
 guitarController();
-console.log(createFretBoard(standardTuning,12))
+console.log(getNotes(fretBoard,range(0,13),range(1,7)));
 window.requestAnimationFrame(step);
