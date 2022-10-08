@@ -9,7 +9,8 @@
     "@svgdotjs/svg.js": "^3.1.2",
     "@types/lodash-es": "^4.17.6",
     "freelizer": "^1.0.0",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "tslib": "^2.4.0"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^14.1.0",
