@@ -22,15 +22,15 @@
    5. [X] - put a last event status in bottom
    6. [X] - choose different tunings
    7. [X] - choose number of strings
-2. [ ] - Create YAML Lessons (ongoing)
+2. [-] - Create YAML Lessons (ongoing)
    1. [ ] - investigate YAML format
    2. [ ] - investigate and integrate YAML editor
    3. [ ] - Lessons should have
       1. [ ] - Name
       2. [ ] - Store in local storage
       3. [ ] - Guitar Note Component integration
-   4. [ ] - note memorization lesson
-      1. [ ] - select strings / frets to focus on
+   4. [-] - note memorization lesson
+      1. [X] - select strings / frets to focus on
       2. [ ] - choose how quickly guide note disappear
 	 1. [ ] - after time
 	 2. [ ] - after so many correct ones
