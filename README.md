@@ -2,15 +2,6 @@
 
 This is the source code for the aural.training website.
 
-# Prerequistes
-
-- Node Installed + npm installed
-
-- ws installed
-```
-npm install -g ws
-```
-
 # Develop
 
 Host server
