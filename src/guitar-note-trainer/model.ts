@@ -2,7 +2,7 @@ import { FretBoard, Note } from "../guitar/model"
 import { flow,filter,isUndefined,isEmpty,includes } from "lodash-es"
 
 // get a subselection of notes from a range of frets
-export function getNotes(fretBoard: FretBoard, frets?: number[], strings?: number[]) {
+export function selectNotes(fretBoard: FretBoard, frets?: number[], strings?: number[]):FretBoard {
 
   const filterFret = (fretBoard: FretBoard) => filter(fretBoard,(note:Note) => {
     if (isUndefined(frets) || isEmpty(frets)) {
