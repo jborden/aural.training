@@ -1,5 +1,5 @@
 import { tones } from "../music/western/model"
-import { max,map,flow } from "lodash-es"
+import { max,map,flow,isEmpty } from "lodash-es"
 interface StringTuning {
   note: string
   octave: number
@@ -62,4 +62,12 @@ export function createFretBoard(tuning: InstrumentTuning, frets: number): FretBo
     currentFretboard.push(createStringNotes(stringTuning, frets));
   }
   return(currentFretboard.flat());
+}
+
+export function noteName(note: Note | null) {
+  if (!isEmpty(note)) {
+    return(`${note.note}${note.octave}`);
+  } else {
+    return null;
+  }
 }

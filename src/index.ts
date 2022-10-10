@@ -27,7 +27,8 @@ const standard7String = [{note: "E", octave: 4},
 			 {note: "E", octave: 2},
 			 {note: "B", octave:1}]
 const fretBoard = createFretBoard(standardTuning, 12);
-const guessNotesFretsRange = range(0,5);
+const guessNotesFretsRange = range(0,1);
+console.log(guessNotesFretsRange)
 const guessNotesStringRange = range(0,7);
 drawGuitar(document.querySelector("#guitar"),fretBoard);
 guitarController();
