@@ -54,6 +54,6 @@ export function logListener(e: any) {
   let {frequency, note, noteFrequency, deviation, octave} = e.detail;
   let audioEventLogElem = document.querySelector("#audio-event-log");
   if (frequency) {
-    audioEventLogElem.innerHTML = `<p>frequency = ${frequency.toFixed(2)} note = ${note} octave=${octave}<p>`;
+    audioEventLogElem.innerHTML = `<p>frequency = ${frequency.toFixed(2)} note = ${note} octave=${octave} deviation=${deviation}<p>`;
   }
 }
