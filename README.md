@@ -42,3 +42,7 @@ Problems:
 1. We will lose Typescript warnings in the rollup compiliation step.
 2. The lsp linter does not like parsing |>
 3. It's not a R-style pipe or clojure thread, it needs a "topic token", like ^^
+
+## React
+
+React (v18, latest) is not in a place that can be easily used with rollup/tsc. It's a configuration nightmare with no straight forward answer.
