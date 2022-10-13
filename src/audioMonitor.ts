@@ -88,5 +88,3 @@ export class audioMonitorToggleButton {
     this.audioMonitorToggleButtonRender();
   };
 }
-
-addEventListener('keyup', );
