@@ -1,4 +1,5 @@
 import { freelizer } from 'freelizer';
+import { functions } from 'lodash-es';
 import { noteName } from './guitar/model'
 
 let start: Function, stop: Function, subscribe: Function;
@@ -57,3 +58,35 @@ export function logListener(e: any) {
     audioEventLogElem.innerHTML = `<p>frequency = ${frequency.toFixed(2)} note = ${note} octave=${octave} deviation=${deviation}<p>`;
   }
 }
+
+export class audioMonitorToggleButton {
+  listening = false;
+  parentDiv: HTMLElement = null;
+
+  constructor(parentDiv: HTMLElement) {
+    this.listening = false;
+    this.parentDiv = parentDiv;
+    this.audioMonitorToggleButtonRender()
+  };
+
+  audioMonitorToggleButtonRender() {
+    let message = this.listening ? "Stop" : "Start";
+    let element = document.createElement('button');
+    element.innerHTML = message;
+    element.addEventListener('click',() => {this.audioMonitorToggleButton()})
+    this.parentDiv.innerHTML = '';
+    this.parentDiv.append(element);
+  };
+
+  audioMonitorToggleButton() {
+    if (this.listening) {
+      stopAudio()
+    } else {
+      startAudio()
+    }
+    this.listening = !this.listening;
+    this.audioMonitorToggleButtonRender();
+  };
+}
+
+addEventListener('keyup', );

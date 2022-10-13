@@ -1,4 +1,4 @@
-import {startAudio, stopAudio, logListener} from "./audioMonitor"
+import {startAudio, stopAudio, logListener, audioMonitorToggleButton} from "./audioMonitor"
 import { drawGuitar } from "./guitar/view"
 import { guitarController, notePluckListener, step} from "./guitar/controller"
 import { createFretBoard, standardTuning} from "./guitar/model"
@@ -34,3 +34,6 @@ drawGuitar(document.querySelector("#guitar"),fretBoard);
 guitarController();
 guessNotes(document.querySelector("#guitar-note-trainer"),fretBoard,guessNotesFretsRange,guessNotesStringRange);
 window.requestAnimationFrame(step);
+
+let toggleButton = new audioMonitorToggleButton(document.querySelector("#audio-monitor-toggle-button"));
+addEventListener('keyup',(event) => { if ( event.key === " ") { toggleButton.audioMonitorToggleButton()}})
