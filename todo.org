@@ -92,3 +92,9 @@
     1. [ ] - read tabs from some format, possibly Muse Score 3?
     2. [ ] - standardized tab?
     3. [ ] - make importing tab super easy
+12. [ ] - tune manually - use your instrument to determine the tuning by playing
+    each note and capturing the freq [hassan]
+13. [ ] - find a path between notes in a particular Key [hassan]
+14. [ ] - use tunings other than A440, ex: A432 [ hassan ]
+15. [ ] - freq to midi [ hassan ]
+16. [ ] - play back a melody given the intervals, not the note names [ hassan ]
