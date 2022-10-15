@@ -3,28 +3,21 @@ import { FretBoard,Note,noteName } from "../guitar/model"
 import { renderCurrentNote, renderIsGuessCorrect } from "./view"
 import { sample,isNull} from "lodash-es"
 import { currentNoteName, currentNoteFirstSeenTimeStamp } from "../audioMonitor"
+import { GuessNoteEvent } from "../events/types"
+import { publishEvent } from "../events/main"
 
 let currentNote: Note = null;
 let guessIsCorrect: boolean = null;
 
-interface GuessNoteEvent {
-  noteAsked: string,
-  noteGiven: string,
-  timestamp: number,
-  uuid: string,
-  type: string
-}
-
-function createGuessNoteEventDetail(noteAsked: string, noteGiven: string): GuessNoteEvent {
+function createGuessNoteEventDetail(noteAsked: Note, noteGiven: Note): GuessNoteEvent {
 
   return({noteAsked: noteAsked,
 	  noteGiven: noteGiven,
 	  timestamp: Date.now(),
 	  uuid: crypto.randomUUID(),
+	  correctGuess: (noteAsked === noteGiven),
 	  type: "guitar-note-trainer/guess-note"})
 }
-
-
 
 export function guessNotes(parentDiv: HTMLElement, fretBoard: FretBoard, frets?: number[], strings?: number[]) {
   let timeSeenMin = 100;
@@ -44,9 +37,12 @@ export function guessNotes(parentDiv: HTMLElement, fretBoard: FretBoard, frets?:
       const signalNoteName = noteName(e.detail);
       if (signalNoteName === noteName(currentNote)) {
 	guessIsCorrect = true;
-	
+	publishEvent("guitar-note-trainer/guess-note",
+		     createGuessNoteEventDetail(currentNote, e.detail))
       } else {
 	guessIsCorrect = false;
+	publishEvent("guitar-note-trainer/guess-note",
+		     createGuessNoteEventDetail(currentNote, e.detail))
       }
       render();
     }
