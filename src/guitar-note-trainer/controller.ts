@@ -7,6 +7,25 @@ import { currentNoteName, currentNoteFirstSeenTimeStamp } from "../audioMonitor"
 let currentNote: Note = null;
 let guessIsCorrect: boolean = null;
 
+interface GuessNoteEvent {
+  noteAsked: string,
+  noteGiven: string,
+  timestamp: number,
+  uuid: string,
+  type: string
+}
+
+function createGuessNoteEventDetail(noteAsked: string, noteGiven: string): GuessNoteEvent {
+
+  return({noteAsked: noteAsked,
+	  noteGiven: noteGiven,
+	  timestamp: Date.now(),
+	  uuid: crypto.randomUUID(),
+	  type: "guitar-note-trainer/guess-note"})
+}
+
+
+
 export function guessNotes(parentDiv: HTMLElement, fretBoard: FretBoard, frets?: number[], strings?: number[]) {
   let timeSeenMin = 100;
   let deviationTolerance = 1;
@@ -25,6 +44,7 @@ export function guessNotes(parentDiv: HTMLElement, fretBoard: FretBoard, frets?:
       const signalNoteName = noteName(e.detail);
       if (signalNoteName === noteName(currentNote)) {
 	guessIsCorrect = true;
+	
       } else {
 	guessIsCorrect = false;
       }
