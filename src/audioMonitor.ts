@@ -1,13 +1,8 @@
 import { freelizer } from 'freelizer';
-import { functions } from 'lodash-es';
 import { noteName } from './guitar/model'
+import { publishEvent } from './events/main'
 
 let start: Function, stop: Function, subscribe: Function;
-
-function publishEvents(e: any) {
-  const event = new CustomEvent("audioSignal",{detail: e});
-  dispatchEvent(event);
-}
 
 export async function startAudio() {
   try {
@@ -15,7 +10,7 @@ export async function startAudio() {
       ({start, stop, subscribe} = await freelizer());
     }
     start();
-    subscribe(publishEvents);
+    subscribe((e:any) => { publishEvent("audioSignal",e) });
   } catch (error){
     console.log("There was an error trying to start the audio");
     console.log(error);
