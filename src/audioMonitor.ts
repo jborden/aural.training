@@ -2,6 +2,14 @@ import { freelizer } from 'freelizer';
 import { noteName } from './guitar/model'
 import { publishEvent } from './events/main'
 
+export interface AudioMonitorEventDetail {
+  frequency: number,
+  note: string,
+  noteFrequency: number,
+  deviation: number,
+  octave: number
+}
+
 let start: Function, stop: Function, subscribe: Function;
 
 export async function startAudio() {
