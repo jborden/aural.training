@@ -41,6 +41,13 @@ let db = new MyAppDatabase();
 //   }).then((result) => console.log(result));
 // }
 
+export function showEvents() {
+  db.transaction('r', [db.guitarNoteTrainerEvent], async () => {
+    return await db.guitarNoteTrainerEvent.where({type:"guitar-note-trainer/guess-note"}).toArray()
+    //return await db.guitarNoteTrainerEvent.get();
+  }).then((result) => console.log(result));
+}
+
 export function newGuitarNoteTrainerEvent(detail: GuitarNoteTrainerEvent) {
   return(db.table("guitarNoteTrainerEvent").put(detail));
 }

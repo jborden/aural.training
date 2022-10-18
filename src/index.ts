@@ -4,7 +4,7 @@ import { guitarController, notePluckListener, step} from "./guitar/controller"
 import { createFretBoard, standardTuning} from "./guitar/model"
 import { range } from "lodash-es";
 import { guessNotes } from "./guitar-note-trainer/controller"
-import { newGuitarNoteTrainerEvent } from "./dexie/model"
+import { newGuitarNoteTrainerEvent, showEvents } from "./dexie/model"
 
 // required to be exported
 exports = {startAudio, stopAudio}
@@ -38,4 +38,5 @@ window.requestAnimationFrame(step);
 let toggleButton = new audioMonitorToggleButton(document.querySelector("#audio-monitor-toggle-button"));
 addEventListener('guitar-note-trainer/guess-note',(e: any) => {newGuitarNoteTrainerEvent(e.detail)});
 addEventListener('keyup',(event) => { if ( event.key === " ") { toggleButton.audioMonitorToggleButton()}})
+showEvents()
 
