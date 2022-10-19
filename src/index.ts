@@ -37,6 +37,7 @@ guessNotes(document.querySelector("#guitar-note-trainer"),fretBoard,guessNotesFr
 window.requestAnimationFrame(step);
 let toggleButton = new audioMonitorToggleButton(document.querySelector("#audio-monitor-toggle-button"));
 addEventListener('guitar-note-trainer/guess-note',(e: any) => {newGuitarNoteTrainerEvent(e.detail)});
+addEventListener('guitar-note-trainer/guess-note',(e: any) => {console.log(e)});
 addEventListener('keyup',(event) => { if ( event.key === " ") { toggleButton.audioMonitorToggleButton()}})
 showEvents()
 

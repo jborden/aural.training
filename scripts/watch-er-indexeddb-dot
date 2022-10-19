@@ -1,0 +1,2 @@
+#!/bin/bash
+fswatch -o ./docs/er_indexeddb.dot | xargs -n1 -I{} dot -Tpdf ./docs/er_indexeddb.dot > ./docs/er_indexeddb.pdf

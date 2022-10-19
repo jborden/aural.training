@@ -1,0 +1,94 @@
+// watch
+// fswatch -o . | xargs -n1 -I{} dot -Tpdf er.dot > er.pdf
+//
+// You'll need Graphviz installed
+digraph G {
+	//
+	// Defaults
+	//
+	splines=true
+	overlap=false
+	// Box for entities
+	node [shape=none, margin=0]
+
+	// One-to-many relation (from one, to many)
+	edge [arrowhead=crow, arrowtail=none, dir=both]
+
+	//
+	// Entities
+	//
+
+	// 1
+	user [label=<
+	      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+	      <tr><td bgcolor="lightblue">user</td></tr>
+	      <tr><td align="left">uuid: string</td></tr>
+	      </table>
+	      >]
+
+
+	eventDetail [label=<
+	      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+	      <tr><td bgcolor="lightblue">eventDetail</td></tr>
+	      <tr><td align="left">uuid: string</td></tr>
+	      <tr><td align="left">type: string</td></tr>
+	      <tr><td align="left">timestamp: number</td></tr>
+	      </table>
+	      >]
+
+	user_eventDetail [label=<
+			 <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+			 <tr><td bgcolor="lightblue">user_eventDetail</td></tr>
+			 <tr><td align="left">user_uuid: string</td></tr>
+			 <tr><td align="left">eventDetail_uuid: string</td></tr>
+			 </table>
+			 >]
+
+	noteAsked [label=<
+	      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+	      <tr><td bgcolor="lightblue">noteAsked</td></tr>
+	      <tr><td align="left">uuid: string</td></tr>
+	      <tr><td align="left">id: string</td></tr>
+	      <tr><td align="left">note: string</td></tr>
+	      <tr><td align="left">string: number</td></tr>
+	      <tr><td align="left">octave: number</td></tr>
+	      <tr><td align="left">fret: number</td></tr>
+	      <tr><td align="left">noteFrequency: number</td></tr>
+	      </table>
+	      >]
+
+	noteGiven [label=<
+	      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+	      <tr><td bgcolor="lightblue">noteGiven</td></tr>
+	      <tr><td align="left">uuid: string</td></tr>
+	      <tr><td align="left">note: string</td></tr>
+	      <tr><td align="left">frequency: number</td></tr>
+	      <tr><td align="left">noteFrequency: number</td></tr>
+	      <tr><td align="left">deviation: number</td></tr>
+	      <tr><td align="left">octave: number</td></tr>
+	      </table>
+	      >]
+
+	eventDetail_noteGiven [label=<
+	      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+	      <tr><td bgcolor="lightblue">eventDetail_noteGiven</td></tr>
+	      <tr><td align="left">eventDetail_uuid: string</td></tr>
+	      <tr><td align="left">noteGiven_uuid: string</td></tr>
+	      </table>
+	      >]
+
+	eventDetail_noteAsked [label=<
+	      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+	      <tr><td bgcolor="lightblue">eventDetail_noteAsked</td></tr>
+	      <tr><td align="left">eventDetail_uuid: string</td></tr>
+	      <tr><td align="left">audioMonitorEventDetail_uuid: string</td></tr>
+	      </table>
+	      >]
+
+	user->user_eventDetail [arrowhead=crow];
+	eventDetail->user_eventDetail [arrowhead=none];
+	eventDetail->eventDetail_noteGiven [arrowhead=none];
+	noteGiven->eventDetail_noteGiven [arrowhead=none];
+	eventDetail->eventDetail_noteAsked [arrowhead=none];
+	noteAsked->eventDetail_noteAsked [arrowhead=none];
+}
