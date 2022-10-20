@@ -22,7 +22,7 @@ digraph G {
 	user [label=<
 	      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
 	      <tr><td bgcolor="lightblue">user</td></tr>
-	      <tr><td align="left">uuid: string</td></tr>
+	      <tr><td align="left">uuid: uuid</td></tr>
 	      </table>
 	      >]
 
@@ -30,57 +30,57 @@ digraph G {
 	event_detail [label=<
 	      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
 	      <tr><td bgcolor="lightblue">event_detail</td></tr>
-	      <tr><td align="left">uuid: string</td></tr>
-	      <tr><td align="left">type: string</td></tr>
-	      <tr><td align="left">timestamp: number</td></tr>
+	      <tr><td align="left">uuid: uuid</td></tr>
+	      <tr><td align="left">type: text</td></tr>
+	      <tr><td align="left">timestamp: bigint</td></tr>
 	      </table>
 	      >]
 
 	user_event_detail [label=<
 			 <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
 			 <tr><td bgcolor="lightblue">user_event_detail</td></tr>
-			 <tr><td align="left">user_uuid: string</td></tr>
-			 <tr><td align="left">event_detail_uuid: string</td></tr>
+			 <tr><td align="left">user_uuid: uuid</td></tr>
+			 <tr><td align="left">event_detail_uuid: uuid</td></tr>
 			 </table>
 			 >]
 
 	note_asked [label=<
 	      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
 	      <tr><td bgcolor="lightblue">note_asked</td></tr>
-	      <tr><td align="left">uuid: string</td></tr>
-	      <tr><td align="left">note: string</td></tr>
-	      <tr><td align="left">string: number</td></tr>
-	      <tr><td align="left">octave: number</td></tr>
-	      <tr><td align="left">fret: number</td></tr>
-	      <tr><td align="left">note_frequency: number</td></tr>
+	      <tr><td align="left">uuid: uuid</td></tr>
+	      <tr><td align="left">note: text</td></tr>
+	      <tr><td align="left">string: smallint</td></tr>
+	      <tr><td align="left">octave: smallint</td></tr>
+	      <tr><td align="left">fret: smallint</td></tr>
+	      <tr><td align="left">note_frequency: numeric</td></tr>
 	      </table>
 	      >]
 
 	note_given [label=<
 	      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
 	      <tr><td bgcolor="lightblue">note_given</td></tr>
-	      <tr><td align="left">uuid: string</td></tr>
-	      <tr><td align="left">note: string</td></tr>
-	      <tr><td align="left">frequency: number</td></tr>
-	      <tr><td align="left">note_frequency: number</td></tr>
-	      <tr><td align="left">deviation: number</td></tr>
-	      <tr><td align="left">octave: number</td></tr>
+	      <tr><td align="left">uuid: uuid</td></tr>
+	      <tr><td align="left">note: text</td></tr>
+	      <tr><td align="left">frequency: numeric</td></tr>
+	      <tr><td align="left">note_frequency: numeric</td></tr>
+	      <tr><td align="left">deviation: numeric</td></tr>
+	      <tr><td align="left">octave: smallint</td></tr>
 	      </table>
 	      >]
 
 	event_detail_note_given [label=<
 	      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
 	      <tr><td bgcolor="lightblue">event_detail_note_given</td></tr>
-	      <tr><td align="left">event_detail_uuid: string</td></tr>
-	      <tr><td align="left">note_given_uuid: string</td></tr>
+	      <tr><td align="left">event_detail_uuid: uuid</td></tr>
+	      <tr><td align="left">note_given_uuid: uuid</td></tr>
 	      </table>
 	      >]
 
 	event_detail_note_asked [label=<
 	      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
 	      <tr><td bgcolor="lightblue">event_detail_note_asked</td></tr>
-	      <tr><td align="left">event_detail_uuid: string</td></tr>
-	      <tr><td align="left">note_asked_uuid: string</td></tr>
+	      <tr><td align="left">event_detail_uuid: uuid</td></tr>
+	      <tr><td align="left">note_asked_uuid: uuid</td></tr>
 	      </table>
 	      >]
 
