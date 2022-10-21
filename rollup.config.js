@@ -4,9 +4,9 @@ import livereload from 'rollup-plugin-livereload';
 
 
 export default {
-  input: 'src/index.ts',
+  input: 'src/ts/index.ts',
   output: {
-    file: 'public/js/bundle.js',
+    file: 'resources/public/js/bundle.js',
     format: 'iife',
     sourcemap: true
   },

@@ -29,7 +29,7 @@ const standard7String = [{note: "E", octave: 4},
 			 {note: "B", octave:1}]
 const fretBoard = createFretBoard(standardTuning, 12);
 const guessNotesFretsRange = range(0,1);
-console.log(guessNotesFretsRange)
+//console.log(guessNotesFretsRange)
 const guessNotesStringRange = range(0,7);
 drawGuitar(document.querySelector("#guitar"),fretBoard);
 guitarController();
@@ -37,7 +37,6 @@ guessNotes(document.querySelector("#guitar-note-trainer"),fretBoard,guessNotesFr
 window.requestAnimationFrame(step);
 let toggleButton = new audioMonitorToggleButton(document.querySelector("#audio-monitor-toggle-button"));
 addEventListener('guitar-note-trainer/guess-note',(e: any) => {newGuitarNoteTrainerEvent(e.detail)});
-addEventListener('guitar-note-trainer/guess-note',(e: any) => {console.log(e)});
+//addEventListener('guitar-note-trainer/guess-note',(e: any) => {console.log(e)});
 addEventListener('keyup',(event) => { if ( event.key === " ") { toggleButton.audioMonitorToggleButton()}})
 showEvents()
-

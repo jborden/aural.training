@@ -1,2 +1,6 @@
 node_modules/
 public/js/*
+.lein-env
+.lein-repl-history
+.nrepl-port
+target/

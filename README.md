@@ -2,20 +2,15 @@
 
 This is the source code for the aural.training website.
 
-# Prerequistes
-
-Install the ws web server
-
-```
-npm install -g local-web-server
-```
-
 # Develop
 
-Host server
+Run the clojure server
 ```
-public$ ws
+lein repl
+aural-training.dev=> (dev-init!)
 ```
+
+
 
 Watch for typescript changes
 ```
