@@ -1,6 +1,8 @@
 import { Note } from "../guitar/model"
 import { AudioMonitorEventDetail } from "../audioMonitor"
 import { Dexie } from 'dexie';
+import 'dexie-observable';
+import 'dexie-syncable';
 
 // By defining the interface of table records,
 // you get better type safety and code completion
@@ -43,6 +45,8 @@ let db = new MyAppDatabase();
 //   }).then((result) => console.log(result));
 // }
 
+// this is a sample from
+// https://dexie.org/docs/Syncable/db.syncable.connect()
 export function showEvents() {
   db.transaction('r', [db.guitarNoteTrainerEvent], async () => {
     return await db.guitarNoteTrainerEvent.where({type:"guitar-note-trainer/guess-note"}).toArray()
@@ -53,3 +57,24 @@ export function showEvents() {
 export function newGuitarNoteTrainerEvent(detail: GuitarNoteTrainerEvent) {
   return(db.table("guitarNoteTrainerEvent").put(detail));
 }
+
+Dexie.Syncable.registerSyncProtocol("myProtocol", {
+    sync: function () {}; // An ISyncProtocol implementation.
+});
+
+
+db.syncable.connect(
+  "myProtocol",
+  "http://localhost:3000/dexie-sync",
+  {})
+  .catch(err => {
+    console.error (`Failed to connect: ${err.stack || err}`);
+  });
+
+// need to look at
+// https://dexie.org/docs/Syncable/Dexie.Syncable.js
+// long polling
+// https://github.com/dexie/Dexie.js/blob/master/samples/remote-sync/ajax/AjaxSyncProtocol.js
+// websocket
+// https://github.com/dexie/Dexie.js/blob/master/samples/remote-sync/websocket/WebSocketSyncProtocol.js
+// https://dexie.org/docs/Syncable/db.syncable.connect()

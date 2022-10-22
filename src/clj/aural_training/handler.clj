@@ -4,6 +4,8 @@
               [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
               [ring.middleware.json :refer [wrap-json-body wrap-json-response]]))
 
+(defonce body-atom (atom {}))
+
 (defroutes app-routes
   ;;(GET "/" [] "Hello World")
   (context "/user" []
@@ -11,6 +13,8 @@
                  (let [new-user body
                        id       (gensym)]
                    {:body (assoc new-user :id id)}))
+           (POST "/dexie-sync" {body :body}
+                 (reset! body-atom body))
            (GET "/:id" [id] {:body {:id id}})
            (PUT "/:id" {body         :body
                         {:keys [id]} :params}
