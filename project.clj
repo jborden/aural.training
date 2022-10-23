@@ -1,6 +1,6 @@
 (defproject aural-training "0.1.0-SNAPSHOT"
-  :description "FIXME: write this!"
-  :url "http://example.com/FIXME"
+  :description "Source code for the aural.training website"
+  :url "htts://aural.training"
   :dependencies [[aleph "0.5.0"]
                  [org.clojure/clojure "1.11.1"]
                  [org.clojure/data.json "2.4.0"]
