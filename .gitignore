@@ -4,3 +4,4 @@ public/js/*
 .lein-repl-history
 .nrepl-port
 target/
+resources/public/js/*
