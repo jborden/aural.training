@@ -10,11 +10,15 @@ lein repl
 aural-training.dev=> (dev-init!)
 ```
 
-
-
 Watch for typescript changes
 ```
 rollup -c -w
+```
+
+Connect to the websocket with wscat
+
+```
+wscat --connect ws://localhost:3000/ws
 ```
 
 # Roadmap
@@ -41,3 +45,7 @@ Problems:
 ## React
 
 React (v18, latest) is not in a place that can be easily used with rollup/tsc. It's a configuration nightmare with no straight forward answer.
+
+## Syncing DB
+
+The websocket on the backend needs more work. The frontend dexie db sync seems to delay connecting, or not connect at all.
