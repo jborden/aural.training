@@ -24,7 +24,7 @@
                   {:body (assoc modified-user :id id)}))
            (DELETE "/:id" [id]
                    {:body {:message (str "user_id: " id " deleted")}}))
-  (GET "/events" [] websocket/websocket-handler)
+  (GET "/ws" [] websocket/websocket-handler)
   (route/resources "/")
   (route/not-found "Not Found"))
 
