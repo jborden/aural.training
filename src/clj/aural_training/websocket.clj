@@ -4,6 +4,7 @@
             [manifold.bus :as bus]
             [manifold.deferred :as d]
             [manifold.stream :as s]
+            [clojure.data.json :as json]
             [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]
             ;; [aural-training..account :as account]
             ;; [aural-training.business.events :as business-events]
@@ -17,7 +18,8 @@
   "This allows the events to be read from the bus by the websocket. Only events which have an account-id are allowed to be viewed by the websocket"
   [conn account-id]
   (s/connect
-     (->> {:foo "bar"}
+   (->> {:foo "bar"}
+        json/write-str
       #_(s/filter (partial business-events/account-can-view-event? account-id))
       (s/map #(str %)))
      conn)

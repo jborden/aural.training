@@ -4,7 +4,7 @@ import { guitarController, notePluckListener, step} from "./guitar/controller"
 import { createFretBoard, standardTuning} from "./guitar/model"
 import { range } from "lodash-es";
 import { guessNotes } from "./guitar-note-trainer/controller"
-import { newGuitarNoteTrainerEvent, showEvents } from "./dexie/model"
+import { newGuitarNoteTrainerEvent, showEvents } from "./dexie/db"
 
 // required to be exported
 exports = {startAudio, stopAudio}
@@ -40,3 +40,4 @@ addEventListener('guitar-note-trainer/guess-note',(e: any) => {newGuitarNoteTrai
 //addEventListener('guitar-note-trainer/guess-note',(e: any) => {console.log(e)});
 addEventListener('keyup',(event) => { if ( event.key === " ") { toggleButton.audioMonitorToggleButton()}})
 showEvents()
+
