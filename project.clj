@@ -14,8 +14,9 @@
                  [postgre-types "0.0.4"]
                  [ring/ring-core "1.6.2"]
                  [ring/ring-json "0.4.0"]
-                 [ring/ring-defaults "0.3.2"]]
+                 [ring/ring-defaults "0.3.2"]
+                 [camel-snake-kebab "0.4.3"]]
   :repl-options {:init-ns aural-training.dev
-                 :init    (dev-init)}
+                 :init    (dev-init!)}
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                                   [ring/ring-mock "0.3.1"]]}})
