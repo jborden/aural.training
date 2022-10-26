@@ -13,7 +13,7 @@ export function noteFreq(note: string, octave: number){
   return Math.pow(2,n/12)*Afreq;
 }
 
-interface Interval {
+export interface Interval {
   name: string,
   semitones: number,
   augmentedOrDiminished: string,

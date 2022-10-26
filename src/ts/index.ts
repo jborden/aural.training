@@ -5,6 +5,7 @@ import { createFretBoard, standardTuning} from "./guitar/model"
 import { range } from "lodash-es";
 import { guessNotes } from "./guitar-note-trainer/controller"
 import { newGuitarNoteTrainerEvent, showEvents } from "./dexie/db"
+import { guessIntervals } from "./guitar-interval-trainer/controller"
 
 // required to be exported
 exports = {startAudio, stopAudio}
@@ -33,7 +34,8 @@ const guessNotesFretsRange = range(0,2);
 const guessNotesStringRange = range(0,7);
 drawGuitar(document.querySelector("#guitar"),fretBoard);
 guitarController();
-guessNotes(document.querySelector("#guitar-note-trainer"),fretBoard,guessNotesFretsRange,guessNotesStringRange);
+//guessNotes(document.querySelector("#guitar-note-trainer"),fretBoard,guessNotesFretsRange,guessNotesStringRange);
+guessIntervals(document.querySelector("#guitar-interval-trainer"),["m2","M2"])
 window.requestAnimationFrame(step);
 let toggleButton = new audioMonitorToggleButton(document.querySelector("#audio-monitor-toggle-button"));
 addEventListener('guitar-note-trainer/guess-note',(e: any) => {newGuitarNoteTrainerEvent(e.detail)});
