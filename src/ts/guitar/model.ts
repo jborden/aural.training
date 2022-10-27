@@ -17,9 +17,9 @@ export const standardTuning:InstrumentTuning = [{ note: "E", octave: 4, string: 
 
 export interface Note {
   note: string
-  string: number
+  string?: number
   octave: number
-  fret: number
+  fret?: number
 }
 
 export type FretBoard = Note[];
@@ -70,4 +70,13 @@ export function noteName(note: Note | null) {
   } else {
     return null;
   }
+}
+
+export function intervalDistance(ithNote: Note, jthNote: Note) {
+  const deltaOctave = jthNote.octave - ithNote.octave;
+  const deltaOctaveSemitones = 12 * deltaOctave;
+  const deltaNoteSemitones = tones.indexOf(jthNote.note) - tones.indexOf(ithNote.note);
+
+  // the distance in semitones between notes
+  return(deltaOctaveSemitones + deltaNoteSemitones);
 }
