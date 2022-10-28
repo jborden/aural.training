@@ -1,14 +1,15 @@
 import { Interval } from "../music/western/model"
 import { renderCurrentInterval, renderIsGuessCorrect } from "./view"
-import { sample,isNull} from "lodash-es"
+import { sample,isNull, isEqual} from "lodash-es"
 import { currentNoteName, currentNoteFirstSeenTimeStamp } from "../audioMonitor"
 import { selectIntervals } from "./model"
+import { intervalDistance, Note } from "../guitar/model"
 import { GuessNoteEvent } from "../events/types"
 import { publishEvent } from "../events/main"
 
 let selectedInterval:Interval  = null;
 let guessIsCorrect: boolean = null;
-
+let lastNotePlayed: Note = null;
 // function createGuessNoteEventDetail(noteAsked: Note, noteGiven: Note): GuessNoteEvent {
 
 //   return({noteAsked: noteAsked,
@@ -18,6 +19,7 @@ let guessIsCorrect: boolean = null;
 // 	  correctGuess: (noteAsked === noteGiven),
 // 	  type: "guitar-note-trainer/guess-note"})
 // }
+
 
 export function guessIntervals(parentDiv: HTMLElement, intervals: string[]) {
   let timeSeenMin = 100;
@@ -33,27 +35,33 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[]) {
     // the deviation of the frequency from the note
     let deviation = Math.abs(e.detail.deviation);
     // when the current note name is not null, we are within our tolerances and a guess hasn't been made
-    // if (currentNoteName && (timeSeen > timeSeenMin) && isNull(guessIsCorrect) && (deviation < deviationTolerance))
-    // {
-    //   const signalNoteName = noteName(e.detail);
-    //   if (signalNoteName === noteName(currentNote)) {
-    // 	guessIsCorrect = true;
-    // 	// publishEvent("guitar-note-trainer/guess-note",
-    // 	// 	     createGuessNoteEventDetail(currentNote, e.detail))
-    //   } else {
-    // 	guessIsCorrect = false;
-    // 	// publishEvent("guitar-note-trainer/guess-note",
-    // 	// 	     createGuessNoteEventDetail(currentNote, e.detail))
-    //   }
-    //   render();
-    // }
-    // // essentially, we are using muted strings to trigger the next
-    // // note request selection
-    // else if (!currentNoteName && (timeSeen > 300) && !isNull(guessIsCorrect)) {
-    //   currentNote = sample(subFretBoard);
-    //   guessIsCorrect = null;
-    //   render();
-    // }
+    if (selectedInterval && (timeSeen > timeSeenMin) && isNull(guessIsCorrect) && (deviation < deviationTolerance))
+    {
+      let { note, octave } = e.detail;
+      let  signalNoteName = {note: note,
+			     octave: octave};
+      // there isn't a previous note
+      if (isNull(lastNotePlayed)) {
+	lastNotePlayed = signalNoteName;
+      }
+      // This can't handle unison interval, sorry
+      else if (!isNull(lastNotePlayed) && !isEqual(lastNotePlayed,signalNoteName)) {
+	console.log("lastNotePlayed: ", lastNotePlayed, " signalNoteName: ", signalNoteName)
+	guessIsCorrect = selectedInterval.semitones === intervalDistance(lastNotePlayed, signalNoteName)
+	console.log("guessIsCorrect: ",guessIsCorrect)
+	lastNotePlayed = null;
+	// publishEvent("guitar-note-trainer/guess-note",
+	// 	     createGuessNoteEventDetail(currentNote, e.detail))
+      }
+      render();
+    }
+    //essentially, we are using muted strings to trigger the next
+    //note request selection
+    else if (!currentNoteName && (timeSeen > 300) && !isNull(guessIsCorrect)) {
+      selectedInterval = sample(selectedIntervals);
+      guessIsCorrect = null;
+      render();
+    }
     render();
   }
 
