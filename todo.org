@@ -70,11 +70,12 @@
    2. [ ] - get music and sing along
       1. [ ] - adjusted to comfortable pitch
 7. [ ] - component to play back tones at intervals
-8. [ ] - Interval Training
+8. [-] - Interval Training
    1. [ ] - solfege - associate notes with songs as settings
-   2. [ ] - sing interval
-   3. [ ] - sing interval, play interval on guitar
-   4. [ ] - play multiple notes in a row ("simon says")
+   2. [X] - play interval with guitar
+   3. [ ] - sing interval
+   4. [ ] - sing interval, play interval on guitar
+   5. [ ] - play multiple notes in a row ("simon says")
       1. [ ] - guitar
       2. [ ] - voice
       3. [ ] - play the intervals starting from different notes / string
