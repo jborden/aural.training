@@ -4,12 +4,11 @@ import { sample,isNull, isEqual} from "lodash-es"
 import { currentNoteName, currentNoteFirstSeenTimeStamp } from "../audioMonitor"
 import { selectIntervals } from "./model"
 import { intervalDistance, Note } from "../guitar/model"
+import { monitoring } from "../audioMonitor"
+import { playInterval } from "../tones"
 import { GuessNoteEvent } from "../events/types"
 import { publishEvent } from "../events/main"
 
-let selectedInterval:Interval  = null;
-let guessIsCorrect: boolean = null;
-let lastNotePlayed: Note = null;
 // function createGuessNoteEventDetail(noteAsked: Note, noteGiven: Note): GuessNoteEvent {
 
 //   return({noteAsked: noteAsked,
@@ -23,11 +22,34 @@ let lastNotePlayed: Note = null;
 
 export function guessIntervals(parentDiv: HTMLElement, intervals: string[]) {
   let timeSeenMin = 100;
+
   let deviationTolerance = 1;
-  //const subFretBoard: FretBoard = selectNotes(fretBoard, frets, strings);
+  let selectedInterval:Interval = null;
+  let guessIsCorrect: boolean = null;
+  let lastNotePlayed: Note = null;
   const selectedIntervals = selectIntervals(intervals);
-  selectedInterval = sample(selectedIntervals);
-  render();
+
+  function setInterval():void {
+    selectedInterval = sample(selectedIntervals);
+  }
+
+  function initializeState():void {
+    setInterval();
+    guessIsCorrect = null;
+    lastNotePlayed = null;
+  }
+
+  function playSelectedInterval():void {
+    if (monitoring){
+      playInterval(selectedInterval);
+    }
+  }
+
+  function newInterval():void {
+    initializeState();
+    render();
+    playSelectedInterval();
+  }
 
   function guessIntervalsAudioSignalListener(e: any): void {
     // the last time this note was seen
@@ -58,9 +80,7 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[]) {
     //essentially, we are using muted strings to trigger the next
     //note request selection
     else if (!currentNoteName && (timeSeen > 300) && !isNull(guessIsCorrect)) {
-      selectedInterval = sample(selectedIntervals);
-      guessIsCorrect = null;
-      render();
+      newInterval();
     }
     render();
   }
@@ -72,4 +92,5 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[]) {
   }
 
   addEventListener('audioSignal', guessIntervalsAudioSignalListener);
+  addEventListener("audioMonitor/start",newInterval);
 }

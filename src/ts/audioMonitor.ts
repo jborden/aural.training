@@ -1,6 +1,7 @@
 import { freelizer } from 'freelizer';
 import { noteName } from './guitar/model'
 import { publishEvent } from './events/main'
+import * as Tone from 'Tone';
 
 export interface AudioMonitorEventDetail {
   frequency: number,
@@ -11,6 +12,8 @@ export interface AudioMonitorEventDetail {
 }
 
 let start: Function, stop: Function, subscribe: Function;
+let monitoring = false;
+export { monitoring };
 
 export async function startAudio() {
   try {
@@ -18,6 +21,9 @@ export async function startAudio() {
       ({start, stop, subscribe} = await freelizer());
     }
     start();
+    Tone.start();
+    monitoring = true;
+    publishEvent("audioMonitor/start");
     subscribe((e:any) => { publishEvent("audioSignal",e) });
   } catch (error){
     console.log("There was an error trying to start the audio");
@@ -91,3 +97,4 @@ export class audioMonitorToggleButton {
     this.audioMonitorToggleButtonRender();
   };
 }
+

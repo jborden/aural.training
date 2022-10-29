@@ -38,8 +38,8 @@ guitarController();
 guessIntervals(document.querySelector("#guitar-interval-trainer"),["m2","M2"])
 window.requestAnimationFrame(step);
 let toggleButton = new audioMonitorToggleButton(document.querySelector("#audio-monitor-toggle-button"));
+addEventListener('keyup',(event) => { if ( event.key === " ") { toggleButton.audioMonitorToggleButton()}})
 addEventListener('guitar-note-trainer/guess-note',(e: any) => {newGuitarNoteTrainerEvent(e.detail)});
 //addEventListener('guitar-note-trainer/guess-note',(e: any) => {console.log(e)});
-addEventListener('keyup',(event) => { if ( event.key === " ") { toggleButton.audioMonitorToggleButton()}})
 //showEvents()
 
