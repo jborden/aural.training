@@ -19,3 +19,10 @@ export function renderIsGuessCorrect(correct: boolean) {
   }
   return html;
 }
+
+export function renderReplayButton(replayFunction: Function) {
+  let element = document.createElement('button');
+  element.innerHTML = 'Replay Interval';
+  element.addEventListener('click',() => {replayFunction()});
+  return element;
+}

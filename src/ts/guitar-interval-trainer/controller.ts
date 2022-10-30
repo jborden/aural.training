@@ -1,5 +1,5 @@
 import { Interval } from "../music/western/model"
-import { renderCurrentInterval, renderIsGuessCorrect } from "./view"
+import { renderCurrentInterval, renderIsGuessCorrect, renderReplayButton } from "./view"
 import { sample,isNull, isEqual} from "lodash-es"
 import { currentNoteName, currentNoteFirstSeenTimeStamp } from "../audioMonitor"
 import { selectIntervals } from "./model"
@@ -81,14 +81,16 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[]) {
     //note request selection
     else if (!currentNoteName && (timeSeen > 300) && !isNull(guessIsCorrect)) {
       newInterval();
+      render();
     }
-    render();
+
   }
 
   function render(): void {
     let selectedIntervalDiv = renderCurrentInterval(selectedInterval);
     let guessHTML = renderIsGuessCorrect(guessIsCorrect);
     parentDiv.innerHTML = `<div>${selectedIntervalDiv} ${guessHTML}</div>`;
+    parentDiv.append(renderReplayButton(playSelectedInterval))
   }
 
   addEventListener('audioSignal', guessIntervalsAudioSignalListener);

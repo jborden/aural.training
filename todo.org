@@ -60,10 +60,11 @@
       2. [ ] - sync with local storage
 5. [ ] - "chord" playing
    1. [ ] - detect chords by playing each note separately
-   2. [ ] - CAGED system quiz
+   2. [ ] - chord progression identifier
+   3. [ ] - CAGED system quiz
       1. [ ] - find chord (x) at (y) fret
       2. [ ] - find nearest (i) chord
-   3. [ ] - Ability to play tabs
+   4. [ ] - Ability to play tabs
 6. [ ] - Voice Training
    1. [ ] - determine vocal range
       1. [ ] - save as a setting
@@ -73,12 +74,17 @@
 8. [-] - Interval Training
    1. [ ] - solfege - associate notes with songs as settings
    2. [X] - play interval with guitar
-   3. [ ] - sing interval
-   4. [ ] - sing interval, play interval on guitar
-   5. [ ] - play multiple notes in a row ("simon says")
-      1. [ ] - guitar
-      2. [ ] - voice
-      3. [ ] - play the intervals starting from different notes / string
+   3. [X] - play tone for interval
+   4. [X] - make a button to replay the interval
+   5. [ ] - download the tones and have them play locally
+   6. [ ] - use a different instrument (such as guitar)
+   7. [ ] - have ascending / descending intervals
+   8. [ ] - sing interval
+   9. [ ] - sing interval, play interval on guitar
+   10. [ ] - play multiple notes in a row ("simon says")
+       1. [ ] - guitar
+       2. [ ] - voice
+       3. [ ] - play the intervals starting from different notes / string
 9. [ ] - Tuner Component
    1. [ ] - Note within so many cents
    2. [ ] - time frame of notes are shown like in 'Nail the Pitch'
