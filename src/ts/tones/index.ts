@@ -1,6 +1,16 @@
 import * as Tone from 'tone';
 import { Interval, tones } from "../music/western/model"
 
+const sampler = new Tone.Sampler({
+	urls: {
+		"C4": "C4.mp3",
+		"D#4": "Ds4.mp3",
+		"F#4": "Fs4.mp3",
+		"A4": "A4.mp3",
+	},
+	baseUrl: "audio/salamander/",
+}).toDestination();
+
 export function playInterval(interval: Interval) {
   const firstTone = tones[0] + "4";
   const secondTone = tones[interval.semitones] + "4" ;
@@ -8,16 +18,7 @@ export function playInterval(interval: Interval) {
   console.log("firstTone: ", firstTone);
   console.log("secondTone: ", secondTone);
 
-  const sampler = new Tone.Sampler({
-    urls: {
-      "C4": "C4.mp3",
-      "D#4": "Ds4.mp3",
-      "F#4": "Fs4.mp3",
-      "A4": "A4.mp3",
-    },
-    baseUrl: "https://tonejs.github.io/audio/salamander/",
-  }).toDestination();
-    Tone.loaded().then(() => {
+  Tone.loaded().then(() => {
       const now = Tone.now()
       console.log("[insideLoaded]: firstTone: ", firstTone)
       console.log("[insideLoaded]: secondTone: ", secondTone)

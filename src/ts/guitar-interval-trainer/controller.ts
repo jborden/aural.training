@@ -68,9 +68,7 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[]) {
       }
       // This can't handle unison interval, sorry
       else if (!isNull(lastNotePlayed) && !isEqual(lastNotePlayed,signalNoteName)) {
-	console.log("lastNotePlayed: ", lastNotePlayed, " signalNoteName: ", signalNoteName)
 	guessIsCorrect = selectedInterval.semitones === intervalDistance(lastNotePlayed, signalNoteName)
-	console.log("guessIsCorrect: ",guessIsCorrect)
 	lastNotePlayed = null;
 	// publishEvent("guitar-note-trainer/guess-note",
 	// 	     createGuessNoteEventDetail(currentNote, e.detail))
