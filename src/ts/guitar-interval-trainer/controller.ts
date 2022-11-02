@@ -66,7 +66,7 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[]) {
       if (isNull(lastNotePlayed)) {
 	lastNotePlayed = signalNoteName;
       }
-      // This can't handle unison interval, sorry
+      // This can't handle unison interval
       else if (!isNull(lastNotePlayed) && !isEqual(lastNotePlayed,signalNoteName)) {
 	guessIsCorrect = selectedInterval.semitones === intervalDistance(lastNotePlayed, signalNoteName)
 	lastNotePlayed = null;

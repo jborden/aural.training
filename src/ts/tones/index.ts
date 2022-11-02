@@ -14,14 +14,14 @@ const sampler = new Tone.Sampler({
 export function playInterval(interval: Interval) {
   const firstTone = tones[0] + "4";
   const secondTone = tones[interval.semitones] + "4" ;
-  console.log("interval: ", interval);
-  console.log("firstTone: ", firstTone);
-  console.log("secondTone: ", secondTone);
+  // console.log("interval: ", interval);
+  // console.log("firstTone: ", firstTone);
+  // console.log("secondTone: ", secondTone);
 
   Tone.loaded().then(() => {
       const now = Tone.now()
-      console.log("[insideLoaded]: firstTone: ", firstTone)
-      console.log("[insideLoaded]: secondTone: ", secondTone)
+      // console.log("[insideLoaded]: firstTone: ", firstTone)
+      // console.log("[insideLoaded]: secondTone: ", secondTone)
       sampler.triggerAttackRelease(firstTone, "8n", now);
       sampler.triggerAttackRelease(secondTone, "8n", now + 0.25);
   })

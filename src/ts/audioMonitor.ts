@@ -1,5 +1,6 @@
 import { freelizer } from 'freelizer';
-import { noteName } from './guitar/model'
+import { sample,isNull, isEqual} from "lodash-es"
+import { noteName, Note } from './guitar/model'
 import { publishEvent } from './events/main'
 import * as Tone from 'Tone';
 
@@ -49,16 +50,47 @@ export let currentNoteName:string = null;
 // deviation from the pitch when the string is first plucked.
 // This allows other functions to have time tolerances for
 // note lifetimes.
-function currentNoteFirstSeenListener( e: any): void {
+function currentNoteFirstSeenListener(e: any): void {
   // if the current note name has changed,
   // reset the currentNoteFirstSeenTimeStamp to e.timeStamp
   if (currentNoteName != noteName(e.detail)) {
+    let timeSeen = e.timeStamp - currentNoteFirstSeenTimeStamp;
+    publishEvent("audioMonitor/currentNoteFirstSeenListener",{currentNoteName: currentNoteName,
+							      timeSeen: timeSeen})
     currentNoteFirstSeenTimeStamp = e.timeStamp;
   }
   currentNoteName = noteName(e.detail);
 }
 
-addEventListener('audioSignal', currentNoteFirstSeenListener);
+addEventListener('audioMonitor/currentNoteFirstSeenListener', (e:any ) =>
+  { let { timeSeen, currentNoteName } = e.detail;
+    if (timeSeen > 300 && currentNoteName)
+    { console.log(`currentNoteName: ${currentNoteName} timeSeen: ${timeSeen}`)}
+  })
+
+//addEventListener('audioSignal', currentNoteFirstSeenListener);
+
+let currentNoteNameWithDeviationTolerance:string = null;
+
+function currentNoteFirstSeenListenerWithTolerance(deviationTolerance: number): Function {
+  let monitorFunction = function(e: any) {
+    let { deviation } = e.detail;
+    deviation = Math.abs(deviation);
+    //console.log(`deviation: ${deviation}, currentNoteNameWithDeviationTolerance: ${currentNoteNameWithDeviationTolerance}`);
+    if ( deviation > deviationTolerance && currentNoteNameWithDeviationTolerance) {
+      publishEvent("audioMonitor/currentNoteFirstSeenListenerWithTolerance",{noteName: currentNoteNameWithDeviationTolerance});
+    }
+    currentNoteNameWithDeviationTolerance = noteName(e.detail);
+  }
+  return(monitorFunction);
+}
+
+addEventListener('audioSignal', (e) => {(currentNoteFirstSeenListenerWithTolerance(3))(e)});
+
+addEventListener('audioMonitor/currentNoteFirstSeenListenerWithTolerance', (e:any ) =>
+  { if (currentNoteNameWithDeviationTolerance)
+    {// console.log(`currentNoteNameWithDeviationTolerance: ${currentNoteNameWithDeviationTolerance}`)
+  }})
 
 export function logListener(e: any) {
   let {frequency, note, noteFrequency, deviation, octave} = e.detail;
@@ -67,6 +99,43 @@ export function logListener(e: any) {
     audioEventLogElem.innerHTML = `<p>frequency = ${frequency.toFixed(2)} note = ${note} octave=${octave} deviation=${deviation}<p>`;
   }
 }
+
+let deviationTolerance = 1;
+let timeSeenMin = 100;
+let lastNotePlayed:Note = null;
+let noteShown = false;
+function notePlayedListener(e: any): void {
+	// the last time this note was seen
+	let timeSeen: number = e.timeStamp - currentNoteFirstSeenTimeStamp;
+	// the deviation of the frequency from the note
+	let deviation = Math.abs(e.detail.deviation);
+	// when the current note name is not null, we are within our tolerances and a guess hasn't been made
+	let { note, octave } = e.detail;
+	let signalNoteName = {
+		note: note,
+		octave: octave
+	};
+
+	if ((timeSeen > timeSeenMin) && (deviation < deviationTolerance)) {
+	  let { note, octave } = e.detail;
+	  let signalNoteName = {
+	    note: note,
+	    octave: octave
+	  };
+	  console.log("criteria met")
+	  if (!noteShown) {
+	    console.log("signalNoteName: ", signalNoteName);
+	  }
+	  noteShown = true;
+	} else {
+	  console.log("criteria not met")
+	  noteShown = false;
+	  lastNotePlayed = signalNoteName;
+	}
+}
+
+
+addEventListener('audioSignal',notePlayedListener)
 
 export class audioMonitorToggleButton {
   listening = false;
@@ -98,3 +167,14 @@ export class audioMonitorToggleButton {
   };
 }
 
+// export function laggingNoteMonitor(timeSeenMin: number, deviationTolerance: number) {
+
+//     let audioEventListener = function(e: any): void {
+//     let timeSeen: number = e.timeStamp - currentNoteFirstSeenTimeStamp;
+//     let deviation = Math.abs(e.detail.deviation);
+//     if (currentNoteName && timeSeen > timeSeenMin && (deviation < deviationTolerance) && currentNoteName != ) {
+//       publishEvent("audioMonitor/laggingNoteMonitor", {currentNoteName: currentNoteName,
+// 						       timeSeenMin: timeSeenMin})
+//     }
+//   }
+// }
