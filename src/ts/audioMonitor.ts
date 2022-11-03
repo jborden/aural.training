@@ -45,6 +45,16 @@ export async function stopAudio() {
 export let currentNoteFirstSeenTimeStamp:number = 0;
 export let currentNoteName:string = null;
 
+function filterAudioSignal(e: any): void {
+  let { deviation, frequency  } = e.detail;
+  if ( Math.abs(deviation) < (frequency * 0.013)) {
+    publishEvent('audioSignalFiltered',e.detail)
+  }
+}
+
+addEventListener('audioSignal',filterAudioSignal);
+
+addEventListener('audioSignalFiltered', (e:any) => { console.log("audioSignalFiltered",e.detail)} )
 // This is a helper listener that lets us know how long
 // we've seen the current note. There is an initial
 // deviation from the pitch when the string is first plucked.
@@ -64,11 +74,11 @@ function currentNoteFirstSeenListener(e: any): void {
 
 addEventListener('audioMonitor/currentNoteFirstSeenListener', (e:any ) =>
   { let { timeSeen, currentNoteName } = e.detail;
-    if (timeSeen > 300 && currentNoteName)
+    if (timeSeen > 200 && currentNoteName)
     { console.log(`currentNoteName: ${currentNoteName} timeSeen: ${timeSeen}`)}
   })
 
-//addEventListener('audioSignal', currentNoteFirstSeenListener);
+addEventListener('audioSignal', currentNoteFirstSeenListener);
 
 let currentNoteNameWithDeviationTolerance:string = null;
 
@@ -93,6 +103,7 @@ addEventListener('audioMonitor/currentNoteFirstSeenListenerWithTolerance', (e:an
   }})
 
 export function logListener(e: any) {
+  console.log(e.detail)
   let {frequency, note, noteFrequency, deviation, octave} = e.detail;
   let audioEventLogElem = document.querySelector("#audio-event-log");
   if (frequency) {
@@ -104,6 +115,7 @@ let deviationTolerance = 1;
 let timeSeenMin = 100;
 let lastNotePlayed:Note = null;
 let noteShown = false;
+
 function notePlayedListener(e: any): void {
 	// the last time this note was seen
 	let timeSeen: number = e.timeStamp - currentNoteFirstSeenTimeStamp;
@@ -135,7 +147,7 @@ function notePlayedListener(e: any): void {
 }
 
 
-addEventListener('audioSignal',notePlayedListener)
+//addEventListener('audioSignal',notePlayedListener)
 
 export class audioMonitorToggleButton {
   listening = false;
