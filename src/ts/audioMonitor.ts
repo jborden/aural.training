@@ -47,14 +47,20 @@ export let currentNoteName:string = null;
 
 function filterAudioSignal(e: any): void {
   let { deviation, frequency  } = e.detail;
-  if ( Math.abs(deviation) < (frequency * 0.013)) {
-    publishEvent('audioSignalFiltered',e.detail)
+  
+  if ( Math.abs(deviation) < (frequency * 0.005)) {
+    //console.log("[filterAudioSignal]: ", e.detail)
+    publishEvent('audioMonitor/filterAudioSignal',e.detail)
+  } // also publish null events
+  else if (!e.detail) {
+    publishEvent('audioMonitor/filterAudioSignal', e.detail)
   }
 }
 
 addEventListener('audioSignal',filterAudioSignal);
 
-addEventListener('audioSignalFiltered', (e:any) => { console.log("audioSignalFiltered",e.detail)} )
+
+//addEventListener('audioMonitor/filterAudioSignal', (e:any) => { console.log("audioSignalFiltered",e.detail)} )
 // This is a helper listener that lets us know how long
 // we've seen the current note. There is an initial
 // deviation from the pitch when the string is first plucked.
@@ -72,82 +78,19 @@ function currentNoteFirstSeenListener(e: any): void {
   currentNoteName = noteName(e.detail);
 }
 
-addEventListener('audioMonitor/currentNoteFirstSeenListener', (e:any ) =>
-  { let { timeSeen, currentNoteName } = e.detail;
-    if (timeSeen > 200 && currentNoteName)
-    { console.log(`currentNoteName: ${currentNoteName} timeSeen: ${timeSeen}`)}
-  })
-
-addEventListener('audioSignal', currentNoteFirstSeenListener);
-
-let currentNoteNameWithDeviationTolerance:string = null;
-
-function currentNoteFirstSeenListenerWithTolerance(deviationTolerance: number): Function {
-  let monitorFunction = function(e: any) {
-    let { deviation } = e.detail;
-    deviation = Math.abs(deviation);
-    //console.log(`deviation: ${deviation}, currentNoteNameWithDeviationTolerance: ${currentNoteNameWithDeviationTolerance}`);
-    if ( deviation > deviationTolerance && currentNoteNameWithDeviationTolerance) {
-      publishEvent("audioMonitor/currentNoteFirstSeenListenerWithTolerance",{noteName: currentNoteNameWithDeviationTolerance});
-    }
-    currentNoteNameWithDeviationTolerance = noteName(e.detail);
-  }
-  return(monitorFunction);
-}
-
-addEventListener('audioSignal', (e) => {(currentNoteFirstSeenListenerWithTolerance(3))(e)});
-
-addEventListener('audioMonitor/currentNoteFirstSeenListenerWithTolerance', (e:any ) =>
-  { if (currentNoteNameWithDeviationTolerance)
-    {// console.log(`currentNoteNameWithDeviationTolerance: ${currentNoteNameWithDeviationTolerance}`)
-  }})
+addEventListener('audioMonitor/filterAudioSignal', currentNoteFirstSeenListener);
+addEventListener('audioMonitor/currentNoteFirstSeenListener',(e:any) =>
+  {
+    if(e.detail.timeSeen > 300)
+    {console.log(e.detail) }});
 
 export function logListener(e: any) {
-  console.log(e.detail)
   let {frequency, note, noteFrequency, deviation, octave} = e.detail;
   let audioEventLogElem = document.querySelector("#audio-event-log");
   if (frequency) {
     audioEventLogElem.innerHTML = `<p>frequency = ${frequency.toFixed(2)} note = ${note} octave=${octave} deviation=${deviation}<p>`;
   }
 }
-
-let deviationTolerance = 1;
-let timeSeenMin = 100;
-let lastNotePlayed:Note = null;
-let noteShown = false;
-
-function notePlayedListener(e: any): void {
-	// the last time this note was seen
-	let timeSeen: number = e.timeStamp - currentNoteFirstSeenTimeStamp;
-	// the deviation of the frequency from the note
-	let deviation = Math.abs(e.detail.deviation);
-	// when the current note name is not null, we are within our tolerances and a guess hasn't been made
-	let { note, octave } = e.detail;
-	let signalNoteName = {
-		note: note,
-		octave: octave
-	};
-
-	if ((timeSeen > timeSeenMin) && (deviation < deviationTolerance)) {
-	  let { note, octave } = e.detail;
-	  let signalNoteName = {
-	    note: note,
-	    octave: octave
-	  };
-	  console.log("criteria met")
-	  if (!noteShown) {
-	    console.log("signalNoteName: ", signalNoteName);
-	  }
-	  noteShown = true;
-	} else {
-	  console.log("criteria not met")
-	  noteShown = false;
-	  lastNotePlayed = signalNoteName;
-	}
-}
-
-
-//addEventListener('audioSignal',notePlayedListener)
 
 export class audioMonitorToggleButton {
   listening = false;
