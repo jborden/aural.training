@@ -121,15 +121,3 @@ export class audioMonitorToggleButton {
     this.audioMonitorToggleButtonRender();
   };
 }
-
-// export function laggingNoteMonitor(timeSeenMin: number, deviationTolerance: number) {
-
-//     let audioEventListener = function(e: any): void {
-//     let timeSeen: number = e.timeStamp - currentNoteFirstSeenTimeStamp;
-//     let deviation = Math.abs(e.detail.deviation);
-//     if (currentNoteName && timeSeen > timeSeenMin && (deviation < deviationTolerance) && currentNoteName != ) {
-//       publishEvent("audioMonitor/laggingNoteMonitor", {currentNoteName: currentNoteName,
-// 						       timeSeenMin: timeSeenMin})
-//     }
-//   }
-// }
