@@ -7,53 +7,52 @@ const noteMonitorMap = new Map();
 const unitIntervalCutoff = 0.90;
 
 export function noteMonitorPing(e: any): void {
-  const { timestamp, detail } = e;
+  const { timeStamp, detail } = e;
   const note = noteName(detail);
-  console.log("[noteMonitorPing] :", detail)
-  console.log("[noteMonitorPing] : ", noteMonitorMap.get(note))
-  
-  if (noteMonitorMap.get(note)) {
-    const { unitInterval, lastSeenTimestamp } = noteMonitorMap.get(note);
-		// in the case that the cutoff has been exceeded,
-		// the note has been seen recently enough to maintain
-		// the last seen timestamp
-		if (unitInterval > unitIntervalCutoff) {
-			noteMonitorMap.set(note, {
+  const thisNoteMonitorObj = noteMonitorMap.get(note);
+  // console.log("[noteMonitorPing] detail:", detail)
+  // console.log("[noteMonitorPing] noteMonitorMap.get: ", thisNoteMonitorObj)
+
+  if (thisNoteMonitorObj) {
+    let { lastSeenTimestamp, unitInterval } = thisNoteMonitorObj;
+    if (unitInterval > unitIntervalCutoff) {
+      noteMonitorMap.set(note, {unitInterval: 1,
 				note: note,
-				unitInterval: 1,
-				lastSeenTimestamp: lastSeenTimestamp
-			})
-		}
-		// otherwise, the note has not been seen recently enough
-		// let's give it a new timestamp
-		else {
-			noteMonitorMap.set(note, {
-				note: note,
-				unitInterval: 1,
-				lastSeenTimestamp: timestamp
-			})
-		}
-	}
+				lastSeenTimestamp: lastSeenTimestamp})
+    } else if (unitInterval <= unitIntervalCutoff) {
+      noteMonitorMap.set(note, {unitInterval: 1,
+			       note: note,
+			       lastSeenTimestamp: timeStamp})
+    }
+  } else {
+    noteMonitorMap.set(note, {unitInterval: 1,
+			      note: note,
+			      lastSeenTimestamp: timeStamp})
+  }
 }
 
 let start:DOMHighResTimeStamp, previousTimeStamp:DOMHighResTimeStamp;
 
 function noteMonitorMapTick(deltaT: DOMHighResTimeStamp) {
   const chi = 0.01 // Χ, after Χρόνος aka chronos
-
   if (!isEmpty(noteMonitorMap)) {
     // decrement all unitIntervals
-    mapValues(noteMonitorMap,
-	      (v: any) => {
-		let { unitInterval, note, lastSeenTimestamp } = v;
-		if (unitInterval > 0) {
-		  unitInterval -= deltaT * chi;
-		  unitInterval = unitInterval < 0 ? 0 : unitInterval;
-		}
-		return({unitInterval: unitInterval,
-			note: note,
-			lastSeenTimestamp: lastSeenTimestamp})
-	      })
+    noteMonitorMap.forEach((v, key, map) => {
+      console.log("v", v)
+      let { unitInterval, note, lastSeenTimestamp } = v;
+      if (unitInterval > 0) {
+	unitInterval -= deltaT * chi;
+	unitInterval = unitInterval < 0 ? 0 : unitInterval;
+      }
+      if (note === "E4") {
+	console.log("[noteMonitorMap]: ",{unitInterval: unitInterval,
+					  note: note,
+					  lastSeenTimestamp: lastSeenTimestamp})
+      }
+      map.set(key, {unitInterval: unitInterval,
+		    note: note,
+		    lastSeenTimestamp: lastSeenTimestamp})
+    })
     // publish noteSeen events
     mapValues(noteMonitorMap,
 	      (v: any) => {
@@ -75,7 +74,7 @@ function noteMonitorMapTick(deltaT: DOMHighResTimeStamp) {
 }
 
 addEventListener("note-monitor-events/noteSeen",
-		 (e:any ) => { console.log(e.detail)})
+		 (e:any ) => { console.log("[note-monitor-events/noteSeen]", e.detail)})
 
 export function stepNoteMonitorEvents(timestamp: DOMHighResTimeStamp): void {
   if (start === undefined)  {

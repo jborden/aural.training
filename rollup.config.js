@@ -8,7 +8,7 @@ export default {
   output: {
     file: 'resources/public/js/bundle.js',
     format: 'iife',
-    sourcemap: true
+    sourcemap: 'inline'
   },
   watch: true,
   plugins: [typescript(),
