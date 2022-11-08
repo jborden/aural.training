@@ -1,33 +1,34 @@
-import { mapValues,isEmpty } from "lodash-es";
+import { isEmpty } from "lodash-es";
 import { publishEvent } from '../events/main';
 import { noteName } from "../guitar/model"
 
 const noteMonitorMap = new Map();
 
-const unitIntervalCutoff = 0.90;
+const unitIntervalCutoff = 0.01;
 
 export function noteMonitorPing(e: any): void {
-  const { timeStamp, detail } = e;
+  const { detail } = e;
   const note = noteName(detail);
   const thisNoteMonitorObj = noteMonitorMap.get(note);
-  // console.log("[noteMonitorPing] detail:", detail)
-  // console.log("[noteMonitorPing] noteMonitorMap.get: ", thisNoteMonitorObj)
 
   if (thisNoteMonitorObj) {
-    let { lastSeenTimestamp, unitInterval } = thisNoteMonitorObj;
+    let { lastSeenTimeStamp, unitInterval } = thisNoteMonitorObj;
     if (unitInterval > unitIntervalCutoff) {
       noteMonitorMap.set(note, {unitInterval: 1,
 				note: note,
-				lastSeenTimestamp: lastSeenTimestamp})
+				lastSeenTimeStamp: lastSeenTimeStamp,
+			        fired: false})
     } else if (unitInterval <= unitIntervalCutoff) {
       noteMonitorMap.set(note, {unitInterval: 1,
-			       note: note,
-			       lastSeenTimestamp: timeStamp})
+				note: note,
+				lastSeenTimeStamp: Date.now(),
+				fired: false})
     }
   } else {
     noteMonitorMap.set(note, {unitInterval: 1,
 			      note: note,
-			      lastSeenTimestamp: timeStamp})
+			      lastSeenTimeStamp: Date.now(),
+			      fired: false})
   }
 }
 
@@ -38,43 +39,45 @@ function noteMonitorMapTick(deltaT: DOMHighResTimeStamp) {
   if (!isEmpty(noteMonitorMap)) {
     // decrement all unitIntervals
     noteMonitorMap.forEach((v, key, map) => {
-      console.log("v", v)
-      let { unitInterval, note, lastSeenTimestamp } = v;
+      let { unitInterval, note, lastSeenTimeStamp,fired } = v;
       if (unitInterval > 0) {
 	unitInterval -= deltaT * chi;
 	unitInterval = unitInterval < 0 ? 0 : unitInterval;
       }
-      if (note === "E4") {
-	console.log("[noteMonitorMap]: ",{unitInterval: unitInterval,
-					  note: note,
-					  lastSeenTimestamp: lastSeenTimestamp})
-      }
       map.set(key, {unitInterval: unitInterval,
 		    note: note,
-		    lastSeenTimestamp: lastSeenTimestamp})
+		    lastSeenTimeStamp: lastSeenTimeStamp,
+		    fired: fired})
     })
     // publish noteSeen events
-    mapValues(noteMonitorMap,
-	      (v: any) => {
-		let { unitInterval, note, lastSeenTimestamp } = v;
-		
-		// if any unitIntervals are below the cutoff, it means the note
-		// hasn't been seen in awhile. Therefore, send an event showing
-		// that the note WAS seen and for what duration
-		if (unitInterval < unitIntervalCutoff) {
-		  publishEvent("note-monitor-events/noteSeen",
-		  {
-		    note: note,
-		    timeSeen: Date.now() - lastSeenTimestamp
-		  })
-		}
-		return(v);
-	      })
+    noteMonitorMap.forEach((v,key,map) =>
+      {
+	let { unitInterval, note, lastSeenTimeStamp, fired} = v;
+	
+	// if any unitIntervals are below the cutoff, it means the note
+	// hasn't been seen in awhile. Therefore, send an event showing
+	// that the note WAS seen and for what duration
+	if ((unitInterval < unitIntervalCutoff) && !fired) {
+	  // publish the event
+	  publishEvent("note-monitor-events/noteSeen",
+		       {note: note,
+			timeSeen: Date.now() - lastSeenTimeStamp,
+		       })
+	  map.set(key, {unitInterval: unitInterval,
+			note: note,
+			fired: true})
+	}
+	
+      }
+      )
   }
 }
 
 addEventListener("note-monitor-events/noteSeen",
-		 (e:any ) => { console.log("[note-monitor-events/noteSeen]", e.detail)})
+		 (e:any ) => { const { timeSeen } = e.detail;
+			       if (timeSeen > 300) {
+				 console.log("[note-monitor-events/noteSeen]", e.detail)
+			       }})
 
 export function stepNoteMonitorEvents(timestamp: DOMHighResTimeStamp): void {
   if (start === undefined)  {
