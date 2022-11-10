@@ -1,8 +1,9 @@
 import { selectNotes } from "./model"
 import { FretBoard,Note,noteName } from "../guitar/model"
 import { renderCurrentNote, renderIsGuessCorrect } from "./view"
-import { sample} from "lodash-es"
+import { sample } from "lodash-es"
 import { GuessNoteEvent } from "../events/types"
+import { publishEvent } from "../events/main"
 
 let currentNote: Note = null;
 let guessIsCorrect: boolean = null;
@@ -23,14 +24,14 @@ export function guessNotes(parentDiv: HTMLElement, fretBoard: FretBoard, frets?:
 
   function guessNotesAudioSignalListener(e: any): void {
     const { note } = e.detail;
-    if (note === noteName(currentNote)) {
+    if (noteName(note) === noteName(currentNote)) {
 	guessIsCorrect = true;
-	// publishEvent("guitar-note-trainer/guess-note",
-	// 	     createGuessNoteEventDetail(currentNote, e.detail))
+	publishEvent("guitar-note-trainer/guess-note",
+		     createGuessNoteEventDetail(currentNote, note))
       } else {
 	guessIsCorrect = false;
-	// publishEvent("guitar-note-trainer/guess-note",
-	// 	     createGuessNoteEventDetail(currentNote, e.detail))
+	publishEvent("guitar-note-trainer/guess-note",
+		     createGuessNoteEventDetail(currentNote, note))
       }
     currentNote = sample(subFretBoard);
     render();

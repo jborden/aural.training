@@ -15,18 +15,18 @@ export function noteMonitorPing(e: any): void {
     let { lastSeenTimeStamp, unitInterval } = thisNoteMonitorObj;
     if (unitInterval > unitIntervalCutoff) {
       noteMonitorMap.set(note, {unitInterval: 1,
-				note: note,
+				note: detail,
 				lastSeenTimeStamp: lastSeenTimeStamp,
 			        fired: false})
     } else if (unitInterval <= unitIntervalCutoff) {
       noteMonitorMap.set(note, {unitInterval: 1,
-				note: note,
+				note: detail,
 				lastSeenTimeStamp: Date.now(),
 				fired: false})
     }
   } else {
     noteMonitorMap.set(note, {unitInterval: 1,
-			      note: note,
+			      note: detail,
 			      lastSeenTimeStamp: Date.now(),
 			      fired: false})
   }
@@ -67,7 +67,6 @@ function noteMonitorMapTick(deltaT: DOMHighResTimeStamp) {
 			note: note,
 			fired: true})
 	}
-	
       }
       )
   }
