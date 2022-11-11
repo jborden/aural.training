@@ -11,7 +11,7 @@ const sampler = new Tone.Sampler({
 	baseUrl: "audio/salamander/",
 }).toDestination();
 
-export function playInterval(interval: Interval, offset: 0) {
+export function playInterval(interval: Interval, offset:number = 0) {
   const firstTone = tones[0] + "4";
   const secondTone = tones[interval.semitones] + "4" ;
   // console.log("interval: ", interval);

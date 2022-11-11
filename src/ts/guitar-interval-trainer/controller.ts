@@ -18,10 +18,8 @@ import { publishEvent } from "../events/main"
 // 	  correctGuess: (noteAsked === noteGiven),
 // 	  type: "guitar-note-trainer/guess-note"})
 // }
-const delay = ms => new Promise(res => setTimeout(res, ms));
 
-
-export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numberIntervals: number = 4) {
+export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numberIntervals: number = 1) {
   let requestedIntervals:Interval[] = [];
   let notesPlayed: Note[] = [];
   let guessIsCorrect: boolean = null;
@@ -42,7 +40,7 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
     lastNotePlayed = null;
   }
 
-  async function playSelectedInterval():void {
+  function playSelectedInterval():void {
     if (monitoring){
       requestedIntervals.map((interval,i) =>
 	{
