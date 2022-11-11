@@ -23,7 +23,6 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
   let requestedIntervals:Interval[] = [];
   let notesPlayed: Note[] = [];
   let guessIsCorrect: boolean = null;
-  let lastNotePlayed: Note = null;
 
   const selectedIntervals = selectIntervals(intervals);
 
@@ -37,7 +36,6 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
   function initializeState():void {
     setIntervals();
     guessIsCorrect = null;
-    lastNotePlayed = null;
   }
 
   function playSelectedInterval():void {
@@ -57,37 +55,24 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
 
   function guessIntervalsAudioSignalListener(e: any): void {
     
-    
-    // // the last time this note was seen
-    // let timeSeen: number = e.timeStamp - currentNoteFirstSeenTimeStamp;
-    // // the deviation of the frequency from the note
-    // let deviation = Math.abs(e.detail.deviation);
-    // // when the current note name is not null, we are within our tolerances and a guess hasn't been made
-    // if (selectedInterval && (timeSeen > timeSeenMin) && isNull(guessIsCorrect) && (deviation < deviationTolerance))
-    // {
-    //   let { note, octave } = e.detail;
-    //   let  signalNoteName = {note: note,
-    // 			     octave: octave};
-    //   // there isn't a previous note
-    //   if (isNull(lastNotePlayed)) {
-    // 	lastNotePlayed = signalNoteName;
-    //   }
-    //   // This can't handle unison interval
-    //   else if (!isNull(lastNotePlayed) && !isEqual(lastNotePlayed,signalNoteName)) {
-    // 	guessIsCorrect = selectedInterval.semitones === intervalDistance(lastNotePlayed, signalNoteName)
-    // 	lastNotePlayed = null;
-    // 	// publishEvent("guitar-note-trainer/guess-note",
-    // 	// 	     createGuessNoteEventDetail(currentNote, e.detail))
-    //   }
-    //   render();
-    // }
-    // //essentially, we are using muted strings to trigger the next
-    // //note request selection
-    // else if (!currentNoteName && (timeSeen > 300) && !isNull(guessIsCorrect)) {
-    //   newInterval();
-    //   render();
-    // }
+    notesPlayed.push(e.detail.note);
+   
+    if (notesPlayed.length ===  (numberIntervals + 1)) {
+      // check to see if the guess is correct
+      if (intervalDistance(notesPlayed[0],notesPlayed[1]) ===
+	requestedIntervals[0].semitones) {
+	guessIsCorrect = true
+      } else {
+	guessIsCorrect = false
+      }
+      // because we're done with this set, set the intervals
+      setIntervals();
+      playSelectedInterval();
+      // .. and reset the notesPlayed array
+      notesPlayed = [];
+    }
 
+    render();
   }
 
   function render(): void {
@@ -97,6 +82,6 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
     parentDiv.append(renderReplayButton(playSelectedInterval))
   }
 
-  addEventListener('audioSignal', guessIntervalsAudioSignalListener);
+  addEventListener('note-monitor-event/noteSeenTimeSeenMin', guessIntervalsAudioSignalListener);
   addEventListener("audioMonitor/start",newInterval);
 }
