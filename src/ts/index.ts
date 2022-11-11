@@ -40,12 +40,12 @@ const guessNotesFretsRange = range(0,2);
 const guessNotesStringRange = range(0,7);
 drawGuitar(document.querySelector("#guitar"),fretBoard);
 guitarController();
-guessNotes(document.querySelector("#guitar-note-trainer"),fretBoard,guessNotesFretsRange,guessNotesStringRange);
-//guessIntervals(document.querySelector("#guitar-interval-trainer"),["m2","M2"])
+//guessNotes(document.querySelector("#guitar-note-trainer"),fretBoard,guessNotesFretsRange,guessNotesStringRange);
+guessIntervals(document.querySelector("#guitar-interval-trainer"),["m2","M2"])
 
 let toggleButton = new audioMonitorToggleButton(document.querySelector("#audio-monitor-toggle-button"));
 addEventListener('keyup',(event) => { if ( event.key === " ") { toggleButton.audioMonitorToggleButton()}})
-addEventListener('guitar-note-trainer/guess-note',(e: any) => {newGuitarNoteTrainerEvent(e.detail)});
+//addEventListener('guitar-note-trainer/guess-note',(e: any) => {newGuitarNoteTrainerEvent(e.detail)});
 //addEventListener('guitar-note-trainer/guess-note',(e: any) => {console.log(e)});
 //showEvents()
 

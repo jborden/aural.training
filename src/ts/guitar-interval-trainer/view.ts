@@ -1,7 +1,13 @@
 import { Interval } from "../music/western/model"
 
-export function renderCurrentInterval(interval: Interval) {
-  return(`<div id=guitar-interval-trainer-current-interval>${interval.abbreviation}</div>`);
+export function renderCurrentInterval(intervals: Interval[]) {
+  let intervalsString = '';
+
+  for(let i = 0; i < intervals.length ; i++) {
+    intervalsString += intervals[i].abbreviation;
+    intervalsString += ' ';
+  }
+  return(`<div id=guitar-interval-trainer-current-interval>${intervalsString}</div>`);
 }
 
 export function renderIsGuessCorrect(correct: boolean) {

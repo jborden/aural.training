@@ -11,18 +11,17 @@ const sampler = new Tone.Sampler({
 	baseUrl: "audio/salamander/",
 }).toDestination();
 
-export function playInterval(interval: Interval) {
+export function playInterval(interval: Interval, offset: 0) {
   const firstTone = tones[0] + "4";
   const secondTone = tones[interval.semitones] + "4" ;
   // console.log("interval: ", interval);
   // console.log("firstTone: ", firstTone);
   // console.log("secondTone: ", secondTone);
-
   Tone.loaded().then(() => {
-      const now = Tone.now()
-      // console.log("[insideLoaded]: firstTone: ", firstTone)
-      // console.log("[insideLoaded]: secondTone: ", secondTone)
-      sampler.triggerAttackRelease(firstTone, "8n", now);
-      sampler.triggerAttackRelease(secondTone, "8n", now + 0.25);
+    const now = Tone.now()
+    // console.log("[insideLoaded]: firstTone: ", firstTone)
+    // console.log("[insideLoaded]: secondTone: ", secondTone)
+    sampler.triggerAttackRelease(firstTone, "8n", now + offset);
+    sampler.triggerAttackRelease(secondTone, "8n", now + 0.25 + offset);
   })
 }
