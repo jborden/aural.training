@@ -5,3 +5,4 @@ public/js/*
 .nrepl-port
 target/
 resources/public/js/*
+resources/public/*
