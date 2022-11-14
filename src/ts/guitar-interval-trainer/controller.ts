@@ -3,7 +3,7 @@ import { renderCurrentInterval, renderIsGuessCorrect, renderReplayButton } from 
 import { sample,isNull, isEqual} from "lodash-es"
 import { currentNoteName, currentNoteFirstSeenTimeStamp } from "../audioMonitor"
 import { selectIntervals } from "./model"
-import { intervalDistance, Note } from "../guitar/model"
+import { intervalDistance, noteSequenceIntervals, Note } from "../guitar/model"
 import { monitoring } from "../audioMonitor"
 import { playInterval, playIntervalSequence } from "../tones"
 import { GuessNoteEvent } from "../events/types"
@@ -27,15 +27,15 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
   const selectedIntervals = selectIntervals(intervals);
 
   function setIntervals():void {
-    // requestedIntervals = [];
-    // for(let i = 0; i < numberIntervals ; i++) {
-    //   requestedIntervals.push(sample(selectedIntervals));
-    // }
-    requestedIntervals = [WesternIntervals[11],
-			  WesternIntervals[11],
-			  //WesternIntervals[1],
-			  //WesternIntervals[11]
-			 ]
+    requestedIntervals = [];
+    for(let i = 0; i < numberIntervals ; i++) {
+      requestedIntervals.push(sample(selectedIntervals));
+    }
+    // requestedIntervals = [WesternIntervals[1],
+    // 			  WesternIntervals[2],
+    // 			  WesternIntervals[1],
+    // 			  WesternIntervals[1]
+    // 			 ]
   }
 
   function initializeState():void {
@@ -46,10 +46,6 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
   function playSelectedInterval():void {
     if (monitoring){
       playIntervalSequence(requestedIntervals);
-      // requestedIntervals.map((interval,i) =>
-      // 	{
-      // 	  playInterval(interval, (i * 0.5));
-      // 	})
     }
   }
 
@@ -59,27 +55,32 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
     playSelectedInterval();
   }
 
-  // function guessIntervalsAudioSignalListener(e: any): void {
+  function guessIntervalsAudioSignalListener(e: any): void {
     
-  //   notesPlayed.push(e.detail.note);
+    notesPlayed.push(e.detail.note);
    
-  //   if (notesPlayed.length ===  (numberIntervals + 1)) {
-  //     // check to see if the guess is correct
-  //     if (intervalDistance(notesPlayed[0],notesPlayed[1]) ===
-  // 	requestedIntervals[0].semitones) {
-  // 	guessIsCorrect = true
-  //     } else {
-  // 	guessIsCorrect = false
-  //     }
-  //     // because we're done with this set, set the intervals
-  //     setIntervals();
-  //     playSelectedInterval();
-  //     // .. and reset the notesPlayed array
-  //     notesPlayed = [];
-  //   }
+    if (notesPlayed.length ===  (requestedIntervals.length + 1)) {
+      // check to see if the guess is correct
+      // console.log("notesPlayed: ", notesPlayed);
+      // console.log("requestedIntervals: ", requestedIntervals);
+      // console.log("requestedIntervalsMap: ", requestedIntervals.map((v) => { return v.semitones}));
+      // console.log("noteSequenceIntervals: ", noteSequenceIntervals(notesPlayed));
+      if (isEqual(requestedIntervals.map((v) => { return v.semitones} ),
+	noteSequenceIntervals(notesPlayed))) {
+	guessIsCorrect = true
+      } else
+      {
+	guessIsCorrect = false
+      }
+      // because we're done with this set, set the intervals
+      setIntervals();
+      playSelectedInterval();
+      // .. and reset the notesPlayed array
+      notesPlayed = [];
+    }
 
-  //   render();
-  // }
+    render();
+  }
 
   function render(): void {
     let selectedIntervalDiv = renderCurrentInterval(requestedIntervals);
@@ -88,6 +89,6 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
     parentDiv.append(renderReplayButton(playSelectedInterval))
   }
 
-  //addEventListener('note-monitor-event/noteSeenTimeSeenMin', guessIntervalsAudioSignalListener);
+  addEventListener('note-monitor-event/noteSeenTimeSeenMin', guessIntervalsAudioSignalListener);
   addEventListener("audioMonitor/start",newInterval);
 }

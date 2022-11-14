@@ -80,3 +80,16 @@ export function intervalDistance(ithNote: Note, jthNote: Note) {
   // the distance in semitones between notes
   return(deltaOctaveSemitones + deltaNoteSemitones);
 }
+
+// given an array of notes, give back the intervals
+export function noteSequenceIntervals(notes: Note[]) {
+  let semitones: number[] = [];
+  if(notes.length < 2) {
+    return null;
+  } else {
+    for (let i = 0; i < (notes.length - 1); i++) {
+      semitones.push(intervalDistance(notes[i],notes[i + 1]))
+    }
+    return semitones;
+  }
+}

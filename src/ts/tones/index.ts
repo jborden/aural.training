@@ -38,7 +38,6 @@ export function playIntervalSequence(intervals: Interval[]) {
     intervalSequence.push(cumulative);
     return cumulative;
   })
-  console.log("intervalSequence: ", intervalSequence);
   Tone.loaded().then(() => {
     const now = Tone.now();
     console.log("firstTone: ", firstTone)
