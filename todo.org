@@ -70,7 +70,7 @@
       1. [ ] - save as a setting
    2. [ ] - get music and sing along
       1. [ ] - adjusted to comfortable pitch
-7. [ ] - component to play back tones at intervals
+7. [X] - component to play back tones at intervals
 8. [-] - Interval Training
    1. [ ] - solfege - associate notes with songs as settings
    2. [X] - play interval with guitar
@@ -81,8 +81,8 @@
    7. [ ] - have ascending / descending intervals
    8. [ ] - sing interval
    9. [ ] - sing interval, play interval on guitar
-   10. [ ] - play multiple notes in a row ("simon says")
-       1. [ ] - guitar
+   10. [-] - play multiple notes in a row ("simon says")
+       1. [X] - guitar
        2. [ ] - voice
        3. [ ] - play the intervals starting from different notes / string
 9. [ ] - Tuner Component
