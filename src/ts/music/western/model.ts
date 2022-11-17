@@ -2,15 +2,26 @@ type Tones = string[];
 
 export const tones:Tones = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
 
+const A4 = 440
+const pitchReference = A4;
+
 export function noteFreq(note: string, octave: number){
   // f = 2^(n/12)*440
   // https://pages.mtu.edu/~suits/NoteFreqCalcs.html
   // https://codepen.io/enxaneta/post/frequencies-of-musical-notes
-  const Afreq = 440.0
-  let nDeltaNote =  tones.indexOf(note) - tones.indexOf("A");
-  let nDeltaOctave = (octave - 4) * 12;
-  let n = nDeltaNote + nDeltaOctave;
-  return Math.pow(2,n/12)*Afreq;
+  const nDeltaNote =  tones.indexOf(note) - tones.indexOf("A");
+  const nDeltaOctave = (octave - 4) * 12;
+  const n = nDeltaNote + nDeltaOctave;
+  return Math.pow(2,n/12)*pitchReference;
+}
+// clearly wrong
+export function freqNote(freq: number) {
+  const n = Math.round((12 * Math.log2(freq / pitchReference)))
+  const note = tones[n % 12];
+  const octave = n < 0 ? Math.ceil(n / 12) + 4 : Math.floor(n / 12) + 4;
+  //const octave = Math.log2(freq / pitchReference);
+  //return(String(note) + String(octave))
+  return({n: n, note: note, octave: octave})
 }
 
 export interface Interval {
