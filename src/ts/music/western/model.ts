@@ -1,8 +1,13 @@
+// https://guitardialogues.wordpress.com/
+// https://www.inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies
+
 type Tones = string[];
 
 export const tones:Tones = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
 
 const A4 = 440
+const C0 = 16.35
+const A4midiReference = 69;
 const pitchReference = A4;
 
 export function noteFreq(note: string, octave: number){
@@ -14,14 +19,19 @@ export function noteFreq(note: string, octave: number){
   const n = nDeltaNote + nDeltaOctave;
   return Math.pow(2,n/12)*pitchReference;
 }
-// clearly wrong
+
+// inspired by freelizer/getDataFromFrequency
+// the key insight involves using the midi reference
+// number to determine the note
 export function freqNote(freq: number) {
-  const n = Math.round((12 * Math.log2(freq / pitchReference)))
-  const note = tones[n % 12];
-  const octave = n < 0 ? Math.ceil(n / 12) + 4 : Math.floor(n / 12) + 4;
-  //const octave = Math.log2(freq / pitchReference);
-  //return(String(note) + String(octave))
-  return({n: n, note: note, octave: octave})
+  const n = Math.round((12 * Math.log2(freq / pitchReference)));
+  const nearestNoteFreq = pitchReference * (2 ** (1 / 12)) ** n;
+  const note = tones[(n + A4midiReference) % 12];
+  const octave = Math.floor(Math.log2(freq / C0));
+  return({deviation: freq - nearestNoteFreq,
+	  n,
+	  note,
+	  octave})
 }
 
 export interface Interval {
