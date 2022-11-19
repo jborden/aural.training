@@ -77,7 +77,7 @@
    3. [X] - play tone for interval
    4. [X] - make a button to replay the interval
    5. [ ] - download the tones and have them play locally
-   6. [ ] - use a different instrument (such as guitar)
+   6. [X] - use a different instrument (such as guitar)
    7. [ ] - have ascending / descending intervals
    8. [ ] - sing interval
    9. [ ] - sing interval, play interval on guitar
