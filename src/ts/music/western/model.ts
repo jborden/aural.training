@@ -34,6 +34,36 @@ export function freqNote(freq: number) {
 	  octave})
 }
 
+// https://math.stackexchange.com/a/930254
+export function semitonesBetweenFreqs(freq1: number, freq2: number) {
+  // we are using freq2 over freq1 because we want positive values
+  return(Math.round(12 * Math.log2(freq2 /  freq1)));
+}
+
+// return the notes between two freq ranges, inclusive of freq1 and freq2
+export function freqNoteRange(freq1: number, freq2: number) {
+  if (freq2 <= freq1) {
+    throw("Error: freq2 parameter must be greater than freq1 in noteBetweenFreqs")
+  }
+  let notesRange = [];
+  const semitoneDistance = semitonesBetweenFreqs(freq1,freq2);
+  const note1 = freqNote(freq1).note;
+  let currentOctave = freqNote(freq1).octave;
+  const note2 = freqNote(freq2).note;
+  const octave2 = freqNote(freq2).octave;
+
+  notesRange.push(note1 + currentOctave);
+
+  for (let i = 1; i < semitoneDistance ; i++){
+    let tone = tones[(i + tones.indexOf(note1)) % 12];
+    if (tone == "C") currentOctave++;
+    notesRange.push(tone + currentOctave)
+  }
+
+  notesRange.push(note2 + octave2);
+  return(notesRange);
+}
+
 export interface Interval {
   name: string,
   semitones: number,

@@ -1,4 +1,5 @@
 import { SVG, Svg } from '@svgdotjs/svg.js'
+import { freqNote } from '../music/western/model'
 
 function drawBox(svg: Svg,height: number,boxWidth:number,boxPadding:number) {
   //bottom
@@ -16,7 +17,7 @@ function drawBox(svg: Svg,height: number,boxWidth:number,boxPadding:number) {
     .stroke({color: 'grey', width: 2, linecap: 'round'});
 }
 
-function drawFreq(svg: Svg,height, boxWidth,boxPadding,freq,min,max) {
+function drawFreq(svg: Svg,height:number, boxWidth:number,boxPadding:number,freq:number,min:number,max:number) {
   
   const minY = height - boxPadding;
   const maxY = boxPadding;
@@ -27,6 +28,23 @@ function drawFreq(svg: Svg,height, boxWidth,boxPadding,freq,min,max) {
   svg.line(0+boxPadding,freqY,boxWidth,freqY)
     .stroke({color: 'red', width: 3});
 }
+
+function drawNote(svg: Svg, boxPadding:number, boxWidth:number, noteName:string, y: number) {
+  console.log("note name: ", noteName)
+  console.log({boxPadding,boxWidth,noteName,y})
+  svg.text(noteName)
+    .move(boxWidth+5,y - (boxPadding * 2))
+    .font({ family: 'Helvetica',
+	    size: '0.75em',
+	    weight: 'bold'})
+    .stroke({color: 'grey'})
+    .fill({color: 'grey'})
+}
+
+function drawNotes(svg:Svg, height: number, boxWidth: number,boxPadding: number, min: number, max: number) {
+  drawNote(svg,boxPadding,boxWidth,String(freqNote(min).note + freqNote(min).octave),height);
+}
+
 export function drawVoiceGraph(parentDiv: HTMLElement,
 			       width:number = 300,
 			       height:number = 300,
@@ -39,4 +57,5 @@ export function drawVoiceGraph(parentDiv: HTMLElement,
   const boxWidth = 100;
   drawBox(svg,height,boxWidth,boxPadding);
   drawFreq(svg,height,boxWidth,boxPadding,(freq|min),min,max);
+  drawNotes(svg,height,boxWidth,boxPadding,min,max);
 }

@@ -8,10 +8,10 @@ import { newGuitarNoteTrainerEvent, showEvents } from "./dexie/db"
 import { voiceGraph } from "./voice/controller"
 import { guessIntervals } from "./guitar-interval-trainer/controller"
 import { noteMonitorPing, stepNoteMonitorEvents } from "./note-monitor-events"
-import { freqNote, noteFreq } from "./music/western/model"
+import { freqNote, noteFreq,freqNoteRange } from "./music/western/model"
 
 // required to be exported
-exports = {startAudio, stopAudio, freqNote, noteFreq}
+exports = {startAudio, stopAudio, freqNote, noteFreq,freqNoteRange}
 // listener for the bottom
 addEventListener('audioSignal',logListener);
 addEventListener('audioSignal',notePluckListener);
