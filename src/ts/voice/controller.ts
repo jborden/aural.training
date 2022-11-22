@@ -1,10 +1,12 @@
 import { drawVoiceGraph } from './view'
+import { noteFreq } from "../music/western/model"
 
 export function voiceGraph(parentDiv: HTMLElement) {
   function render(freq?:number):void {
     parentDiv.innerHTML = null;
-    drawVoiceGraph(parentDiv,300,300,freq,//97.99,415.3)
-		   261.63,1046.5)
+    drawVoiceGraph(parentDiv,300,300,freq,
+		   noteFreq("G",2),
+		   noteFreq("G",4))
   }
 
   function signalListener(e: any):void {

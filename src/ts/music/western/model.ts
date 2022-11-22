@@ -52,15 +52,18 @@ export function freqNoteRange(freq1: number, freq2: number) {
   const note2 = freqNote(freq2).note;
   const octave2 = freqNote(freq2).octave;
 
-  notesRange.push(note1 + currentOctave);
+  notesRange.push({note: note1,
+		   octave: currentOctave});
 
   for (let i = 1; i < semitoneDistance ; i++){
-    let tone = tones[(i + tones.indexOf(note1)) % 12];
-    if (tone == "C") currentOctave++;
-    notesRange.push(tone + currentOctave)
+    let note = tones[(i + tones.indexOf(note1)) % 12];
+    if (note == "C") currentOctave++;
+    notesRange.push({note,
+		     octave: currentOctave});
   }
 
-  notesRange.push(note2 + octave2);
+  notesRange.push({note: note2,
+		   octave: octave2});
   return(notesRange);
 }
 

@@ -15,6 +15,7 @@
 }
 
 #audio-event-log {
+  color: #FFFFFF;
   position: fixed;
   bottom: 0;
   left: 1em;

@@ -1,5 +1,5 @@
 import { SVG, Svg } from '@svgdotjs/svg.js'
-import { freqNote } from '../music/western/model'
+import { freqNoteRange,freqNote } from '../music/western/model'
 
 function drawBox(svg: Svg,height: number,boxWidth:number,boxPadding:number) {
   //bottom
@@ -18,31 +18,50 @@ function drawBox(svg: Svg,height: number,boxWidth:number,boxPadding:number) {
 }
 
 function drawFreq(svg: Svg,height:number, boxWidth:number,boxPadding:number,freq:number,min:number,max:number) {
-  
+  const noteName = freqNote(freq).note + freqNote(freq).octave;
   const minY = height - boxPadding;
   const maxY = boxPadding;
   const actualHeight = (minY - maxY);
   const freqMultiplier = actualHeight / (max - min);
   const freqY = maxY + (freqMultiplier * (max - freq))
-  console.log({freq: freq, freqY: freqY, freqMultiplier: freqMultiplier})
+  let freqDeviationPercent = Math.abs(freqNote(freq).deviation / freq);
+  let noteColor = "white";
+  if (freqDeviationPercent > 0.10) {
+    noteColor = "red";
+  } else if ( 0.05 < freqDeviationPercent && freqDeviationPercent < 0.10) {
+    noteColor = "yellow";
+  } else {
+    noteColor = "green";
+  }
+
   svg.line(0+boxPadding,freqY,boxWidth,freqY)
     .stroke({color: 'red', width: 3});
+  svg.text(noteName)
+    .font({ family: 'Helvetica',
+	    size: '0.75em',
+	    color: 'gray'})
+    .stroke({color: noteColor})
+    .fill({color: 'white'})
+    .move(boxWidth/2,freqY-15);
 }
 
 function drawNote(svg: Svg, boxPadding:number, boxWidth:number, noteName:string, y: number) {
-  console.log("note name: ", noteName)
-  console.log({boxPadding,boxWidth,noteName,y})
   svg.text(noteName)
     .move(boxWidth+5,y - (boxPadding * 2))
     .font({ family: 'Helvetica',
 	    size: '0.75em',
-	    weight: 'bold'})
-    .stroke({color: 'grey'})
-    .fill({color: 'grey'})
+	    color: 'gray'})
+    .stroke({color: 'gray'})
+    .fill({color: 'gray'})
 }
 
 function drawNotes(svg:Svg, height: number, boxWidth: number,boxPadding: number, min: number, max: number) {
-  drawNote(svg,boxPadding,boxWidth,String(freqNote(min).note + freqNote(min).octave),height);
+  const notes = freqNoteRange(min,max);
+  const noteDistance = height / notes.length;
+  notes.map((v,i) =>
+    {
+      drawNote(svg,boxPadding,boxWidth,String(v.note + " " + v.octave),height-(i*noteDistance));
+    })
 }
 
 export function drawVoiceGraph(parentDiv: HTMLElement,
@@ -56,6 +75,6 @@ export function drawVoiceGraph(parentDiv: HTMLElement,
   let svg = SVG().addTo(parentDiv).size(width + padding, height);
   const boxWidth = 100;
   drawBox(svg,height,boxWidth,boxPadding);
-  drawFreq(svg,height,boxWidth,boxPadding,(freq|min),min,max);
+  drawFreq(svg,height,boxWidth,boxPadding,freq||min,min,max);
   drawNotes(svg,height,boxWidth,boxPadding,min,max);
 }
