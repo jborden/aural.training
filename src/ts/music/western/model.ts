@@ -13,12 +13,12 @@ const C0 = 16.35
 const A4midiReference = 69;
 const pitchReference = A4;
 
-export function noteFreq(note: string, octave: number){
+export function noteFreq(note:Note){
   // f = 2^(n/12)*440
   // https://pages.mtu.edu/~suits/NoteFreqCalcs.html
   // https://codepen.io/enxaneta/post/frequencies-of-musical-notes
-  const nDeltaNote =  tones.indexOf(note) - tones.indexOf("A");
-  const nDeltaOctave = (octave - 4) * 12;
+  const nDeltaNote =  tones.indexOf(note.note) - tones.indexOf("A");
+  const nDeltaOctave = (note.octave - 4) * 12;
   const n = nDeltaNote + nDeltaOctave;
   return Math.pow(2,n/12)*pitchReference;
 }

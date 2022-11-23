@@ -5,8 +5,8 @@ export function voiceGraph(parentDiv: HTMLElement) {
   function render(freq?:number):void {
     parentDiv.innerHTML = null;
     drawVoiceGraph(parentDiv,300,300,freq,
-		   noteFreq("G",2),
-		   noteFreq("G",4))
+		   noteFreq({note: "G", octave:2}),
+		   noteFreq({note: "G", octave:4}))
   }
 
   function signalListener(e: any):void {

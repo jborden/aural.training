@@ -62,7 +62,7 @@ function noteColor(octave: number) {
 function drawNote(svg: Svg, currentNote:GuitarNote, fretSpacing: number, diameter: number) {
   const {note,octave,string,fret} = currentNote;
   const radius = diameter / 2;
-  const freq = Math.round(noteFreq(note,octave));
+  const freq = Math.round(noteFreq({note, octave}));
   const x = fretSpacing * fret;
   // note circle
   svg.circle(diameter)
