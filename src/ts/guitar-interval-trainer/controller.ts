@@ -3,13 +3,13 @@ import { renderCurrentInterval, renderIsGuessCorrect, renderReplayButton } from 
 import { sample,isNull, isEqual} from "lodash-es"
 import { currentNoteName, currentNoteFirstSeenTimeStamp } from "../audioMonitor"
 import { selectIntervals } from "./model"
-import { intervalDistance, noteSequenceIntervals, Note } from "../guitar/model"
+import { intervalDistance, noteSequenceIntervals, GuitarNote } from "../guitar/model"
 import { monitoring } from "../audioMonitor"
 import { playInterval, playIntervalSequence } from "../tones"
 import { GuessNoteEvent } from "../events/types"
 import { publishEvent } from "../events/main"
 
-// function createGuessNoteEventDetail(noteAsked: Note, noteGiven: Note): GuessNoteEvent {
+// function createGuessNoteEventDetail(noteAsked: GuitarNote, noteGiven: GuitarNote): GuessNoteEvent {
 
 //   return({noteAsked: noteAsked,
 // 	  noteGiven: noteGiven,
@@ -21,7 +21,7 @@ import { publishEvent } from "../events/main"
 
 export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numberIntervals: number = 1) {
   let requestedIntervals:Interval[] = [];
-  let notesPlayed: Note[] = [];
+  let notesPlayed: GuitarNote[] = [];
   let guessIsCorrect: boolean = null;
 
   const selectedIntervals = selectIntervals(intervals);

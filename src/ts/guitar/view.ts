@@ -1,5 +1,5 @@
 import { SVG, Svg } from '@svgdotjs/svg.js'
-import {fretCount, stringCount, FretBoard, Note} from "./model"
+import {fretCount, stringCount, FretBoard, GuitarNote} from "./model"
 import { noteFreq } from "../music/western/model"
 import { max,map,flow } from "lodash-es"
 
@@ -59,7 +59,7 @@ function noteColor(octave: number) {
   return paulTolColors[((octave + 3) * 2) % 12];
 }
 
-function drawNote(svg: Svg, currentNote:Note, fretSpacing: number, diameter: number) {
+function drawNote(svg: Svg, currentNote:GuitarNote, fretSpacing: number, diameter: number) {
   const {note,octave,string,fret} = currentNote;
   const radius = diameter / 2;
   const freq = Math.round(noteFreq(note,octave));

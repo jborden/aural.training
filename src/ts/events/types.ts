@@ -1,8 +1,8 @@
-import { Note } from "../guitar/model"
+import { GuitarNote } from "../guitar/model"
 
 export interface GuessNoteEvent {
-  noteAsked: Note,
-  noteGiven: Note,
+  noteAsked: GuitarNote,
+  noteGiven: GuitarNote,
   timestamp: number,
   correctGuess: boolean,
   uuid: string,

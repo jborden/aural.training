@@ -1,4 +1,4 @@
-import { tones } from "../music/western/model"
+import { tones, Note } from "../music/western/model"
 import { max,map,flow,isEmpty } from "lodash-es"
 interface StringTuning {
   note: string
@@ -15,14 +15,14 @@ export const standardTuning:InstrumentTuning = [{ note: "E", octave: 4, string: 
 						{ note: "A", octave: 2, string: 5},
 						{ note: "E", octave: 2, string: 6}];
 
-export interface Note {
+export interface GuitarNote extends Note {
   note: string
   string?: number
   octave: number
   fret?: number
 }
 
-export type FretBoard = Note[];
+export type FretBoard = GuitarNote[];
 
 export function fretCount(fretBoard: FretBoard): number {
   return(flow(x => map(x,"fret"),
@@ -34,7 +34,7 @@ export function stringCount(fretBoard: FretBoard) {
 }
 
 function createNote(stringTuning: StringTuning, fret: number) {
-  let note:Note = {note: stringTuning.note,
+  let note:GuitarNote = {note: stringTuning.note,
 		   octave: stringTuning.octave,
 		   string: stringTuning.string,
 		   fret: fret}
@@ -64,7 +64,7 @@ export function createFretBoard(tuning: InstrumentTuning, frets: number): FretBo
   return(currentFretboard.flat());
 }
 
-export function noteName(note: Note | null) {
+export function noteName(note: GuitarNote | null) {
   if (!isEmpty(note)) {
     return(`${note.note}${note.octave}`);
   } else {
@@ -72,7 +72,7 @@ export function noteName(note: Note | null) {
   }
 }
 
-export function intervalDistance(ithNote: Note, jthNote: Note) {
+export function intervalDistance(ithNote: GuitarNote, jthNote: GuitarNote) {
   const deltaOctave = jthNote.octave - ithNote.octave;
   const deltaOctaveSemitones = 12 * deltaOctave;
   const deltaNoteSemitones = tones.indexOf(jthNote.note) - tones.indexOf(ithNote.note);
@@ -82,7 +82,7 @@ export function intervalDistance(ithNote: Note, jthNote: Note) {
 }
 
 // given an array of notes, give back the intervals
-export function noteSequenceIntervals(notes: Note[]) {
+export function noteSequenceIntervals(notes: GuitarNote[]) {
   let semitones: number[] = [];
   if(notes.length < 2) {
     return null;

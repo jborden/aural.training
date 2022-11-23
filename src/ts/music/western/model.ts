@@ -1,6 +1,9 @@
 // https://guitardialogues.wordpress.com/
 // https://www.inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies
-
+export interface Note {
+  note: string
+  octave: number
+}
 type Tones = string[];
 
 export const tones:Tones = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]

@@ -1,14 +1,14 @@
 import { selectNotes } from "./model"
-import { FretBoard,Note,noteName } from "../guitar/model"
+import { FretBoard,GuitarNote,noteName } from "../guitar/model"
 import { renderCurrentNote, renderIsGuessCorrect } from "./view"
 import { sample } from "lodash-es"
 import { GuessNoteEvent } from "../events/types"
 import { publishEvent } from "../events/main"
 
-let currentNote: Note = null;
+let currentNote: GuitarNote = null;
 let guessIsCorrect: boolean = null;
 
-function createGuessNoteEventDetail(noteAsked: Note, noteGiven: Note): GuessNoteEvent {
+function createGuessNoteEventDetail(noteAsked: GuitarNote, noteGiven: GuitarNote): GuessNoteEvent {
   return({noteAsked: noteAsked,
 	  noteGiven: noteGiven,
 	  timestamp: Date.now(),

@@ -1,6 +1,6 @@
-import { Note } from "../guitar/model"
+import { GuitarNote } from "../guitar/model"
 
-export function renderCurrentNote(note: Note) {
+export function renderCurrentNote(note: GuitarNote) {
   return(`<div id=guitar-note-trainer-current-note>${note.note}${note.octave}</div>`);
 }
 

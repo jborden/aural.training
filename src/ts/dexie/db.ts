@@ -1,4 +1,4 @@
-import { Note } from "../guitar/model"
+import { GuitarNote } from "../guitar/model"
 import { AudioMonitorEventDetail } from "../audioMonitor"
 import { Dexie } from 'dexie';
 import 'dexie-observable';
@@ -13,7 +13,7 @@ export interface EventDetail {
 }
 
 export interface GuitarNoteTrainerEvent extends EventDetail {
-  noteAsked: Note,
+  noteAsked: GuitarNote,
   noteGiven: AudioMonitorEventDetail
 }
 
