@@ -16,13 +16,8 @@ const baseOctave = 3;
 export function playInterval(interval: Interval, offset:number = 0) {
   const firstTone = tones[0] + baseOctave;
   const secondTone = tones[interval.semitones % 12] + (Math.floor(interval.semitones / 12) + 4) ;
-  // console.log("interval: ", interval);
-  // console.log("firstTone: ", firstTone);
-  // console.log("secondTone: ", secondTone);
   Tone.loaded().then(() => {
     const now = Tone.now()
-    // console.log("[insideLoaded]: firstTone: ", firstTone)
-    // console.log("[insideLoaded]: secondTone: ", secondTone)
     sampler.triggerAttackRelease(firstTone, "8n", now + offset);
     sampler.triggerAttackRelease(secondTone, "8n", now + 0.25 + offset);
   })
