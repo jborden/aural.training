@@ -61,10 +61,6 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
    
     if (notesPlayed.length ===  (requestedIntervals.length + 1)) {
       // check to see if the guess is correct
-      // console.log("notesPlayed: ", notesPlayed);
-      // console.log("requestedIntervals: ", requestedIntervals);
-      // console.log("requestedIntervalsMap: ", requestedIntervals.map((v) => { return v.semitones}));
-      // console.log("noteSequenceIntervals: ", noteSequenceIntervals(notesPlayed));
       if (isEqual(requestedIntervals.map((v) => { return v.semitones} ),
 	noteSequenceIntervals(notesPlayed))) {
 	guessIsCorrect = true
