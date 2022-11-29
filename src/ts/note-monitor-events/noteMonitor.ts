@@ -6,7 +6,6 @@ type NoteMonitorObj = { lastSeen: DOMHighResTimeStamp,
 			unitInterval: number,
 			fired: boolean,
 			note: string};
-
 export class NoteMonitor {
   eventName: string;
   maxDeviation: number;
@@ -15,7 +14,17 @@ export class NoteMonitor {
   start:DOMHighResTimeStamp;
   previousTimeStamp:DOMHighResTimeStamp;
   pingEventListenerRef: number;
-
+  /**
+   * Create a note monitor
+   *
+   * @param {string} eventName? - the name of the event that will be fired
+   *                              when conditions are met
+   * @param {string} pingEventName? - the name of the event that reset the
+   *                                  unitInterval to 1 for that note
+   * @param {number}  maxDeviation? - the maximum deviation of the signal from the note it represents
+   *                                  as expressed in percentage of the freq of that note
+   * @param {number} unitIntervalCutoff? - lowest value for unitInterval
+   */
   constructor(eventName?: "noteMonitor/noteSeen",
 	      pingEventName?: "audioMonitor/filterAudioSignal",
 	      maxDeviation?: number,
