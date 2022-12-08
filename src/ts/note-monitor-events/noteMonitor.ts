@@ -13,7 +13,6 @@ export class NoteMonitor {
   noteMonitorMap:Map<string,NoteMonitorObj> = new Map();
   start:DOMHighResTimeStamp;
   previousTimeStamp:DOMHighResTimeStamp;
-  pingEventListenerRef: number;
   /**
    * Create a note monitor
    *
@@ -34,7 +33,7 @@ export class NoteMonitor {
     this.unitIntervalCutoff = unitIntervalCutoff;
 
     // listen for ping events
-    pingEventListenerRef = addEventListener(pingEventName,this.noteMonitorPing);
+    addEventListener(pingEventName,this.noteMonitorPing);
     // listen for timemin events
     // eventListenerRef = addEventListener(eventName,
     // 				       (e:any) => { const { timeSeen } = e.detail;
@@ -44,7 +43,7 @@ export class NoteMonitor {
     // 								   e.detail)}
     // 						  })
     // start the monitor
-    window.requestAnimationFrame(stepNoteMonitorEvents);
+    window.requestAnimationFrame(this.stepNoteMonitorEvents);
   }
 
   /**
@@ -90,35 +89,36 @@ export class NoteMonitor {
    */
   noteMonitorMapTick(deltaT: DOMHighResTimeStamp) {
     const chi = 0.01 // Χ, after Χρόνος aka chronos
-    if (!isEmpty(noteMonitorMap)) {
+    if (!isEmpty(this.noteMonitorMap)) {
       // decrement all unitIntervals
-      noteMonitorMap.forEach((v, key, map) => {
-	let { unitInterval, note, lastSeenTimeStamp,fired } = v;
+      this.noteMonitorMap.forEach((v, key, map) => {
+	let { unitInterval, note, lastSeen,fired } = v;
 	if (unitInterval > 0) {
 	  unitInterval -= deltaT * chi;
 	  unitInterval = unitInterval < 0 ? 0 : unitInterval;
 	}
 	map.set(key, {unitInterval: unitInterval,
 		      note: note,
-		      lastSeenTimeStamp: lastSeenTimeStamp,
+		      lastSeen: lastSeen,
 		      fired: fired})})
 
       // publish noteSeen events
-      noteMonitorMap.forEach((v,key,map) =>
+      this.noteMonitorMap.forEach((v,key,map) =>
 	{
-	  let { unitInterval, note, lastSeenTimeStamp, fired} = v;
+	  let { unitInterval, note, lastSeen, fired} = v;
 	  // if any unitIntervals are below the cutoff, it means the note
 	  // hasn't been seen in awhile. Therefore, send an event showing
 	  // that the note WAS seen and for what duration
-	  if ((unitInterval < unitIntervalCutoff) && !fired) {
+	  if ((unitInterval < this.unitIntervalCutoff) && !fired) {
 	    // publish the event
 	    publishEvent("note-monitor-events/noteSeen",
 			 {note: note,
-			  timeSeen: Date.now() - lastSeenTimeStamp,
+			  timeSeen: Date.now() - lastSeen,
 			 })
 	    map.set(key, {unitInterval: unitInterval,
 			  note: note,
-			  fired: true})}})}
+			  fired: true,
+			  lastSeen: lastSeen})}})}
   }
 
   /**
@@ -132,10 +132,10 @@ export class NoteMonitor {
       this.start = timestamp;
     }
     if (this.previousTimeStamp !== timestamp) {
-      noteMonitorMapTick(timestamp - this.previousTimeStamp)
+      this.noteMonitorMapTick(timestamp - this.previousTimeStamp)
     }
 
     this.previousTimeStamp = timestamp;
-    window.requestAnimationFrame(stepNoteMonitorEvents);
+    window.requestAnimationFrame(this.stepNoteMonitorEvents);
   }
 }

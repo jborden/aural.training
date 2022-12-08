@@ -2,6 +2,15 @@
 
 This is the source code for the aural.training website.
 
+# Prerequistes
+
+1. `lein` must be installed
+2. `npm` must be installed
+3. `rollup` must be installed
+
+```
+npm install --global rollup
+```
 # Develop
 
 Run the clojure server
