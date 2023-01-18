@@ -87,4 +87,7 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
 
   addEventListener('note-monitor-event/noteSeenTimeSeenMin', guessIntervalsAudioSignalListener);
   addEventListener("audioMonitor/start",newInterval);
+  if (monitoring) {
+    newInterval();
+  }
 }

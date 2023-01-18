@@ -1,4 +1,5 @@
 import {startAudio, stopAudio, logListener, audioMonitorToggleButton} from "./audioMonitor"
+import {createTabs } from "./tabs/index"
 import { drawGuitar } from "./guitar/view"
 import { guitarController, notePluckListener, step} from "./guitar/controller"
 import { createFretBoard, standardTuning} from "./guitar/model"
@@ -48,8 +49,6 @@ addEventListener('keyup',(event) => { if ( event.key === " ") { toggleButton.aud
 // const guessNotesStringRange = range(0,7);
 // drawGuitar(document.querySelector("#guitar"),fretBoard);
 // guitarController();
-// //guessNotes(document.querySelector("#guitar-note-trainer"),fretBoard,guessNotesFretsRange,guessNotesStringRange);
-// guessIntervals(document.querySelector("#guitar-interval-trainer"),["m2","M2"])
 /********************END GUITAR********************/
 
 /**************************************************
@@ -66,6 +65,30 @@ addEventListener('keyup',(event) => { if ( event.key === " ") { toggleButton.aud
 * voice
 *
 **************************************************/
-voiceGraph(document.querySelector("#voice"))
 
 /********************END VOICE********************/
+const data = [
+  {title: 'Note Trainer', content: () => {
+    const guitarNoteTrainerDiv = document.createElement('div');
+    guitarNoteTrainerDiv.id = 'guitar-note-trainer';
+    const fretBoard = createFretBoard(standardTuning, 12);
+    const guessNotesFretsRange = range(0,2);
+    guessNotes(guitarNoteTrainerDiv,fretBoard,guessNotesFretsRange,guessNotesFretsRange);
+    return guitarNoteTrainerDiv;
+  }},
+  {title: 'Guitar Interval Trainer', content: () => {
+    const intervalTrainerDiv = document.createElement('div');
+    intervalTrainerDiv.id = 'guitar-interval-trainer';
+    guessIntervals(intervalTrainerDiv,["m2","M2"]);
+    return intervalTrainerDiv;
+  }},
+  {title: 'Voice Trainer', content: () => {
+    const voiceTrainerDiv = document.createElement('voice');
+    voiceTrainerDiv.id = 'voice-trainer';
+    voiceGraph(voiceTrainerDiv);
+    return voiceTrainerDiv;
+  }}
+  // ... more tabs data
+]
+const container = document.getElementById('tabs-container') as HTMLElement;
+createTabs(data, container);
