@@ -24,6 +24,10 @@ Watch for typescript changes
 rollup -c -w
 ```
 
+Open in browser
+
+http://localhost:3000
+
 Connect to the websocket with wscat
 
 ```
