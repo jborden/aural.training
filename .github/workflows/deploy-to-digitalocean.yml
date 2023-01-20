@@ -19,7 +19,7 @@ jobs:
     - name: Build Typescript
       run: |
         npm install
-        npx rollup -c
+        npm run compile
 
     - name: Copy artifacts
       run: |
