@@ -31,6 +31,8 @@ jobs:
         key: ${{ secrets.DIGITALOCEAN_PRIVATE_KEY }}
         source: "aural-training-server.jar,docker-compose.yml,Dockerfile"
         target: "aural-training-deploy"
+        source: "resources"
+        target: "resources"
 
     # - name: Start app with docker-compose
     #   run: |
