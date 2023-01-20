@@ -1,0 +1,2 @@
+#!/bin/sh
+java -jar -DHTTP_PORT="8080" -DDB_HOST="" -DDB_NAME="" -DDB_PORT="" -DDB_USER="" -DDB_PASSWORD="" -DS3_ACCESS_KEY="" -DS3_SECRET_KEY="" -DS3_ENDPOINT="" $1

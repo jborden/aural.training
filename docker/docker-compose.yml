@@ -1,0 +1,16 @@
+version: '3.1'
+services:
+  chatr:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    container_name: aural_training
+    image: aural_training/server
+    networks:
+      - discovery
+networks:
+  discovery:
+    external: true
