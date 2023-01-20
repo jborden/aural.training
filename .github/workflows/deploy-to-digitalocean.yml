@@ -24,7 +24,7 @@ jobs:
         mv docker/docker-compose.yml deploy/docker-compose.yml
 
     - name: Deploy to DigitalOcean
-      uses: appleboy/scp-action@v1
+      uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.DIGITALOCEAN_IP }}
         username: ${{ secrets.DIGITALOCEAN_USERNAME }}
