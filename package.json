@@ -13,6 +13,7 @@
     "dexie-syncable": "^3.0.0-beta.10",
     "freelizer": "^1.0.0",
     "lodash-es": "^4.17.21",
+    "rollup": "^2.79.1",
     "tone": "^14.7.77",
     "tslib": "^2.4.0"
   },

@@ -13,8 +13,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Build app
+    - name: Build Clojure server
       run: lein with-profile +prod uberjar
+
+    - name: Build Typescript
+      run: |
+        npm install
+        npx rollup -c
 
     - name: Copy artifacts
       run: |
@@ -23,7 +28,7 @@ jobs:
         mv docker/Dockerfile .
         mv docker/docker-compose.yml .
 
-    - name: Deploy to DigitalOcean
+    - name: Transfer to DigitalOcean
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.DIGITALOCEAN_IP }}
@@ -33,6 +38,6 @@ jobs:
         target: "aural-training-deploy"
 
 
-    # - name: Start app with docker-compose
-    #   run: |
-    #     ssh ${{ secrets.DIGITALOCEAN_USERNAME }}@${{ secrets.DIGITALOCEAN_IP }} 'cd /path/to/deployment && docker-compose up -d'
+    - name: Start app with docker-compose
+      run: |
+        ssh ${{ secrets.DIGITALOCEAN_USERNAME }}@${{ secrets.DIGITALOCEAN_IP }} 'cd aural-training-deploy && docker-compose up -d'
