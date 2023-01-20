@@ -37,7 +37,11 @@ jobs:
         source: "aural-training-server.jar,docker-compose.yml,Dockerfile,resources"
         target: "aural-training-deploy"
 
-
-    - name: Start app with docker-compose
-      run: |
-        ssh ${{ secrets.DIGITALOCEAN_USERNAME }}@${{ secrets.DIGITALOCEAN_IP }} 'cd aural-training-deploy && docker-compose up -d'
+    - name: restart service
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.DIGITALOCEAN_IP }}
+        username: ${{ secrets.DIGITALOCEAN_USERNAME }}
+        key: ${{ secrets.DIGITALOCEAN_PRIVATE_KEY }}
+        script: |
+          cd aural-training-deploy && docker-compose up -d
