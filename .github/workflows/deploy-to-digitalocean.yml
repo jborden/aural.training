@@ -29,10 +29,9 @@ jobs:
         host: ${{ secrets.DIGITALOCEAN_IP }}
         username: ${{ secrets.DIGITALOCEAN_USERNAME }}
         key: ${{ secrets.DIGITALOCEAN_PRIVATE_KEY }}
-        source: "aural-training-server.jar,docker-compose.yml,Dockerfile"
+        source: "aural-training-server.jar,docker-compose.yml,Dockerfile,resources"
         target: "aural-training-deploy"
-        source: "resources"
-        target: "resources"
+
 
     # - name: Start app with docker-compose
     #   run: |
