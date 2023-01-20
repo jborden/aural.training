@@ -30,7 +30,7 @@ jobs:
         username: ${{ secrets.DIGITALOCEAN_USERNAME }}
         key: ${{ secrets.DIGITALOCEAN_PRIVATE_KEY }}
         source: deploy/
-        destination: aural-training-deploy
+        target: aural-training-deploy
 
     # - name: Start app with docker-compose
     #   run: |
