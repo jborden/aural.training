@@ -19,7 +19,7 @@ jobs:
     - name: Copy artifacts
       run: |
         mkdir -p deploy
-        mv target/app.jar deploy/app.jar
+        mv target/aural-training-server.jar deploy/aural-training-server.jar
         mv docker/Dockerfile deploy/Dockerfile
         mv docker/docker-compose.yml deploy/docker-compose.yml
 
