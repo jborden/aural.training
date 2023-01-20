@@ -44,4 +44,4 @@ jobs:
         username: ${{ secrets.DIGITALOCEAN_USERNAME }}
         key: ${{ secrets.DIGITALOCEAN_PRIVATE_KEY }}
         script: |
-          cd aural-training-deploy && docker-compose up -d
+          cd aural-training-deploy && docker-compose up --build -d
