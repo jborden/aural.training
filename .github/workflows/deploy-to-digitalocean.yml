@@ -1,0 +1,37 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build app
+      run: lein with-profile +prod uberjar
+
+    - name: Copy artifacts
+      run: |
+        mkdir -p deploy
+        mv target/app.war deploy/app.war
+        mv docker/Dockerfile deploy/Dockerfile
+        mv docker/docker-compose.yml deploy/docker-compose.yml
+
+    - name: Deploy to DigitalOcean
+      uses: appleboy/scp-action@v1
+      with:
+        host: ${{ secrets.DIGITALOCEAN_IP }}
+        username: ${{ secrets.DIGITALOCEAN_USERNAME }}
+        private_key: ${{ secrets.DIGITALOCEAN_PRIVATE_KEY }}
+        source: deploy/
+        destination: aural-training-deploy
+
+    # - name: Start app with docker-compose
+    #   run: |
+    #     ssh ${{ secrets.DIGITALOCEAN_USERNAME }}@${{ secrets.DIGITALOCEAN_IP }} 'cd /path/to/deployment && docker-compose up -d'
