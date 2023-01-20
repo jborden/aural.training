@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Build app
       run: lein with-profile +prod uberjar
@@ -19,7 +19,7 @@ jobs:
     - name: Copy artifacts
       run: |
         mkdir -p deploy
-        mv target/app.war deploy/app.war
+        mv target/app.jar deploy/app.jar
         mv docker/Dockerfile deploy/Dockerfile
         mv docker/docker-compose.yml deploy/docker-compose.yml
 
