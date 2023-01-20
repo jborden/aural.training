@@ -19,9 +19,9 @@ jobs:
     - name: Copy artifacts
       run: |
         mkdir -p deploy
-        mv target/aural-training-server.jar deploy/aural-training-server.jar
-        mv docker/Dockerfile deploy/Dockerfile
-        mv docker/docker-compose.yml deploy/docker-compose.yml
+        mv target/aural-training-server.jar .
+        mv docker/Dockerfile .
+        mv docker/docker-compose.yml .
 
     - name: Deploy to DigitalOcean
       uses: appleboy/scp-action@master
@@ -29,7 +29,7 @@ jobs:
         host: ${{ secrets.DIGITALOCEAN_IP }}
         username: ${{ secrets.DIGITALOCEAN_USERNAME }}
         key: ${{ secrets.DIGITALOCEAN_PRIVATE_KEY }}
-        source: "deploy/aural-training-server.jar,deploy/docker-compose.yml,deploy/Dockerfile"
+        source: "aural-training-server.jar,docker-compose.yml,Dockerfile"
         target: "aural-training-deploy"
 
     # - name: Start app with docker-compose
