@@ -1,7 +1,7 @@
 import { freelizer } from 'freelizer';
-import { noteName } from './guitar/model'
-import { publishEvent } from './events/main'
-import * as Tone from 'Tone';
+import { noteName } from './guitar/model';
+import { publishEvent } from './events/main';
+import * as Tone from 'tone';
 
 export interface AudioMonitorEventDetail {
   frequency: number,
