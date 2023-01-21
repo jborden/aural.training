@@ -34,7 +34,7 @@ jobs:
         host: ${{ secrets.DIGITALOCEAN_IP }}
         username: ${{ secrets.DIGITALOCEAN_USERNAME }}
         key: ${{ secrets.DIGITALOCEAN_PRIVATE_KEY }}
-        source: "aural-training-server.jar,docker-compose.yml,Dockerfile,resources"
+        source: "aural-training-server.jar,docker-compose.yml,Dockerfile,resources,scripts/run-server-jar.template"
         target: "aural-training-deploy"
 
     - name: restart service
@@ -44,4 +44,6 @@ jobs:
         username: ${{ secrets.DIGITALOCEAN_USERNAME }}
         key: ${{ secrets.DIGITALOCEAN_PRIVATE_KEY }}
         script: |
-          cd aural-training-deploy && docker-compose up --build -d
+          cd aural-training-deploy
+          cp scripts/run-server-jar.template scripts/run-server-jar
+          docker-compose up --build -d
