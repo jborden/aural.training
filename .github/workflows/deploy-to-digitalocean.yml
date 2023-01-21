@@ -13,13 +13,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Build Clojure server
-      run: lein with-profile +prod uberjar
-
     - name: Build Typescript
       run: |
         npm install
         npm run compile
+
+    - name: Build Clojure server
+      run: lein with-profile +prod uberjar
 
     - name: Copy artifacts
       run: |
