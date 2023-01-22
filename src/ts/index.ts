@@ -68,19 +68,36 @@ addEventListener('keyup',(event) => { if ( event.key === " ") { toggleButton.aud
 
 /********************END VOICE********************/
 const data = [
-  {title: 'Note Trainer', content: () => {
+  {title: 'Guitar Note Trainer', content: () => {
+    // root div
+    const noteTrainerRoot = document.createElement('div');
+    // noteTrainer
     const guitarNoteTrainerDiv = document.createElement('div');
     guitarNoteTrainerDiv.id = 'guitar-note-trainer';
     const fretBoard = createFretBoard(standardTuning, 12);
     const guessNotesFretsRange = range(0,2);
     guessNotes(guitarNoteTrainerDiv,fretBoard,guessNotesFretsRange,guessNotesFretsRange);
-    return guitarNoteTrainerDiv;
+    noteTrainerRoot.appendChild(guitarNoteTrainerDiv);
+    // fretboard view
+    const fretBoardDiv = document.createElement('div');
+    drawGuitar(fretBoardDiv,fretBoard);
+    noteTrainerRoot.appendChild(fretBoardDiv);
+    return noteTrainerRoot;
   }},
   {title: 'Guitar Interval Trainer', content: () => {
+    // root div
+    const guitarIntervalTrainer = document.createElement('div');
+    // interval trainer
     const intervalTrainerDiv = document.createElement('div');
     intervalTrainerDiv.id = 'guitar-interval-trainer';
     guessIntervals(intervalTrainerDiv,["m2","M2"]);
-    return intervalTrainerDiv;
+    guitarIntervalTrainer.append(intervalTrainerDiv);
+    // fretboardiv
+    const fretBoard = createFretBoard(standardTuning, 12);
+    const fretBoardDiv = document.createElement('div');
+    drawGuitar(fretBoardDiv,fretBoard);
+    guitarIntervalTrainer.appendChild(fretBoardDiv);
+    return guitarIntervalTrainer;
   }},
   {title: 'Voice Trainer', content: () => {
     const voiceTrainerDiv = document.createElement('voice');
