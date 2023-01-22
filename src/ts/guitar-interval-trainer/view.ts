@@ -29,6 +29,7 @@ export function renderIsGuessCorrect(correct: boolean) {
 export function renderReplayButton(replayFunction: Function) {
   let element = document.createElement('button');
   element.innerHTML = 'Replay Interval';
+  element.classList.add('button-54');
   element.addEventListener('click',() => {replayFunction()});
   return element;
 }
