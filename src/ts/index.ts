@@ -74,9 +74,9 @@ const data = [
     // noteTrainer
     const guitarNoteTrainerDiv = document.createElement('div');
     guitarNoteTrainerDiv.id = 'guitar-note-trainer';
+    const fretsRange = range(0,2);
     const fretBoard = createFretBoard(standardTuning, 12);
-    const guessNotesFretsRange = range(0,2);
-    guessNotes(guitarNoteTrainerDiv,fretBoard,guessNotesFretsRange,guessNotesFretsRange);
+    guessNotes(guitarNoteTrainerDiv,fretBoard,fretsRange,range(0,5));
     noteTrainerRoot.appendChild(guitarNoteTrainerDiv);
     // fretboard view
     const fretBoardDiv = document.createElement('div');
