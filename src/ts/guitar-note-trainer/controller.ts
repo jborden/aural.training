@@ -40,7 +40,7 @@ export function guessNotes(parentDiv: HTMLElement, fretBoard: FretBoard, frets?:
   function render(): void {
     let selectedNoteHTML = renderCurrentNote(currentNote);
     let guessHTML = renderIsGuessCorrect(guessIsCorrect);
-    parentDiv.innerHTML = `<div>${selectedNoteHTML} ${guessHTML}</div>`;
+    parentDiv.innerHTML = `<div class='text'>${selectedNoteHTML} ${guessHTML}</div>`;
   }
 
   addEventListener('note-monitor-event/noteSeenTimeSeenMin', guessNotesAudioSignalListener);

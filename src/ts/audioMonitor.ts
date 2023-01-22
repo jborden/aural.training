@@ -77,9 +77,11 @@ export class audioMonitorToggleButton {
   };
 
   audioMonitorToggleButtonRender() {
-    let message = this.listening ? "Stop" : "Start";
+    let message = this.listening ? "Stop Mic Monitoring" : "Start Mic Monitoring";
     let element = document.createElement('button');
     element.innerHTML = message;
+    element.classList.add('button-54');
+    element.setAttribute("role","button");
     element.addEventListener('click',() => {this.audioMonitorToggleButton()})
     this.parentDiv.innerHTML = '';
     this.parentDiv.append(element);

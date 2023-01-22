@@ -81,7 +81,7 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
   function render(): void {
     let selectedIntervalDiv = renderCurrentInterval(requestedIntervals);
     let guessHTML = renderIsGuessCorrect(guessIsCorrect);
-    parentDiv.innerHTML = `<div>${selectedIntervalDiv} ${guessHTML}</div>`;
+    parentDiv.innerHTML = `<div class='text'>${selectedIntervalDiv} ${guessHTML}</div>`;
     parentDiv.append(renderReplayButton(playSelectedInterval))
   }
 

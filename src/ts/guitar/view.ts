@@ -78,13 +78,14 @@ function drawNote(svg: Svg, currentNote:GuitarNote, fretSpacing: number, diamete
     .font({ family:   'Helvetica',
 	    size:     '0.75em',
 	    weight: 'bold'})
+    .fill({color: noteColor(octave + (octave % 6) )})
     .addClass(`note-${note}`)
     .addClass(`octave-${octave}`)
     .addClass(`freq-${freq}`);
   // plucked note
   svg.circle(diameter)
     .move(x,(diameter * string) - radius)
-    .stroke({ color: "white",
+    .stroke({ color: "#8d99ae",
 	      width: 2})
     .fill({color: "none"})
     .addClass(`plucked`)
@@ -94,7 +95,7 @@ function drawNote(svg: Svg, currentNote:GuitarNote, fretSpacing: number, diamete
 }
 
 function drawNotes(svg: Svg, fretBoard: FretBoard, fretSpacing: number) {
-  const diameter = 20;
+  const diameter = 22;
 
   map(fretBoard,
       currentNote => drawNote(svg,currentNote,fretSpacing,diameter))
