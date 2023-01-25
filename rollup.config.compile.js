@@ -17,7 +17,7 @@ export default {
       "react-dom/client":"ReactDOM",
       "react":"React"},
   },
-  watch: true,
+  watch: false,
   plugins: [typescript(),
             nodeResolve(),
             livereload(),
