@@ -20,9 +20,9 @@ import { publishEvent } from "../events/main"
 // }
 
 export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numberIntervals: number = 1) {
-  let requestedIntervals:Interval[] = [];
+  let requestedIntervals:any = [];
   let notesPlayed: GuitarNote[] = [];
-  let guessIsCorrect: boolean = null;
+  let guessIsCorrect: boolean = false;
 
   const selectedIntervals = selectIntervals(intervals);
 
@@ -40,7 +40,7 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
 
   function initializeState():void {
     setIntervals();
-    guessIsCorrect = null;
+    guessIsCorrect = false;
   }
 
   function playSelectedInterval():void {
@@ -61,7 +61,7 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
    
     if (notesPlayed.length ===  (requestedIntervals.length + 1)) {
       // check to see if the guess is correct
-      if (isEqual(requestedIntervals.map((v) => { return v.semitones} ),
+      if (isEqual(requestedIntervals.map((v:any) => { return v.semitones} ),
 	noteSequenceIntervals(notesPlayed))) {
 	guessIsCorrect = true
       } else

@@ -24,14 +24,16 @@ export class NoteMonitor {
    *                                  as expressed in percentage of the freq of that note
    * @param {number} unitIntervalCutoff? - lowest value for unitInterval
    */
-  constructor(eventName?: "noteMonitor/noteSeen",
-	      pingEventName?: "audioMonitor/filterAudioSignal",
-	      maxDeviation?: number,
-	      unitIntervalCutoff?: 0.01) {
+  constructor(eventName:string =  "noteMonitor/noteSeen",
+	      pingEventName:string = "audioMonitor/filterAudioSignal",
+	      maxDeviation:number = 1,
+	      unitIntervalCutoff:number = 0.01) {
     this.eventName = eventName;
     this.maxDeviation = maxDeviation;
     this.unitIntervalCutoff = unitIntervalCutoff;
-
+    // for typescript errors
+    this.start = Date.now();
+    this.previousTimeStamp = Date.now();
     // listen for ping events
     addEventListener(pingEventName,this.noteMonitorPing);
     // listen for timemin events
@@ -53,7 +55,7 @@ export class NoteMonitor {
    */
   noteMonitorPing(e: any): void {
     const { detail } = e;
-    const note = noteName(detail);
+    const note = noteName(detail) || "";
     const noteMonitorObj = this.noteMonitorMap.get(note);
 
     if (noteMonitorObj) {

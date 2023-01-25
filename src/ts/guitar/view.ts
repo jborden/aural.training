@@ -61,12 +61,13 @@ function noteColor(octave: number) {
 
 function drawNote(svg: Svg, currentNote:GuitarNote, fretSpacing: number, diameter: number) {
   const {note,octave,string,fret} = currentNote;
+  const thisString = string || 1;
   const radius = diameter / 2;
   const freq = Math.round(noteFreq({note, octave}));
-  const x = fretSpacing * fret;
+  const x = fretSpacing * (fret || 0);
   // note circle
   svg.circle(diameter)
-    .move(x,(diameter * string) - radius)
+    .move(x,(diameter * thisString) - radius)
     .stroke({color: noteColor(octave)})
     .fill({ color: noteColor(octave)})
     .addClass(`note-${note}`)
@@ -74,7 +75,7 @@ function drawNote(svg: Svg, currentNote:GuitarNote, fretSpacing: number, diamete
     .addClass(`freq-${freq}`);
   // note text
   svg.text(`${note}${octave}`)
-    .move(x,(diameter * string) - radius)
+    .move(x,(diameter * thisString) - radius)
     .font({ family:   'Helvetica',
 	    size:     '0.75em',
 	    weight: 'bold'})
@@ -84,7 +85,7 @@ function drawNote(svg: Svg, currentNote:GuitarNote, fretSpacing: number, diamete
     .addClass(`freq-${freq}`);
   // plucked note
   svg.circle(diameter)
-    .move(x,(diameter * string) - radius)
+    .move(x,(diameter * thisString) - radius)
     .stroke({ color: "#8d99ae",
 	      width: 2})
     .fill({color: "none"})

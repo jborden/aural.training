@@ -17,8 +17,8 @@ function setAllAttributes(els: NodeList, name: string, value: string) {
 let start:DOMHighResTimeStamp, previousTimeStamp:DOMHighResTimeStamp;
 
 function processPluckedCircle(el: Element, deltaT: DOMHighResTimeStamp) {
-  let strokeOpacity = el.getAttribute("stroke-opacity")
-  let strokeOpacityNumber = parseFloat(strokeOpacity)
+  let strokeOpacity = el.getAttribute("stroke-opacity") || "0";
+  let strokeOpacityNumber = parseFloat(strokeOpacity);
   const chi = 0.01 // Χ, after Χρόνος aka chronos
 
   if (strokeOpacityNumber > 0) {

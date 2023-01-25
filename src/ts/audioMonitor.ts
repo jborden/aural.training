@@ -42,7 +42,7 @@ export async function stopAudio() {
 }
 
 export let currentNoteFirstSeenTimeStamp:number = 0;
-export let currentNoteName:string = null;
+export let currentNoteName:string = '';
 
 function filterAudioSignal(e: any): void {
   let { deviation, frequency  } = e.detail;
@@ -61,16 +61,16 @@ addEventListener('audioSignal',filterAudioSignal);
 export function logListener(e: any) {
   let {frequency, note, noteFrequency, deviation, octave} = e.detail;
   let audioEventLogElem = document.querySelector("#audio-event-log");
-  if (frequency) {
+  if (frequency && audioEventLogElem) {
     audioEventLogElem.innerHTML = `<p>frequency = ${frequency.toFixed(2)} note = ${note} octave=${octave} deviation=${deviation}<p>`;
   }
 }
 
 export class audioMonitorToggleButton {
   listening = false;
-  parentDiv: HTMLElement = null;
+  parentDiv: HTMLElement | null;
 
-  constructor(parentDiv: HTMLElement) {
+  constructor(parentDiv: HTMLElement | null) {
     this.listening = false;
     this.parentDiv = parentDiv;
     this.audioMonitorToggleButtonRender()
@@ -83,8 +83,10 @@ export class audioMonitorToggleButton {
     element.classList.add('button-54');
     element.setAttribute("role","button");
     element.addEventListener('click',() => {this.audioMonitorToggleButton()})
-    this.parentDiv.innerHTML = '';
-    this.parentDiv.append(element);
+    if (this.parentDiv) {
+      this.parentDiv.innerHTML = '';
+      this.parentDiv.append(element);
+    }
   };
 
   audioMonitorToggleButton() {

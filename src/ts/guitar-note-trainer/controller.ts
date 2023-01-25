@@ -5,8 +5,8 @@ import { sample } from "lodash-es"
 import { GuessNoteEvent } from "../events/types"
 import { publishEvent } from "../events/main"
 
-let currentNote: GuitarNote = null;
-let guessIsCorrect: boolean = null;
+let currentNote: GuitarNote;
+let guessIsCorrect: boolean = false;
 
 function createGuessNoteEventDetail(noteAsked: GuitarNote, noteGiven: GuitarNote): GuessNoteEvent {
   return({noteAsked: noteAsked,
@@ -18,7 +18,7 @@ function createGuessNoteEventDetail(noteAsked: GuitarNote, noteGiven: GuitarNote
 }
 
 export function guessNotes(parentDiv: HTMLElement, fretBoard: FretBoard, frets?: number[], strings?: number[]) {
-  const subFretBoard: FretBoard = selectNotes(fretBoard, frets, strings);
+  const subFretBoard: any = selectNotes(fretBoard, frets, strings);
   currentNote = sample(subFretBoard);
   render();
 
