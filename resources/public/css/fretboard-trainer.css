@@ -36,6 +36,9 @@ body {
   color: #ef233c;
 }
 
+.text-green {
+  color: green;
+}
 /* CSS */
 .button-54 {
   margin-top: 1rem;
@@ -70,6 +73,21 @@ body {
   .button-54 {
     padding: 0.25em 0.75em;
   }
+}
+
+/* Define the keyframes for the animation */
+@keyframes fadeOut {
+  0% { opacity: 1; } /* Element is fully visible at the start */
+  100% { opacity: 0; } /* Element becomes completely transparent at the end */
+}
+
+/* Apply the animation to the element */
+.flash-element {
+  animation-name: fadeOut; /* Use the "fadeOut" keyframes */
+  animation-duration: 2.0s; /* Animation duration (2 seconds in this example) */
+  /* animation-delay: 3s; /\* Delay before the animation starts (3 seconds in this example) *\/ */
+  /* After the animation, the element will have "display: none" to completely remove it from the document flow */
+  animation-fill-mode: forwards;
 }
 
 /* https://venngage.com/blog/blue-color-palettes/ */

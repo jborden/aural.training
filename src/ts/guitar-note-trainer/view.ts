@@ -11,10 +11,10 @@ export function renderIsGuessCorrect(correct: boolean) {
       html = `<div></div>`;
       break;
     case (false):
-      html = `<div class='guitar-note-trainer-incorrect'>Incorrect Guess</div>`;
+      html = `<div class='guitar-note-trainer-incorrect flash-element'>Incorrect Guess</div>`;
       break;
     case (true):
-      html = `<div class='guitar-note-trainer-correct'>Correct!</div>`;
+      html = `<div class='guitar-note-trainer-correct flash-element text-green'>Correct!</div>`;
       break;
   }
   return html;

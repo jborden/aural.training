@@ -17,10 +17,10 @@ export function renderIsGuessCorrect(correct: boolean) {
       html = `<div></div>`;
       break;
     case (false):
-      html = `<div class='guitar-interval-trainer-incorrect'>Incorrect Guess</div>`;
+      html = `<div class='guitar-interval-trainer-incorrect flash-element'>Incorrect Guess</div>`;
       break;
     case (true):
-      html = `<div class='guitar-interval-trainer-correct'>Correct!</div>`;
+      html = `<div class='guitar-interval-trainer-correct flash-element text-green'>Correct!</div>`;
       break;
   }
   return html;
