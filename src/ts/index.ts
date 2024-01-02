@@ -10,6 +10,7 @@ import { voiceGraph } from "./voice/controller"
 import { guessIntervals } from "./guitar-interval-trainer/controller"
 import { noteMonitorPing, stepNoteMonitorEvents } from "./note-monitor-events"
 import { freqNote, noteFreq,freqNoteRange } from "./music/western/model"
+import { listenForEvent } from "./events/main"
 
 // required to be exported
 exports = {startAudio, stopAudio, freqNote, noteFreq,freqNoteRange}
@@ -107,5 +108,17 @@ const data = [
   }}
   // ... more tabs data
 ]
+
+
 const container = document.getElementById('tabs-container') as HTMLElement;
 createTabs(data, container);
+
+// debug
+
+
+const eventsToMonitor = ["guitar-note-trainer/guess-note"];
+
+eventsToMonitor.forEach((eventName) => {
+  console.log(`I am trying for ${eventName}`);
+  listenForEvent(eventName);
+});
