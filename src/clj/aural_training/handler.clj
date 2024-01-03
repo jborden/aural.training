@@ -3,6 +3,7 @@
             [compojure.core :refer [GET POST PUT DELETE context defroutes]]
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
+            [ring.middleware.file :refer [wrap-file]]
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
             [ring.util.response :refer [redirect]]))
 
@@ -26,6 +27,9 @@
                    {:body {:message (str "user_id: " id " deleted")}}))
   (GET "/ws" [] websocket/websocket-handler)
   (route/resources "/")
+  (context "/src/ts" []
+           (-> (route/not-found "File Not Found")
+               (wrap-file "src/ts")))
   (route/not-found "Not Found"))
 
 (def app

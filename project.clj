@@ -18,7 +18,8 @@
                  [camel-snake-kebab "0.4.3"]]
   :repl-options {:init-ns aural-training.dev
                  :init    (dev-init!)}
-  :source-paths ["src/clj"]
+ :source-paths ["src/clj"]
+ :resource-paths ["src/ts" "resources"]
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                                   [ring/ring-mock "0.3.1"]]}
              :prod {:main aural-training.main
