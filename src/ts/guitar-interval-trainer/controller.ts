@@ -8,7 +8,7 @@ import { monitoring } from "../audioMonitor"
 import { playInterval, playIntervalSequence } from "../tones"
 import { GuessNoteEvent } from "../events/types"
 import { publishEvent } from "../events/main"
-
+import { isElementActiveById } from "../tabs/index"
 // function createGuessNoteEventDetail(noteAsked: GuitarNote, noteGiven: GuitarNote): GuessNoteEvent {
 
 //   return({noteAsked: noteAsked,
@@ -56,26 +56,28 @@ export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numbe
   }
 
   function guessIntervalsAudioSignalListener(e: any): void {
-    
-    notesPlayed.push(e.detail.note);
-   
-    if (notesPlayed.length ===  (requestedIntervals.length + 1)) {
-      // check to see if the guess is correct
-      if (isEqual(requestedIntervals.map((v) => { return v.semitones} ),
-	noteSequenceIntervals(notesPlayed))) {
-	guessIsCorrect = true
-      } else
-      {
-	guessIsCorrect = false
-      }
-      // because we're done with this set, set the intervals
-      setIntervals();
-      playSelectedInterval();
-      // .. and reset the notesPlayed array
-      notesPlayed = [];
-    }
 
-    render();
+    if (isElementActiveById("guitar-interval-trainer-tab")) {
+    
+      notesPlayed.push(e.detail.note);
+   
+      if (notesPlayed.length ===  (requestedIntervals.length + 1)) {
+	// check to see if the guess is correct
+	if (isEqual(requestedIntervals.map((v) => { return v.semitones} ),
+		    noteSequenceIntervals(notesPlayed))) {
+	  guessIsCorrect = true
+	} else
+	{
+	  guessIsCorrect = false
+	}
+	// because we're done with this set, set the intervals
+	setIntervals();
+	playSelectedInterval();
+	// .. and reset the notesPlayed array
+	notesPlayed = [];
+      }
+      render();
+    }
   }
 
   function render(): void {

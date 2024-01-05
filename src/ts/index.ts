@@ -69,7 +69,9 @@ addEventListener('keyup',(event) => { if ( event.key === " ") { toggleButton.aud
 
 /********************END VOICE********************/
 const data = [
-  {title: 'Guitar Note Trainer', content: () => {
+  {title: 'Guitar Note Trainer',
+   id: "guitar-note-trainer-tab",
+   content: () => {
     // root div
     const noteTrainerRoot = document.createElement('div');
     // noteTrainer
@@ -85,7 +87,9 @@ const data = [
     noteTrainerRoot.appendChild(fretBoardDiv);
     return noteTrainerRoot;
   }},
-  {title: 'Guitar Interval Trainer', content: () => {
+  {title: 'Guitar Interval Trainer',
+   id: "guitar-interval-trainer-tab",
+   content: () => {
     // root div
     const guitarIntervalTrainer = document.createElement('div');
     // interval trainer
@@ -100,7 +104,9 @@ const data = [
     guitarIntervalTrainer.appendChild(fretBoardDiv);
     return guitarIntervalTrainer;
   }},
-  {title: 'Voice Trainer', content: () => {
+  {title: 'Voice Trainer',
+   id: "voice-trainer-tab",
+   content: () => {
     const voiceTrainerDiv = document.createElement('voice');
     voiceTrainerDiv.id = 'voice-trainer';
     voiceGraph(voiceTrainerDiv);

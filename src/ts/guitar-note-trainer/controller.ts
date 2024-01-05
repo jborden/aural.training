@@ -4,6 +4,7 @@ import { renderCurrentNote, renderIsGuessCorrect } from "./view"
 import { sample } from "lodash-es"
 import { GuessNoteEvent } from "../events/types"
 import { publishEvent } from "../events/main"
+import { isElementActiveById } from "../tabs/index"
 
 let currentNote: GuitarNote = null;
 let guessIsCorrect: boolean = null;
@@ -19,12 +20,15 @@ function createGuessNoteEventDetail(noteAsked: GuitarNote, noteGiven: GuitarNote
 
 export function guessNotes(parentDiv: HTMLElement, fretBoard: FretBoard, frets?: number[], strings?: number[]) {
   const subFretBoard: FretBoard = selectNotes(fretBoard, frets, strings);
+  guessIsCorrect = null;
   currentNote = sample(subFretBoard);
   render();
 
   function guessNotesAudioSignalListener(e: any): void {
-    const { note } = e.detail;
-    if (noteName(note) === noteName(currentNote)) {
+    // check to see if the tab is active
+    if (isElementActiveById("guitar-note-trainer-tab")) {
+      const { note } = e.detail;
+      if (noteName(note) === noteName(currentNote)) {
 	guessIsCorrect = true;
 	publishEvent("guitar-note-trainer/guess-note",
 		     createGuessNoteEventDetail(currentNote, note))
@@ -33,8 +37,9 @@ export function guessNotes(parentDiv: HTMLElement, fretBoard: FretBoard, frets?:
 	publishEvent("guitar-note-trainer/guess-note",
 		     createGuessNoteEventDetail(currentNote, note))
       }
-    currentNote = sample(subFretBoard);
-    render();
+      currentNote = sample(subFretBoard);
+      render();
+    }
   }
 
   function render(): void {
