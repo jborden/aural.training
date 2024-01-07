@@ -36,8 +36,8 @@ wscat --connect ws://localhost:3000/ws
 
 # Roadmap
 
-1. [ ] MVP - note memorization lesson
-2. [ ] Public Release to  https://aural.training
+1. [x] MVP - note memorization lesson
+2. [x] Public Release to  https://aural.training
 
 # Notes
 
