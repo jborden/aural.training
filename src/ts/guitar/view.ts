@@ -91,7 +91,8 @@ function drawNote(svg: Svg, currentNote:GuitarNote, fretSpacing: number, diamete
     .addClass(`plucked`)
     .addClass(`note-${note}`)
     .addClass(`octave-${octave}`)
-    .addClass(`freq-${freq}`);
+    .addClass(`freq-${freq}`)
+    .attr("stroke-opacity",0)
 }
 
 function drawNotes(svg: Svg, fretBoard: FretBoard, fretSpacing: number) {
