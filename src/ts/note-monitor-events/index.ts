@@ -75,7 +75,7 @@ function noteMonitorMapTick(deltaT: DOMHighResTimeStamp) {
 addEventListener("note-monitor-events/noteSeen",
 		 (e:any) => { const { timeSeen } = e.detail;
 			      if (timeSeen > 300) {
-				console.log("[note-monitor-events/noteSeenTimeSeenMin]", e.detail)
+				//console.log("[note-monitor-events/noteSeenTimeSeenMin]", e.detail)
 				publishEvent("note-monitor-event/noteSeenTimeSeenMin",
 					    e.detail)}
 			    })
@@ -83,7 +83,7 @@ addEventListener("note-monitor-events/noteSeen",
 addEventListener("note-monitor-events/noteSeen",
 		 (e:any) => { const { timeSeen } = e.detail;
 			       if (timeSeen > 300) {
-				 console.log("[note-monitor-events/noteSeen]", e.detail)
+				 //console.log("[note-monitor-events/noteSeen]", {"note": e.detail.note.note, "octave": e.detail.note.octage, "timeSeen": e.detail.timeSeen})
 			       }})
 
 export function stepNoteMonitorEvents(timestamp: DOMHighResTimeStamp): void {

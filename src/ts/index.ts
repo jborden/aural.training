@@ -11,6 +11,7 @@ import { guessIntervals } from "./guitar-interval-trainer/controller"
 import { noteMonitorPing, stepNoteMonitorEvents } from "./note-monitor-events"
 import { freqNote, noteFreq,freqNoteRange } from "./music/western/model"
 import { listenForEvent } from "./events/main"
+import { NoteMonitor } from "./note-monitor/index"
 
 // required to be exported
 exports = {startAudio, stopAudio, freqNote, noteFreq,freqNoteRange}
@@ -19,6 +20,11 @@ addEventListener('audioSignal',logListener);
 addEventListener('audioSignal',notePluckListener);
 // listener for the note-monitor-events
 addEventListener("audioMonitor/filterAudioSignal", noteMonitorPing);
+
+// monitor notes below threshold
+const noteMonitor = new NoteMonitor();
+noteMonitor.startListening();
+
 // init step function
 window.requestAnimationFrame(step);
 window.requestAnimationFrame(stepNoteMonitorEvents);
@@ -77,7 +83,7 @@ const data = [
     // noteTrainer
     const guitarNoteTrainerDiv = document.createElement('div');
     guitarNoteTrainerDiv.id = 'guitar-note-trainer';
-    const fretsRange = range(0,2);
+    const fretsRange = range(0,1);
     const fretBoard = createFretBoard(standardTuning, 12);
     guessNotes(guitarNoteTrainerDiv,fretBoard,fretsRange,range(0,5));
     noteTrainerRoot.appendChild(guitarNoteTrainerDiv);
@@ -122,9 +128,9 @@ createTabs(data, container);
 // debug
 
 
-const eventsToMonitor = ["guitar-note-trainer/guess-note"];
+// const eventsToMonitor = ["guitar-note-trainer/guess-note"];
 
-eventsToMonitor.forEach((eventName) => {
-  console.log(`I am trying for ${eventName}`);
-  listenForEvent(eventName);
-});
+// eventsToMonitor.forEach((eventName) => {
+//   console.log(`I am trying for ${eventName}`);
+//   listenForEvent(eventName);
+// });
