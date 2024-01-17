@@ -1,10 +1,21 @@
+import { publishEvent } from "../events/main"
+
 type Note = {
   note: string;
   octave: number;
 };
 
+export type NoteObserved = Note & {
+  ms: number;
+}
+
 export class NoteMonitor {
   private noteMap: Map<string, { lastSeen: number; totalTime: number }> = new Map();
+  private threshold: number;
+
+  constructor(threshold: number = 300) {
+    this.threshold = threshold;
+  }
 
   handleNotePlucked(note: Note) {
     const { note: observedNote, octave } = note;
@@ -19,28 +30,32 @@ export class NoteMonitor {
       
       if (duration <= 100) {
         this.noteMap.set(currentNoteKey, { lastSeen: currentTime, totalTime: totalTime + duration });
-        if (totalTime >= 300) {
-          this.fireEvent(observedNote, octave, totalTime);
+        if (totalTime >= this.threshold) {
+          this.fireEvent({note: observedNote, octave: octave, ms: totalTime});
         }
       } else {
 	this.noteMap.set(currentNoteKey, { lastSeen: currentTime, totalTime: 0})
       }
     } else {
-      // console.log(`I never saw ${currentNoteKey}`)
       this.noteMap.set(currentNoteKey, { lastSeen: currentTime, totalTime: 0 });
     }
   }
 
-  private fireEvent(note: string, octave: number, threshold: number) {
-    // Trigger your custom event here
-    const eventDetail = { note, octave, threshold };
-    // Replace the next line with your actual event firing mechanism
-    console.log('!!!!!!!Custom Event Fired:', eventDetail);
+  private handleNotePluckedCallback = (event: CustomEvent<Note>) => {
+    this.handleNotePlucked(event.detail);
+  };
+
+  private fireEvent(eventDetail: NoteObserved) {
+    publishEvent("note-monitor/note-observed", eventDetail)
   }
 
   startListening() {
-    addEventListener('audioMonitor/filterAudioSignal', (event: CustomEvent<Note>) => {
-      this.handleNotePlucked(event.detail);
-    });
+    addEventListener('audioMonitor/filterAudioSignal',
+		     this.handleNotePluckedCallback);
+  }
+
+  stopListening() {
+    removeEventListener('audioMonitor/filterAudioSignal',
+			this.handleNotePluckedCallback);
   }
 }

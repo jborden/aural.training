@@ -5,8 +5,9 @@ import { sample } from "lodash-es"
 import { GuessNoteEvent } from "../events/types"
 import { publishEvent } from "../events/main"
 import { isElementActiveById } from "../tabs/index"
+import { NoteMonitor, NoteObserved } from "../note-monitor/index"
 
-let currentNote: GuitarNote = null;
+//let currentNote: GuitarNote = null;
 let guessIsCorrect: boolean = null;
 
 function createGuessNoteEventDetail(noteAsked: GuitarNote, noteGiven: GuitarNote): GuessNoteEvent {
@@ -21,13 +22,13 @@ function createGuessNoteEventDetail(noteAsked: GuitarNote, noteGiven: GuitarNote
 export function guessNotes(parentDiv: HTMLElement, fretBoard: FretBoard, frets?: number[], strings?: number[]) {
   const subFretBoard: FretBoard = selectNotes(fretBoard, frets, strings);
   guessIsCorrect = null;
-  currentNote = sample(subFretBoard);
+  let currentNote: GuitarNote = sample(subFretBoard);
   render();
 
-  function guessNotesAudioSignalListener(e: any): void {
+  function guessNotesAudioSignalListener(noteObserved: NoteObserved): void {
     // check to see if the tab is active
     if (isElementActiveById("guitar-note-trainer-tab")) {
-      const { note } = e.detail;
+      const note: GuitarNote = {note: noteObserved.note, octave: noteObserved.octave};
       if (noteName(note) === noteName(currentNote)) {
 	guessIsCorrect = true;
 	publishEvent("guitar-note-trainer/guess-note",
@@ -37,7 +38,7 @@ export function guessNotes(parentDiv: HTMLElement, fretBoard: FretBoard, frets?:
 	publishEvent("guitar-note-trainer/guess-note",
 		     createGuessNoteEventDetail(currentNote, note))
       }
-      currentNote = sample(subFretBoard);
+      currentNote = sample(subFretBoard) as GuitarNote;
       render();
     }
   }
@@ -48,5 +49,16 @@ export function guessNotes(parentDiv: HTMLElement, fretBoard: FretBoard, frets?:
     parentDiv.innerHTML = `<div class='text'>${selectedNoteHTML} ${guessHTML}</div>`;
   }
 
-  addEventListener('note-monitor-event/noteSeenTimeSeenMin', guessNotesAudioSignalListener);
+  // create a listener for note events
+  const noteMonitor = new NoteMonitor();
+  noteMonitor.startListening();
+
+  const anonymousListener = (e: any) => {
+    const { detail }: { detail: NoteObserved } = e;
+    if (detail) {
+      guessNotesAudioSignalListener(detail);
+    }
+  };
+
+  addEventListener('note-monitor/note-observed',anonymousListener);
 }
