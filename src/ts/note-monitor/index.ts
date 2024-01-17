@@ -1,54 +1,45 @@
-import { AudioMonitorEventDetail } from "../audioMonitor";
+type Note = {
+  note: string;
+  octave: number;
+};
 
 export class NoteMonitor {
-  private isObserving: boolean = false;
-  private note: { note: string, octave: number } | null = null;
-  private threshold = 1000; // in milliseconds
-  private silenceThreshold = 300; // in milliseconds, adjust as needed
+  private noteMap: Map<string, { lastSeen: number; totalTime: number }> = new Map();
 
-  constructor() {
-    this.handleNotePlucked = this.handleNotePlucked.bind(this);
-  }
-
-  private publishNoteEvent() {
-    if (this.note) {
-      const eventDetail = {
-        note: this.note.note,
-        octave: this.note.octave,
-        threshold: this.threshold,
-      };
-
-      // Emit your custom event here
-      // Example: document.dispatchEvent(new CustomEvent("note-monitor-events/noteSeenAtThreshold", { detail: eventDetail }));
-      console.log("!!!!!!!!!!Note seen at threshold:", eventDetail);
-    }
-  }
-
-  private checkForSilence() {
-    setTimeout(() => {
-      this.isObserving = false;
-      this.note = null;
-    }, this.silenceThreshold);
-  }
-
-  public handleNotePlucked(note: AudioMonitorEventDetail) {
-    // Extract only the relevant properties
+  handleNotePlucked(note: Note) {
     const { note: observedNote, octave } = note;
-    const currentNote = { note: observedNote, octave };
+    const currentNoteKey = `${observedNote}${octave}`;
 
-    if (!this.isObserving) {
-      this.isObserving = true;
-      this.note = currentNote;
-      this.publishNoteEvent();
-      this.checkForSilence();
+    const currentTime = Date.now();
+    if (this.noteMap.has(currentNoteKey)) {
+      const { lastSeen, totalTime } = this.noteMap.get(currentNoteKey)!;
+
+      const duration = currentTime - lastSeen;
+      // console.log(`currentNoteKey: ${currentNoteKey}, lastSeen: ${lastSeen}, totalTime: ${totalTime}, currentTime: ${currentTime} duration: ${duration}`)
+      
+      if (duration <= 100) {
+        this.noteMap.set(currentNoteKey, { lastSeen: currentTime, totalTime: totalTime + duration });
+        if (totalTime >= 300) {
+          this.fireEvent(observedNote, octave, totalTime);
+        }
+      } else {
+	this.noteMap.set(currentNoteKey, { lastSeen: currentTime, totalTime: 0})
+      }
     } else {
-      // Continue observing subsequent notes
-      this.note = currentNote;
+      // console.log(`I never saw ${currentNoteKey}`)
+      this.noteMap.set(currentNoteKey, { lastSeen: currentTime, totalTime: 0 });
     }
   }
 
-  public startListening() {
-    addEventListener('audioMonitor/filterAudioSignal', (event: CustomEvent<AudioMonitorEventDetail>) => {
+  private fireEvent(note: string, octave: number, threshold: number) {
+    // Trigger your custom event here
+    const eventDetail = { note, octave, threshold };
+    // Replace the next line with your actual event firing mechanism
+    console.log('!!!!!!!Custom Event Fired:', eventDetail);
+  }
+
+  startListening() {
+    addEventListener('audioMonitor/filterAudioSignal', (event: CustomEvent<Note>) => {
       this.handleNotePlucked(event.detail);
     });
   }
