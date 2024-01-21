@@ -12,7 +12,7 @@ import { noteMonitorPing, stepNoteMonitorEvents } from "./note-monitor-events"
 import { freqNote, noteFreq,freqNoteRange } from "./music/western/model"
 import { listenForEvent } from "./events/main"
 import { NoteMonitor } from "./note-monitor/index"
-
+import { RealTimeGraph } from "./RealTimeGraph"
 // required to be exported
 exports = {startAudio, stopAudio, freqNote, noteFreq,freqNoteRange}
 // listener for the bottom
@@ -25,6 +25,9 @@ addEventListener("audioMonitor/filterAudioSignal", noteMonitorPing);
 const noteMonitor = new NoteMonitor();
 noteMonitor.startListening();
 
+// Real Time note monitor graph
+const graph = new RealTimeGraph('audioGraph','deviation');
+graph.attachEventListener("audioSignal");
 // init step function
 window.requestAnimationFrame(step);
 window.requestAnimationFrame(stepNoteMonitorEvents);
