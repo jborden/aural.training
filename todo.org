@@ -47,8 +47,8 @@
    9. [ ] - note memorization lesson
       1. [ ] - scale memorization
       2. [ ] - different keys
-3. [ ] - Host at https://aural.training
-   1. [ ] - automate deploy with CircleCI
+3. [x] - Host at https://aural.training
+   1. [x] - automate deploy with github actions
 4. [ ] - user settings page
    1. [ ] - basic profile
    2. [ ] - save settings such as
