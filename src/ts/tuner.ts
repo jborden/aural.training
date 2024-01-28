@@ -22,6 +22,8 @@ with the above license.
 
 This code is from Alexander Ellis:  https://alexanderell.is/posts/tuner/tuner.js
 It is demo'd here: https://alexanderell.is/posts/tuner/
+
+Converted to TS by James Borden, using same MIT license
 */
 
 export class AudioAnalyzer {
