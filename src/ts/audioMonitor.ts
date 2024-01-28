@@ -2,6 +2,7 @@ import { freelizer } from 'freelizer';
 import { noteName } from './guitar/model';
 import { publishEvent } from './events/main';
 import * as Tone from 'tone';
+import { AudioAnalyzer } from './tuner';
 
 export interface AudioMonitorEventDetail {
   frequency: number,
@@ -21,6 +22,10 @@ export async function startAudio() {
       ({start, stop, subscribe} = await freelizer());
     }
     start();
+    // for the newer tuner.ts
+    const tuner = new AudioAnalyzer();
+    tuner.init();
+
     Tone.start();
     monitoring = true;
     publishEvent("audioMonitor/start");

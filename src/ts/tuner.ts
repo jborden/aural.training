@@ -51,7 +51,8 @@ export class AudioAnalyzer {
     this.analyser.maxDecibels = -10;
     this.analyser.smoothingTimeConstant = 0.85;
 
-    this.canvas = document.querySelector('.visualizer');
+    // this is for the visualizer which we aren't using
+    //this.canvas = document.querySelector('.visualizer');
     this.canvasContext = this.canvas?.getContext("2d");
   }
 
@@ -90,12 +91,12 @@ export class AudioAnalyzer {
     const dataArray = new Uint8Array(bufferLength);
     this.analyser.getByteTimeDomainData(dataArray);
     
-    this.canvasContext.fillStyle = 'rgb(200, 200, 200)';
-    this.canvasContext.fillRect(0, 0, this.WIDTH || 0, this.HEIGHT || 0);
+    // this.canvasContext.fillStyle = 'rgb(200, 200, 200)';
+    // this.canvasContext.fillRect(0, 0, this.WIDTH || 0, this.HEIGHT || 0);
     
-    this.canvasContext.lineWidth = 2;
-    this.canvasContext.strokeStyle = 'rgb(0, 0, 0)';
-    this.canvasContext.beginPath();
+    // this.canvasContext.lineWidth = 2;
+    // this.canvasContext.strokeStyle = 'rgb(0, 0, 0)';
+    // this.canvasContext.beginPath();
     
     const sliceWidth = (this.WIDTH || 0) * 1.0 / bufferLength;
     let x = 0;
