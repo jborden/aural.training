@@ -62,3 +62,7 @@ React (v18, latest) is not in a place that can be easily used with rollup/tsc. I
 ## Syncing DB
 
 The websocket on the backend needs more work. The frontend dexie db sync seems to delay connecting, or not connect at all.
+
+## Freelize Problems
+
+We will need to use something else to process notes. We will need something that uses Fast Fourier Transform (FFT)
