@@ -21,6 +21,7 @@ Note: autoCorrelate comes from https://github.com/cwilso/PitchDetect/pull/23
 with the above license.
 
 This code is from Alexander Ellis:  https://alexanderell.is/posts/tuner/tuner.js
+It is demo'd here: https://alexanderell.is/posts/tuner/
 */
 
 function init() {
