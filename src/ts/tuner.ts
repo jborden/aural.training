@@ -41,7 +41,7 @@ export class AudioAnalyzer {
   private smoothingThreshold: number = 5;
   private smoothingCountThreshold: number = 5;
   private noteStrings: string[] = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-  private roundingValue: string = "hz"; // "none", "hz", "note"
+  private roundingValue: string = "note"; // "none", "hz", "note"
   private smoothingValue: string = "basic"; // "none", "basic", "very"
   private valueToDisplay: string | number;
   constructor() {
@@ -80,6 +80,18 @@ export class AudioAnalyzer {
   private noteFromPitch( frequency: number ) {
       var noteNum = 12 * (Math.log( frequency / 440 )/Math.log(2) );
       return Math.round( noteNum ) + 69;
+  }
+
+  private octaveFromPitch( frequency: number ) {
+    // this is from freelizer lib , but is standard music theory.
+    // https://github.com/sablevsky/freelizer
+    const CONCERT_PITCH = 440 //frequency of a fixed note, which is used as a standard for tuning. It is usually a standard (also called concert) pitch of 440 Hz, which is called A440 or note A in the one-line (or fourth) octave (A4)
+    const A = 2 ** (1 / 12) // the twelth root of 2 = the number which when multiplied by itself 12 times equals 2 = 1.059463094359...
+    const C0_PITCH = 16.35 // frequency of lowest note: C0
+    const N = Math.round(12 * Math.log2(frequency / CONCERT_PITCH)) // the number of half steps away from the fixed note you are. If you are at a higher note, n is positive. If you are on a lower note, n is negative.
+    const Fn = CONCERT_PITCH * A ** N // the frequency of the note n half steps away of concert pitch
+    return Math.floor(Math.log2(Fn / C0_PITCH))
+
   }
   
   private draw() {
@@ -125,7 +137,7 @@ export class AudioAnalyzer {
     const buffer = new Float32Array(bufferLength);
     this.analyser.getFloatTimeDomainData(buffer);
     const autoCorrelateValue = this.autoCorrelate(buffer, this.audioContext.sampleRate);
-
+    
     // Handle rounding
     this.valueToDisplay = autoCorrelateValue;
     //const roundingValue = document.querySelector('input[name="rounding"]:checked').value;
@@ -134,9 +146,13 @@ export class AudioAnalyzer {
     } else if (this.roundingValue == 'hz') {
       this.valueToDisplay = Math.round(this.valueToDisplay);
     } else if (this.roundingValue = 'note'){
+      // Get the closest Octave
+      
       // Get the closest note
       // Thanks to PitchDetect:
-      this.valueToDisplay = this.noteStrings[this.noteFromPitch(autoCorrelateValue) % 12];
+      const note = this.noteStrings[this.noteFromPitch(autoCorrelateValue) % 12];
+      const octave = this.octaveFromPitch(autoCorrelateValue);
+      this.valueToDisplay = `${note}${octave}`;
     }
 
     //var smoothingValue = document.querySelector('input[name="smoothing"]:checked').value
