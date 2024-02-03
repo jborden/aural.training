@@ -4,14 +4,21 @@ export function publishEvent(type: string, detail?: any, ) {
   dispatchEvent(event);
 }
 
-export function listenForEvent(type: string) {
+export function listenForEvent(type: string, detailFn?: (detail: any) => any) {
   console.log(`Event Logger: ${type}`)
+  console.log("detailFn:", detailFn)
+  const defaultFn = (detail: any) => {
+    return JSON.stringify(detail, null, 2);
+  }
+  const chosenFn = detailFn || defaultFn;
+
   addEventListener(
     type,
-    (event: Event) => {
-      // Print the name of the event
-      console.log(`${type}: `, event);
-
+    (event: CustomEvent) => {
+      const value = chosenFn(event.detail);
+      //console.log("choosenFn:",chosenFn)
+      // Print the name of the event and the value
+      console.log(`${type}: ${value}`);
       // Print the contents of the event (event object)
       // console.log('Event Contents:', event);
     },

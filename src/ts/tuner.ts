@@ -25,13 +25,25 @@ It is demo'd here: https://alexanderell.is/posts/tuner/
 
 Converted to TS by James Borden, using same MIT license
 */
+type Note = {
+  note: string;
+  octave: number;
+};
+
+export type NoteObserved = Note & {
+  timestamp: Date;
+}
+
+import { publishEvent } from "./events/main"
 
 export class AudioAnalyzer {
   private source: MediaStreamAudioSourceNode | undefined;
   private audioContext: AudioContext;
   private analyser: AnalyserNode;
-  private canvas: HTMLCanvasElement | null;
-  private canvasContext: CanvasRenderingContext2D | null;
+  // private canvas: HTMLCanvasElement | null;
+  // private canvasContext: CanvasRenderingContext2D | null;
+  private monitoring: boolean;
+  private animationFrameId: number;
   private WIDTH: number | undefined;
   private HEIGHT: number | undefined;
   //private drawVisual: number | undefined;
@@ -45,36 +57,7 @@ export class AudioAnalyzer {
   private smoothingValue: string = "basic"; // "none", "basic", "very"
   private valueToDisplay: string | number;
   constructor() {
-    this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    this.analyser = this.audioContext.createAnalyser();
-    this.analyser.minDecibels = -100;
-    this.analyser.maxDecibels = -10;
-    this.analyser.smoothingTimeConstant = 0.85;
-
-    // this is for the visualizer which we aren't using
-    //this.canvas = document.querySelector('.visualizer');
-    this.canvasContext = this.canvas?.getContext("2d");
-  }
-
-  private visualize() {
-    this.WIDTH = this.canvas?.width || undefined;
-    this.HEIGHT = this.canvas?.height || undefined;
-
-    //this.drawVisual = requestAnimationFrame(this.draw.bind(this));
-    requestAnimationFrame(this.draw.bind(this));
-    this.analyser.fftSize = 2048;
-    const bufferLength = this.analyser.fftSize;
-    const dataArray = new Uint8Array(bufferLength);
-    this.analyser.getByteTimeDomainData(dataArray);
-
-    // var displayValue = document.querySelector('input[name="display"]:checked').value
-    // if (displayValue == 'sine') {
-    //   draw();
-    // } else {
-    //   drawFrequency();
-    // }
-    // Call other draw methods...
-    this.drawNote();
+    this.monitoring = false;
   }
 
   private noteFromPitch( frequency: number ) {
@@ -94,45 +77,9 @@ export class AudioAnalyzer {
 
   }
   
-  private draw() {
-    //this.drawVisual = requestAnimationFrame(this.draw.bind(this));
-    requestAnimationFrame(this.draw.bind(this));
-    
-    this.analyser.fftSize = 2048;
-    const bufferLength = this.analyser.fftSize;
-    const dataArray = new Uint8Array(bufferLength);
-    this.analyser.getByteTimeDomainData(dataArray);
-    
-    // this.canvasContext.fillStyle = 'rgb(200, 200, 200)';
-    // this.canvasContext.fillRect(0, 0, this.WIDTH || 0, this.HEIGHT || 0);
-    
-    // this.canvasContext.lineWidth = 2;
-    // this.canvasContext.strokeStyle = 'rgb(0, 0, 0)';
-    // this.canvasContext.beginPath();
-    
-    const sliceWidth = (this.WIDTH || 0) * 1.0 / bufferLength;
-    let x = 0;
-    
-    for (let i = 0; i < bufferLength; i++) {
-      const v = dataArray[i] / 128.0;
-      const y = v * (this.HEIGHT || 0) / 2;
-      
-      if (i === 0) {
-	this.canvasContext?.moveTo(x, y);
-      } else {
-	this.canvasContext?.lineTo(x, y);
-      }
-      
-      x += sliceWidth;
-    }
-
-    this.canvasContext?.lineTo(this.canvas?.width || 0, (this.canvas?.height || 0) / 2);
-    this.canvasContext?.stroke();
-  }
-
   private drawNote() {
-    //this.drawNoteVisual = requestAnimationFrame(this.drawNote.bind(this));
-    requestAnimationFrame(this.drawNote.bind(this));
+    this.animationFrameId = requestAnimationFrame(this.drawNote.bind(this));
+    //requestAnimationFrame(this.drawNote.bind(this));
     const bufferLength = this.analyser.fftSize;
     const buffer = new Float32Array(bufferLength);
     this.analyser.getFloatTimeDomainData(buffer);
@@ -152,9 +99,15 @@ export class AudioAnalyzer {
       // Thanks to PitchDetect:
       const note = this.noteStrings[this.noteFromPitch(autoCorrelateValue) % 12];
       const octave = this.octaveFromPitch(autoCorrelateValue);
+      if (note != undefined) {
+	publishEvent("tuner/note-heard",
+		     {note: note,
+		      octave: octave,
+		      timestamp: new Date()})
+      }
       this.valueToDisplay = `${note}${octave}`;
     }
-
+    
     //var smoothingValue = document.querySelector('input[name="smoothing"]:checked').value
 
 
@@ -192,8 +145,9 @@ export class AudioAnalyzer {
         this.valueToDisplay = this.valueToDisplay.toString() + ' Hz';
       }
 
-      document.getElementById('note').innerText = this.valueToDisplay;
+    document.getElementById('note').innerText = this.valueToDisplay;
     
+    // this.animationFrameId = requestAnimationFrame(() => this.drawNote());
   }
 
   private noteIsSimilarEnough() {
@@ -204,39 +158,6 @@ export class AudioAnalyzer {
       return this.valueToDisplay === this.previousValueToDisplay;
     }
   }
-
-  // private drawFrequency() {
-  //   const bufferLengthAlt = this.analyser.frequencyBinCount;
-  //   const dataArrayAlt = new Uint8Array(bufferLengthAlt);
-
-  //   this.canvasContext?.clearRect(0, 0, this.WIDTH || 0, this.HEIGHT || 0);
-
-  //   const drawAlt = () => {
-  //     requestAnimationFrame(drawAlt);
-  //     //this.drawVisual = requestAnimationFrame(drawAlt);
-
-  //     this.analyser.getByteFrequencyData(dataArrayAlt);
-
-  //     this.canvasContext?.fillStyle = 'rgb(0, 0, 0)';
-  //     this.canvasContext?.fillRect(0, 0, this.WIDTH || 0, this.HEIGHT || 0);
-
-  //     const barWidth = (this.WIDTH || 0) / bufferLengthAlt * 2.5;
-  //     let barHeight;
-  //     let x = 0;
-
-  //     for (let i = 0; i < bufferLengthAlt; i++) {
-  //       barHeight = dataArrayAlt[i];
-
-  //       this.canvasContext?.fillStyle = `rgb(${barHeight + 100},50,50)`;
-  //       this.canvasContext?.fillRect(x, this.HEIGHT ? this.HEIGHT - barHeight / 2 : 0, barWidth, barHeight / 2);
-
-  //       x += barWidth + 1;
-  //     }
-  //   };
-
-  //   console.log('wut');
-  //   drawAlt();
-  // }
 
   private autoCorrelate(buffer: Float32Array, sampleRate: number): number {
     // Perform a quick root-mean-square to see if we have enough signal
@@ -321,7 +242,12 @@ export class AudioAnalyzer {
     return sampleRate / T0;
   }
 
-  public init() {
+  public startAudioMonitoring() {
+    this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    this.analyser = this.audioContext.createAnalyser();
+    this.analyser.minDecibels = -100;
+    this.analyser.maxDecibels = -10;
+    this.analyser.smoothingTimeConstant = 0.85;
     if (!navigator?.mediaDevices?.getUserMedia) {
       // No audio allowed
       alert('Sorry, getUserMedia is required for the app.');
@@ -334,11 +260,67 @@ export class AudioAnalyzer {
           this.source = this.audioContext.createMediaStreamSource(stream);
           // Connect the source node to the analyzer
           this.source.connect(this.analyser);
-          this.visualize();
+          this.drawNote();
         })
         .catch((err) => {
           alert(`Microphone permissions are required for the app. ${err}`,);
         });
     }
   }
+
+  public stopAudioMonitoring() {
+    try {
+      if (this.source) {
+        this.source.disconnect();
+        this.analyser.disconnect();
+      }
+
+      if (this.audioContext.state !== 'closed') {
+        this.audioContext.close();
+      }
+
+      cancelAnimationFrame(this.animationFrameId);
+
+    } catch (error) {
+      console.error('Error during cleanup:', error);
+    }
+  }
+
+}
+
+export class AudioMonitorToggleButton {
+  private listening = false;
+  private parentDiv: HTMLElement = null;
+  private tuner: AudioAnalyzer;
+  
+  constructor(parentDiv: HTMLElement) {
+    this.listening = false;
+    this.parentDiv = parentDiv;
+    this.audioMonitorToggleButtonRender();
+    // for the newer tuner.ts
+    this.tuner = new AudioAnalyzer();
+
+  };
+
+  
+  public audioMonitorToggleButtonRender() {
+    let message = this.listening ? "Stop Mic Monitoring" : "Start Mic Monitoring";
+    let element = document.createElement('button');
+    element.innerHTML = message;
+    element.classList.add('button-54');
+    element.setAttribute("role","button");
+    element.addEventListener('click',() => {this.audioMonitorToggleButton()})
+    this.parentDiv.innerHTML = '';
+    this.parentDiv.append(element);
+  };
+
+  public audioMonitorToggleButton() {
+    if (this.listening) {
+      this.tuner.stopAudioMonitoring()
+    } else {
+      this.tuner.startAudioMonitoring()
+    }
+    this.listening = !this.listening;
+    this.audioMonitorToggleButtonRender();
+  };
 }

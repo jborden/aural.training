@@ -1,43 +1,22 @@
-import {startAudio, stopAudio, logListener, audioMonitorToggleButton} from "./audioMonitor"
+//import {startAudio, stopAudio, audioMonitorToggleButton} from "./audioMonitor"
 import {createTabs } from "./tabs/index"
 import { drawGuitar } from "./guitar/view"
-import { guitarController, notePluckListener, step} from "./guitar/controller"
+import { step} from "./guitar/controller"
 import { createFretBoard, standardTuning} from "./guitar/model"
 import { range } from "lodash-es";
-import { guessNotes } from "./guitar-note-trainer/controller"
-import { newGuitarNoteTrainerEvent, showEvents } from "./dexie/db"
+import { GuessNotes } from "./guitar-note-trainer/controller";
+//import { newGuitarNoteTrainerEvent, showEvents } from "./dexie/db"
 import { voiceGraph } from "./voice/controller"
 import { guessIntervals } from "./guitar-interval-trainer/controller"
-import { noteMonitorPing, stepNoteMonitorEvents } from "./note-monitor-events"
-import { freqNote, noteFreq,freqNoteRange } from "./music/western/model"
+//import { freqNote, noteFreq,freqNoteRange } from "./music/western/model"
 import { listenForEvent } from "./events/main"
-import { NoteMonitor } from "./note-monitor/index"
-//import { RealTimeGraph } from "./RealTimeGraph"
-// required to be exported
-exports = {startAudio, stopAudio, freqNote, noteFreq,freqNoteRange}
-// listener for the bottom
-addEventListener('audioSignal',logListener);
-addEventListener('audioSignal',notePluckListener);
-// listener for the note-monitor-events
-addEventListener("audioMonitor/filterAudioSignal", noteMonitorPing);
+import { AudioMonitorToggleButton } from "./tuner"
 
-// monitor notes below threshold
-const noteMonitor = new NoteMonitor();
-noteMonitor.startListening();
+//exports = {startAudio, stopAudio, freqNote, noteFreq,freqNoteRange}
 
-// Real Time note monitor graph
-//const graph = new RealTimeGraph('audioGraph','deviation');
-//graph.attachEventListener("audioSignal");
-// init step function
 window.requestAnimationFrame(step);
-window.requestAnimationFrame(stepNoteMonitorEvents);
-let toggleButton = new audioMonitorToggleButton(document.querySelector("#audio-monitor-toggle-button"));
+let toggleButton = new AudioMonitorToggleButton(document.querySelector("#audio-monitor-toggle-button"));
 addEventListener('keyup',(event) => { if ( event.key === " ") { toggleButton.audioMonitorToggleButton()}})
-/**************************************************
-*
-* guitar
-*
-**************************************************/
 // drop-D tuning
 // const dropDTuning = [{note: "E", octave: 4},
 // 		     {note: "B", octave: 3},
@@ -53,30 +32,7 @@ addEventListener('keyup',(event) => { if ( event.key === " ") { toggleButton.aud
 // 			 {note: "A", octave: 2},
 // 			 {note: "E", octave: 2},
 // 			 {note: "B", octave:1}]
-// const fretBoard = createFretBoard(standardTuning, 12);
-// const guessNotesFretsRange = range(0,2);
-// //console.log(guessNotesFretsRange)
-// const guessNotesStringRange = range(0,7);
-// drawGuitar(document.querySelector("#guitar"),fretBoard);
-// guitarController();
-/********************END GUITAR********************/
 
-/**************************************************
-*
-* events
-*
-**************************************************/
-//showEvents()
-
-/********************END EVENTS*******************/
-
-/**************************************************
-*
-* voice
-*
-**************************************************/
-
-/********************END VOICE********************/
 const data = [
   {title: 'Guitar Note Trainer',
    id: "guitar-note-trainer-tab",
@@ -88,7 +44,7 @@ const data = [
     guitarNoteTrainerDiv.id = 'guitar-note-trainer';
     const fretsRange = range(0,1);
     const fretBoard = createFretBoard(standardTuning, 12);
-    guessNotes(guitarNoteTrainerDiv,fretBoard,fretsRange,range(0,5));
+    new GuessNotes(guitarNoteTrainerDiv,fretBoard,fretsRange,range(0,5));
     noteTrainerRoot.appendChild(guitarNoteTrainerDiv);
     // fretboard view
     const fretBoardDiv = document.createElement('div');
@@ -130,10 +86,9 @@ createTabs(data, container);
 
 // debug
 
+const eventsToMonitor = ["tuner/note-heard"];
 
-// const eventsToMonitor = ["guitar-note-trainer/guess-note"];
-
-// eventsToMonitor.forEach((eventName) => {
-//   console.log(`I am trying for ${eventName}`);
-//   listenForEvent(eventName);
-// });
+eventsToMonitor.forEach((eventName) => {
+  console.log(`I am trying for ${eventName}`);
+  listenForEvent(eventName, (detail: any) => `${detail.note}${detail.octave}`);
+});

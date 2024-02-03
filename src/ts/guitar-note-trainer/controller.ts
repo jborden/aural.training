@@ -5,60 +5,73 @@ import { sample } from "lodash-es"
 import { GuessNoteEvent } from "../events/types"
 import { publishEvent } from "../events/main"
 import { isElementActiveById } from "../tabs/index"
-import { NoteMonitor, NoteObserved } from "../note-monitor/index"
+import { NoteObserved } from "../tuner"
 
-//let currentNote: GuitarNote = null;
-let guessIsCorrect: boolean = null;
+export class GuessNotes {
+  private subFretBoard: FretBoard;
+  private guessIsCorrect: boolean | null;
+  private currentNote: GuitarNote | null;
+  private currentNoteTimeAsked: Date | null;
+  private parentDiv: HTMLElement;
 
-function createGuessNoteEventDetail(noteAsked: GuitarNote, noteGiven: GuitarNote): GuessNoteEvent {
+  constructor(parentDiv: HTMLElement, fretBoard: FretBoard, frets?: number[], strings?: number[]) {
+    this.subFretBoard = selectNotes(fretBoard, frets, strings);
+    this.guessIsCorrect = null;
+    this.parentDiv = parentDiv;
+    this.setCurrentNote();
+    this.render();
+    this.anonymousListener = this.anonymousListener.bind(this);
+    addEventListener('tuner/note-heard',this.anonymousListener);
+  }
+
+  private setCurrentNote(): void {
+    this.currentNote = sample(this.subFretBoard);
+    this.currentNoteTimeAsked = new Date();
+  }
+
+  private createGuessNoteEventDetail(noteAsked: GuitarNote, noteGiven: GuitarNote): GuessNoteEvent {
   return({noteAsked: noteAsked,
 	  noteGiven: noteGiven,
 	  timestamp: Date.now(),
 	  uuid: crypto.randomUUID(),
 	  correctGuess: (noteAsked === noteGiven),
 	  type: "guitar-note-trainer/guess-note"})
-}
-
-export function guessNotes(parentDiv: HTMLElement, fretBoard: FretBoard, frets?: number[], strings?: number[]) {
-  const subFretBoard: FretBoard = selectNotes(fretBoard, frets, strings);
-  guessIsCorrect = null;
-  let currentNote: GuitarNote = sample(subFretBoard);
-  render();
-
-  function guessNotesAudioSignalListener(noteObserved: NoteObserved): void {
+  }
+  
+  private guessNotesAudioSignalListener(noteHeard: NoteObserved): void {
     // check to see if the tab is active
     if (isElementActiveById("guitar-note-trainer-tab")) {
-      const note: GuitarNote = {note: noteObserved.note, octave: noteObserved.octave};
-      if (noteName(note) === noteName(currentNote)) {
-	guessIsCorrect = true;
+      //const note: GuitarNote = {note: noteObserved.note, octave: noteObserved.octave};
+      
+      if (noteName(noteHeard) === noteName(this.currentNote) && (noteHeard.timestamp > this.currentNoteTimeAsked)) {
+	this.guessIsCorrect = true;
 	publishEvent("guitar-note-trainer/guess-note",
-		     createGuessNoteEventDetail(currentNote, note))
+		     this.createGuessNoteEventDetail(this.currentNote, noteHeard))
       } else {
-	guessIsCorrect = false;
+	this.guessIsCorrect = false;
 	publishEvent("guitar-note-trainer/guess-note",
-		     createGuessNoteEventDetail(currentNote, note))
+		     this.createGuessNoteEventDetail(this.currentNote, noteHeard))
       }
-      currentNote = sample(subFretBoard) as GuitarNote;
-      render();
+      this.setCurrentNote();
+      this.render();
     }
   }
 
-  function render(): void {
-    let selectedNoteHTML = renderCurrentNote(currentNote);
-    let guessHTML = renderIsGuessCorrect(guessIsCorrect);
-    parentDiv.innerHTML = `<div class='text'>${selectedNoteHTML} ${guessHTML}</div>`;
+  private render(): void {
+    let selectedNoteHTML = renderCurrentNote(this.currentNote);
+    let guessHTML = renderIsGuessCorrect(this.guessIsCorrect);
+    this.parentDiv.innerHTML = `<div class='text'>${selectedNoteHTML} ${guessHTML}</div>`;
   }
 
   // create a listener for note events
-  const noteMonitor = new NoteMonitor();
-  noteMonitor.startListening();
+  // const noteMonitor = new NoteMonitor();
+  // noteMonitor.startListening();
 
-  const anonymousListener = (e: any) => {
+  private anonymousListener(e: any): void {
     const { detail }: { detail: NoteObserved } = e;
     if (detail) {
-      guessNotesAudioSignalListener(detail);
+      this.guessNotesAudioSignalListener(detail);
     }
-  };
+  }
 
-  addEventListener('note-monitor/note-observed',anonymousListener);
 }

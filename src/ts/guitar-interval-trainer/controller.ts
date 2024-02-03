@@ -1,14 +1,17 @@
 import { Interval, WesternIntervals } from "../music/western/model"
 import { renderCurrentInterval, renderIsGuessCorrect, renderReplayButton } from "./view"
 import { sample,isNull, isEqual} from "lodash-es"
-import { currentNoteName, currentNoteFirstSeenTimeStamp } from "../audioMonitor"
 import { selectIntervals } from "./model"
 import { intervalDistance, noteSequenceIntervals, GuitarNote } from "../guitar/model"
-import { monitoring } from "../audioMonitor"
 import { playInterval, playIntervalSequence } from "../tones"
 import { GuessNoteEvent } from "../events/types"
 import { publishEvent } from "../events/main"
 import { isElementActiveById } from "../tabs/index"
+
+// this is just a quick hack because we took out audioMonitor.ts
+// properly, we should have a way to cleanup objects when a tab is
+// clicked on
+const monitoring = false
 // function createGuessNoteEventDetail(noteAsked: GuitarNote, noteGiven: GuitarNote): GuessNoteEvent {
 
 //   return({noteAsked: noteAsked,
