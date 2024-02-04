@@ -56,6 +56,8 @@ export class AudioAnalyzer {
   private roundingValue: string = "note"; // "none", "hz", "note"
   private smoothingValue: string = "basic"; // "none", "basic", "very"
   private valueToDisplay: string | number;
+  private note: string | undefined;
+  private octave: number | undefined;
   constructor() {
     this.monitoring = false;
   }
@@ -99,55 +101,53 @@ export class AudioAnalyzer {
       // Thanks to PitchDetect:
       const note = this.noteStrings[this.noteFromPitch(autoCorrelateValue) % 12];
       const octave = this.octaveFromPitch(autoCorrelateValue);
-      if (note != undefined) {
-	publishEvent("tuner/note-heard",
-		     {note: note,
-		      octave: octave,
-		      timestamp: new Date()})
-      }
+      this.note = note;
+      this.octave = octave;
       this.valueToDisplay = `${note}${octave}`;
     }
     
     //var smoothingValue = document.querySelector('input[name="smoothing"]:checked').value
+    if (autoCorrelateValue === -1) {
+      document.getElementById('note').innerText = 'Too quiet...';
+      return;
+    }
+    // original default was at 'basic'
+    // const originalParameters  = {'none': {'smoothingThreshold': 99999,
+    // 					  'smoothingCountThreshold': 0},
+    // 				 'basic': {'smoothingThreshold': 10,
+    // 					   'smoothingCountThreshold': 5},
+    // 				 'very': {'smoothingThreshold': 5,
+    // 					  'smoothingCountThreshold': 10}}
+    // this.smoothingCount = originalParameters['basic']['smoothingThreshold'];
+    // this.smoothingCountThreshold = originalParameters['basic']['smoothingCountThreshold'];
 
-
-      if (autoCorrelateValue === -1) {
-        document.getElementById('note').innerText = 'Too quiet...';
-        return;
-      }
-      if (this.smoothingValue === 'none') {
-        this.smoothingThreshold = 99999;
-        this.smoothingCountThreshold = 0;
-      } else if (this.smoothingValue === 'basic') {
-        this.smoothingThreshold = 10;
-        this.smoothingCountThreshold = 5;
-      } else if (this.smoothingValue === 'very') {
-        this.smoothingThreshold = 5;
-        this.smoothingCountThreshold = 10;
-      }
-     
+    // we need to play with this variable
+    this.smoothingCountThreshold = 50;
       // Check if this value has been within the given range for n iterations
-      if (this.noteIsSimilarEnough()) {
-        if (this.smoothingCount < this.smoothingCountThreshold) {
-          this.smoothingCount++;
-          return;
-        } else {
-          this.previousValueToDisplay = this.valueToDisplay;
-          this.smoothingCount = 0;
-        }
+    if (this.noteIsSimilarEnough()) {
+      if (this.smoothingCount < this.smoothingCountThreshold) {
+        this.smoothingCount++;
+        return;
       } else {
         this.previousValueToDisplay = this.valueToDisplay;
         this.smoothingCount = 0;
-        return;
       }
+    } else {
+      this.previousValueToDisplay = this.valueToDisplay;
+      this.smoothingCount = 0;
+      return;
+    }
     
-      if (typeof(this.valueToDisplay) == 'number') {
-        this.valueToDisplay = this.valueToDisplay.toString() + ' Hz';
-      }
-
+    if (typeof(this.valueToDisplay) == 'number') {
+      this.valueToDisplay = this.valueToDisplay.toString() + ' Hz';
+    }
+    
     document.getElementById('note').innerText = this.valueToDisplay;
-    
-    // this.animationFrameId = requestAnimationFrame(() => this.drawNote());
+    publishEvent("tuner/note-heard", {
+      note: this.note,
+      octave: this.octave,
+      timestamp: new Date()
+    })
   }
 
   private noteIsSimilarEnough() {
@@ -170,7 +170,11 @@ export class AudioAnalyzer {
     }
 
     const rootMeanSquare = Math.sqrt(sumOfSquares / SIZE);
-    if (rootMeanSquare < 0.01) {
+    // was originally 0.01, we need to be able to play with this
+    // it essentially gives us the threshold at where a note is detected.
+    // The problem is that lower notes will need a lower threshold
+    // we might have to make this value dependent upon note asked!
+    if (rootMeanSquare < 0.1) {
       return -1;
     }
 
