@@ -42,7 +42,7 @@ export class AudioAnalyzer {
   private analyser: AnalyserNode;
   // private canvas: HTMLCanvasElement | null;
   // private canvasContext: CanvasRenderingContext2D | null;
-  private monitoring: boolean;
+  public monitoring: boolean;
   private animationFrameId: number;
   private WIDTH: number | undefined;
   private HEIGHT: number | undefined;
@@ -255,6 +255,7 @@ export class AudioAnalyzer {
     if (!navigator?.mediaDevices?.getUserMedia) {
       // No audio allowed
       alert('Sorry, getUserMedia is required for the app.');
+      this.monitoring = false;
       return;
     } else {
       const constraints = { audio: true };
@@ -264,6 +265,7 @@ export class AudioAnalyzer {
           this.source = this.audioContext.createMediaStreamSource(stream);
           // Connect the source node to the analyzer
           this.source.connect(this.analyser);
+	  this.monitoring = true;
           this.drawNote();
         })
         .catch((err) => {
@@ -284,7 +286,7 @@ export class AudioAnalyzer {
       }
 
       cancelAnimationFrame(this.animationFrameId);
-
+      this.monitoring = false;
     } catch (error) {
       console.error('Error during cleanup:', error);
     }
@@ -296,6 +298,7 @@ export class AudioMonitorToggleButton {
   private listening = false;
   private parentDiv: HTMLElement = null;
   private tuner: AudioAnalyzer;
+  public monitoring: boolean;
   
   constructor(parentDiv: HTMLElement) {
     this.listening = false;
@@ -303,7 +306,7 @@ export class AudioMonitorToggleButton {
     this.audioMonitorToggleButtonRender();
     // for the newer tuner.ts
     this.tuner = new AudioAnalyzer();
-
+    this.monitoring = this.tuner.monitoring;
   };
 
   

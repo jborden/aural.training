@@ -7,7 +7,7 @@ import { range } from "lodash-es";
 import { GuessNotes } from "./guitar-note-trainer/controller";
 //import { newGuitarNoteTrainerEvent, showEvents } from "./dexie/db"
 import { voiceGraph } from "./voice/controller"
-import { guessIntervals } from "./guitar-interval-trainer/controller"
+import { IntervalTrainer } from "./guitar-interval-trainer/controller"
 //import { freqNote, noteFreq,freqNoteRange } from "./music/western/model"
 import { listenForEvent } from "./events/main"
 import { AudioMonitorToggleButton } from "./tuner"
@@ -37,37 +37,37 @@ const data = [
   {title: 'Guitar Note Trainer',
    id: "guitar-note-trainer-tab",
    content: () => {
-    // root div
-    const noteTrainerRoot = document.createElement('div');
-    // noteTrainer
-    const guitarNoteTrainerDiv = document.createElement('div');
-    guitarNoteTrainerDiv.id = 'guitar-note-trainer';
-    const fretsRange = range(0,1);
-    const fretBoard = createFretBoard(standardTuning, 12);
-    new GuessNotes(guitarNoteTrainerDiv,fretBoard,fretsRange,range(0,5));
-    noteTrainerRoot.appendChild(guitarNoteTrainerDiv);
-    // fretboard view
-    const fretBoardDiv = document.createElement('div');
-    drawGuitar(fretBoardDiv,fretBoard);
-    noteTrainerRoot.appendChild(fretBoardDiv);
-    return noteTrainerRoot;
+     // root div
+     const noteTrainerRoot = document.createElement('div');
+     // noteTrainer
+     const guitarNoteTrainerDiv = document.createElement('div');
+     guitarNoteTrainerDiv.id = 'guitar-note-trainer';
+     const fretsRange = range(0,1);
+     const fretBoard = createFretBoard(standardTuning, 12);
+     new GuessNotes(guitarNoteTrainerDiv,fretBoard,fretsRange,range(0,5));
+     noteTrainerRoot.appendChild(guitarNoteTrainerDiv);
+     // fretboard view
+     const fretBoardDiv = document.createElement('div');
+     drawGuitar(fretBoardDiv,fretBoard);
+     noteTrainerRoot.appendChild(fretBoardDiv);
+     return noteTrainerRoot;
   }},
   {title: 'Guitar Interval Trainer',
    id: "guitar-interval-trainer-tab",
    content: () => {
-    // root div
-    const guitarIntervalTrainer = document.createElement('div');
-    // interval trainer
-    const intervalTrainerDiv = document.createElement('div');
-    intervalTrainerDiv.id = 'guitar-interval-trainer';
-    guessIntervals(intervalTrainerDiv,["m2","M2"]);
-    guitarIntervalTrainer.append(intervalTrainerDiv);
-    // fretboardiv
-    const fretBoard = createFretBoard(standardTuning, 12);
-    const fretBoardDiv = document.createElement('div');
-    drawGuitar(fretBoardDiv,fretBoard);
-    guitarIntervalTrainer.appendChild(fretBoardDiv);
-    return guitarIntervalTrainer;
+     // root div
+     const guitarIntervalTrainer = document.createElement('div');
+     // interval trainer
+     const intervalTrainerDiv = document.createElement('div');
+     intervalTrainerDiv.id = 'guitar-interval-trainer';
+     new IntervalTrainer(intervalTrainerDiv,["m2","M2"], toggleButton.monitoring)
+     guitarIntervalTrainer.append(intervalTrainerDiv);
+     // fretboardiv
+     const fretBoard = createFretBoard(standardTuning, 12);
+     const fretBoardDiv = document.createElement('div');
+     drawGuitar(fretBoardDiv,fretBoard);
+     guitarIntervalTrainer.appendChild(fretBoardDiv);
+     return guitarIntervalTrainer;
   }},
   {title: 'Voice Trainer',
    id: "voice-trainer-tab",

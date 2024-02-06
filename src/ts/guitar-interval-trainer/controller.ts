@@ -1,98 +1,103 @@
-import { Interval, WesternIntervals } from "../music/western/model"
-import { renderCurrentInterval, renderIsGuessCorrect, renderReplayButton } from "./view"
-import { sample,isNull, isEqual} from "lodash-es"
-import { selectIntervals } from "./model"
-import { intervalDistance, noteSequenceIntervals, GuitarNote } from "../guitar/model"
-import { playInterval, playIntervalSequence } from "../tones"
-import { GuessNoteEvent } from "../events/types"
-import { publishEvent } from "../events/main"
-import { isElementActiveById } from "../tabs/index"
+import { Interval, WesternIntervals } from "../music/western/model";
+import { renderCurrentInterval, renderIsGuessCorrect, renderReplayButton } from "./view";
+import { sample, isEqual } from "lodash-es";
+import { selectIntervals } from "./model";
+import { intervalDistance, noteSequenceIntervals, GuitarNote } from "../guitar/model";
+import { playInterval, playIntervalSequence } from "../tones";
+import { GuessNoteEvent } from "../events/types";
+import { publishEvent } from "../events/main";
+import { isElementActiveById } from "../tabs/index";
 
-// this is just a quick hack because we took out audioMonitor.ts
-// properly, we should have a way to cleanup objects when a tab is
-// clicked on
-const monitoring = false
-// function createGuessNoteEventDetail(noteAsked: GuitarNote, noteGiven: GuitarNote): GuessNoteEvent {
+export class IntervalTrainer {
+  private parentDiv: HTMLElement;
+  private requestedIntervals: Interval[];
+  private numberIntervals: number;
+  private notesPlayed: GuitarNote[];
+  private guessIsCorrect: boolean | null;
+  private selectedIntervals: Interval[];
+  private addEventListenerCallback: (e: any) => void;
+  private monitoring: boolean;
+  
+  constructor(parentDiv: HTMLElement, intervals:string[], monitoring: boolean, numberIntervals = 1) {
+    this.parentDiv = parentDiv;
+    this.numberIntervals = numberIntervals;
+    this.requestedIntervals = [WesternIntervals[1],WesternIntervals[2]];
+    this.notesPlayed = [];
+    this.guessIsCorrect = null;
+    this.monitoring = monitoring;
+    this.selectedIntervals = selectIntervals(intervals);
 
-//   return({noteAsked: noteAsked,
-// 	  noteGiven: noteGiven,
-// 	  timestamp: Date.now(),
-// 	  uuid: crypto.randomUUID(),
-// 	  correctGuess: (noteAsked === noteGiven),
-// 	  type: "guitar-note-trainer/guess-note"})
-// }
+    this.addEventListenerCallback = this.guessIntervalsAudioSignalListener.bind(this);
+    addEventListener('note-monitor-event/noteSeenTimeSeenMin', this.guessIntervalsAudioSignalListener.bind(this));
+    addEventListener("audioMonitor/start", this.newInterval.bind(this));
 
-export function guessIntervals(parentDiv: HTMLElement, intervals: string[],numberIntervals: number = 1) {
-  let requestedIntervals:Interval[] = [];
-  let notesPlayed: GuitarNote[] = [];
-  let guessIsCorrect: boolean = null;
-
-  const selectedIntervals = selectIntervals(intervals);
-
-  function setIntervals():void {
-    requestedIntervals = [];
-    for(let i = 0; i < numberIntervals ; i++) {
-      requestedIntervals.push(sample(selectedIntervals));
-    }
-    // requestedIntervals = [WesternIntervals[1],
-    // 			  WesternIntervals[2],
-    // 			  WesternIntervals[1],
-    // 			  WesternIntervals[1]
-    // 			 ]
+    // This is just a quick hack because we took out audioMonitor.ts
+    // Properly, we should have a way to cleanup objects when a tab is
+    // clicked on
+    // this.monitoring = false;
+    // if (this.monitoring) {
+    //   this.newInterval();
+    // }
   }
 
-  function initializeState():void {
-    setIntervals();
-    guessIsCorrect = null;
-  }
-
-  function playSelectedInterval():void {
-    if (monitoring){
-      playIntervalSequence(requestedIntervals);
+  setIntervals() {
+    this.requestedIntervals = [];
+    for (let i = 0; i < this.numberIntervals; i++) {
+      this.requestedIntervals.push(sample(this.selectedIntervals));
     }
   }
 
-  function newInterval():void {
-    initializeState();
-    render();
-    playSelectedInterval();
+  initializeState() {
+    this.setIntervals();
+    this.guessIsCorrect = null;
   }
 
-  function guessIntervalsAudioSignalListener(e: any): void {
+  playSelectedInterval() {
+    if (this.monitoring) {
+      playIntervalSequence(this.requestedIntervals);
+    }
+  }
 
+  newInterval() {
+    this.initializeState();
+    this.render();
+    this.playSelectedInterval();
+  }
+
+  guessIntervalsAudioSignalListener(e: any) {
     if (isElementActiveById("guitar-interval-trainer-tab")) {
-    
-      notesPlayed.push(e.detail.note);
-   
-      if (notesPlayed.length ===  (requestedIntervals.length + 1)) {
-	// check to see if the guess is correct
-	if (isEqual(requestedIntervals.map((v) => { return v.semitones} ),
-		    noteSequenceIntervals(notesPlayed))) {
-	  guessIsCorrect = true
-	} else
-	{
-	  guessIsCorrect = false
-	}
-	// because we're done with this set, set the intervals
-	setIntervals();
-	playSelectedInterval();
-	// .. and reset the notesPlayed array
-	notesPlayed = [];
+      this.notesPlayed.push(e.detail.note);
+
+      if (this.notesPlayed.length === (this.requestedIntervals.length + 1)) {
+        // Check to see if the guess is correct
+        if (isEqual(this.requestedIntervals.map((v) => v.semitones), noteSequenceIntervals(this.notesPlayed))) {
+          this.guessIsCorrect = true;
+        } else {
+          this.guessIsCorrect = false;
+        }
+
+        // Because we're done with this set, set the intervals
+        this.setIntervals();
+        this.playSelectedInterval();
+
+        // Reset the notesPlayed array
+        this.notesPlayed = [];
       }
-      render();
+
+      this.render();
     }
   }
 
-  function render(): void {
-    let selectedIntervalDiv = renderCurrentInterval(requestedIntervals);
-    let guessHTML = renderIsGuessCorrect(guessIsCorrect);
-    parentDiv.innerHTML = `<div class='text'>${selectedIntervalDiv} ${guessHTML}</div>`;
-    parentDiv.append(renderReplayButton(playSelectedInterval))
+  render() {
+    const selectedIntervalDiv = renderCurrentInterval(this.requestedIntervals);
+    const guessHTML = renderIsGuessCorrect(this.guessIsCorrect);
+    this.parentDiv.innerHTML = `<div class='text'>${selectedIntervalDiv} ${guessHTML}</div>`;
+    this.parentDiv.append(renderReplayButton(this.playSelectedInterval.bind(this)));
   }
 
-  addEventListener('note-monitor-event/noteSeenTimeSeenMin', guessIntervalsAudioSignalListener);
-  addEventListener("audioMonitor/start",newInterval);
-  if (monitoring) {
-    newInterval();
+  destroy() {
+    removeEventListener('note-monitor-event/noteSeenTimeSeenMin', this.addEventListenerCallback);
   }
 }
+
+export default IntervalTrainer;
