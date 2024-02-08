@@ -28,7 +28,7 @@ export class IntervalTrainer {
     this.selectedIntervals = selectIntervals(intervals);
 
     this.addEventListenerCallback = this.guessIntervalsAudioSignalListener.bind(this);
-    addEventListener('note-monitor-event/noteSeenTimeSeenMin', this.guessIntervalsAudioSignalListener.bind(this));
+    addEventListener('tuner/note-heard', this.guessIntervalsAudioSignalListener.bind(this));
     addEventListener("audioMonitor/start", this.newInterval.bind(this));
 
     // This is just a quick hack because we took out audioMonitor.ts

@@ -57,6 +57,9 @@ export class GuessNotes {
     }
   }
 
+  public destroy(): void {
+    removeEventListener('tuner/note-heard',this.anonymousListener);
+  }
   private render(): void {
     let selectedNoteHTML = renderCurrentNote(this.currentNote);
     let guessHTML = renderIsGuessCorrect(this.guessIsCorrect);
@@ -73,5 +76,6 @@ export class GuessNotes {
       this.guessNotesAudioSignalListener(detail);
     }
   }
+  
 
 }
