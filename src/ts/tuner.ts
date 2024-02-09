@@ -36,13 +36,14 @@ export type NoteObserved = Note & {
 
 import { publishEvent } from "./events/main"
 
+export let monitoring = {value: false}
+
 export class AudioAnalyzer {
   private source: MediaStreamAudioSourceNode | undefined;
   private audioContext: AudioContext;
   private analyser: AnalyserNode;
   // private canvas: HTMLCanvasElement | null;
   // private canvasContext: CanvasRenderingContext2D | null;
-  public monitoring: boolean;
   private animationFrameId: number;
   private WIDTH: number | undefined;
   private HEIGHT: number | undefined;
@@ -59,7 +60,7 @@ export class AudioAnalyzer {
   private note: string | undefined;
   private octave: number | undefined;
   constructor() {
-    this.monitoring = false;
+    monitoring.value = false;
   }
 
   private noteFromPitch( frequency: number ) {
@@ -255,7 +256,7 @@ export class AudioAnalyzer {
     if (!navigator?.mediaDevices?.getUserMedia) {
       // No audio allowed
       alert('Sorry, getUserMedia is required for the app.');
-      this.monitoring = false;
+      monitoring.value = false;
       return;
     } else {
       const constraints = { audio: true };
@@ -265,7 +266,7 @@ export class AudioAnalyzer {
           this.source = this.audioContext.createMediaStreamSource(stream);
           // Connect the source node to the analyzer
           this.source.connect(this.analyser);
-	  this.monitoring = true;
+	  monitoring.value = true;
           this.drawNote();
         })
         .catch((err) => {
@@ -286,7 +287,7 @@ export class AudioAnalyzer {
       }
 
       cancelAnimationFrame(this.animationFrameId);
-      this.monitoring = false;
+      monitoring.value = false;
     } catch (error) {
       console.error('Error during cleanup:', error);
     }
@@ -306,7 +307,6 @@ export class AudioMonitorToggleButton {
     this.audioMonitorToggleButtonRender();
     // for the newer tuner.ts
     this.tuner = new AudioAnalyzer();
-    this.monitoring = this.tuner.monitoring;
   };
 
   

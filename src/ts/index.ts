@@ -10,7 +10,7 @@ import { voiceGraph } from "./voice/controller"
 import { IntervalTrainer } from "./guitar-interval-trainer/controller"
 //import { freqNote, noteFreq,freqNoteRange } from "./music/western/model"
 import { listenForEvent } from "./events/main"
-import { AudioMonitorToggleButton } from "./tuner"
+import { AudioMonitorToggleButton, monitoring } from "./tuner"
 
 //exports = {startAudio, stopAudio, freqNote, noteFreq,freqNoteRange}
 
@@ -60,7 +60,7 @@ const data = [
      // interval trainer
      const intervalTrainerDiv = document.createElement('div');
      intervalTrainerDiv.id = 'guitar-interval-trainer';
-     new IntervalTrainer(intervalTrainerDiv,["m2","M2"], toggleButton.monitoring)
+     new IntervalTrainer(intervalTrainerDiv,["m2","M2"], monitoring)
      guitarIntervalTrainer.append(intervalTrainerDiv);
      // fretboardiv
      const fretBoard = createFretBoard(standardTuning, 12);
@@ -89,6 +89,5 @@ createTabs(data, container);
 const eventsToMonitor = ["tuner/note-heard"];
 
 eventsToMonitor.forEach((eventName) => {
-  console.log(`I am trying for ${eventName}`);
   listenForEvent(eventName, (detail: any) => `${detail.note}${detail.octave}`);
 });

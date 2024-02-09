@@ -6,7 +6,6 @@ export function publishEvent(type: string, detail?: any, ) {
 
 export function listenForEvent(type: string, detailFn?: (detail: any) => any) {
   console.log(`Event Logger: ${type}`)
-  console.log("detailFn:", detailFn)
   const defaultFn = (detail: any) => {
     return JSON.stringify(detail, null, 2);
   }

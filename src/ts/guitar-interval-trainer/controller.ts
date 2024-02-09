@@ -16,12 +16,11 @@ export class IntervalTrainer {
   private guessIsCorrect: boolean | null;
   private selectedIntervals: Interval[];
   private addEventListenerCallback: (e: any) => void;
-  private monitoring: boolean;
+  private monitoring: {value: boolean};
   
-  constructor(parentDiv: HTMLElement, intervals:string[], monitoring: boolean, numberIntervals = 1) {
+  constructor(parentDiv: HTMLElement, intervals:string[], monitoring: {value: boolean}, numberIntervals = 1) {
     this.parentDiv = parentDiv;
     this.numberIntervals = numberIntervals;
-    this.requestedIntervals = [WesternIntervals[1],WesternIntervals[2]];
     this.notesPlayed = [];
     this.guessIsCorrect = null;
     this.monitoring = monitoring;
@@ -30,7 +29,8 @@ export class IntervalTrainer {
     this.addEventListenerCallback = this.guessIntervalsAudioSignalListener.bind(this);
     addEventListener('tuner/note-heard', this.guessIntervalsAudioSignalListener.bind(this));
     addEventListener("audioMonitor/start", this.newInterval.bind(this));
-
+    this.initializeState();
+    this.render();
     // This is just a quick hack because we took out audioMonitor.ts
     // Properly, we should have a way to cleanup objects when a tab is
     // clicked on
@@ -53,7 +53,7 @@ export class IntervalTrainer {
   }
 
   playSelectedInterval() {
-    if (this.monitoring) {
+    if (this.monitoring.value) {
       playIntervalSequence(this.requestedIntervals);
     }
   }
