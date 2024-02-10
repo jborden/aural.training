@@ -4,7 +4,7 @@ export interface Tab {
 	id: string;
 }
 
-export const createTabs = (data: Tab[], container: HTMLElement) => {
+export const createTabs = (data: Tab[], container: HTMLElement, defaultOpen: number = 0) => {
 	const tabsContainer = document.createElement('div');
 	tabsContainer.classList.add('tabs-container');
 	const tabContent = document.createElement('div');
@@ -37,7 +37,7 @@ export const createTabs = (data: Tab[], container: HTMLElement) => {
 		if (currentActiveTab) currentActiveTab.classList.remove('active');
 		tabsContainer.children[tabNumber].classList.add('active');
 	};
-	showTabContent(0);
+  showTabContent(defaultOpen);
 }
 
 export function isElementActiveById(elementId: string) {

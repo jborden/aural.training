@@ -82,7 +82,7 @@ const data = [
 
 
 const container = document.getElementById('tabs-container') as HTMLElement;
-createTabs(data, container);
+createTabs(data, container, 1);
 
 // debug
 
