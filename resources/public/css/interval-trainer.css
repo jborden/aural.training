@@ -1,0 +1,59 @@
+.circle {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 5px;
+  border: 1px solid #edf2f4;
+}
+
+.circle.filled {
+  background-color: #edf2f4;
+}
+/* from https://codepen.io/gvissing/pen/BKmmpJ */
+
+.note {
+  position: relative;
+  display: inline-block;
+  width: 12px;
+  /* height: 32px; */
+  margin: 0 12px;
+  /* margin-bottom: 48px; */
+}
+.note::before {
+  height: 8px;
+  width: 12px;
+}
+
+.quarter.note::after {
+  content: "";
+  height: 28px;
+  width: 2px;
+  background-color: #98c1d9;
+  position: absolute;
+  top: -24px;
+  right: 0;
+}
+
+.quarter.note::before {
+  position: absolute;
+  content: "";
+  transform: rotatez(-15deg);
+  border-radius: 50%;
+}
+
+.quarter.note::before {
+  background-color: #98c1d9;
+}
+
+.note.filled {
+  background-color: #8d99ae;
+}
+.note.filled::before {
+  background-color: #8d99ae;
+}
+
+.note.filled::after {
+  background-color: #8d99ae;
+  width: 2px;
+}

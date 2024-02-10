@@ -88,10 +88,37 @@ export class IntervalTrainer {
     }
   }
 
-  render() {
+  private generateCirclesHTML() {
+    const requestedCount = this.requestedIntervals.length + 1;
+    const playedCount = this.notesPlayed.length;
+    // const emptyNote = `<span class="note">&#9833;</span>`; // Unicode for MUSIC FLAT SIGN
+    // const filledNote = `<span class="note">&#9833;</span>`; // Unicode for MUSIC NATURAL SIGN
+    const emptyNote = `<span class="quarter note"></span>`;
+    const filledNote = `<span class="quarter note filled"></span>`;
+    // const emptyNote = `<span class="circle"></span>`;
+    // const filledNote = `<span class="circle filled"></span>`;
+    //let circlesHTML = '';
+    let notesHTML = '';
+
+    // Filling circles based on notes played
+    for (let i = 0; i < requestedCount; i++) {
+      if (i < playedCount) {
+	notesHTML += filledNote;
+        //circlesHTML += filledCircle;
+      } else {
+	notesHTML += emptyNote;
+        //circlesHTML += emptyCircle;
+        }
+    }
+
+    //return circlesHTML;
+    return notesHTML;
+  }
+  private render() {
     const selectedIntervalDiv = renderCurrentInterval(this.requestedIntervals);
     const guessHTML = renderIsGuessCorrect(this.guessIsCorrect);
-    this.parentDiv.innerHTML = `<div class='text'>${selectedIntervalDiv} ${guessHTML}</div>`;
+    const circlesHTML = this.generateCirclesHTML();
+    this.parentDiv.innerHTML = `<div class='text'>${selectedIntervalDiv} ${guessHTML} ${circlesHTML}</div>`;
     this.parentDiv.append(renderReplayButton(this.playSelectedInterval.bind(this)));
   }
 
