@@ -10,8 +10,9 @@ import { voiceGraph } from "./voice/controller"
 import { IntervalTrainer } from "./guitar-interval-trainer/controller"
 //import { freqNote, noteFreq,freqNoteRange } from "./music/western/model"
 import { listenForEvent } from "./events/main"
-import { AudioMonitorToggleButton, monitoring } from "./tuner"
-import { PopOver } from "./popover"
+import { AudioMonitorToggleButton, monitoring } from "./tuner";
+import { PopOver } from "./popover";
+import { SliderControl } from "./slider-control";
 
 //exports = {startAudio, stopAudio, freqNote, noteFreq,freqNoteRange}
 
@@ -89,14 +90,27 @@ createTabs(data, container, 1);
 //popup
 const popoverContainer = document.getElementById('popover-container') as HTMLElement;
 new PopOver(popoverContainer);
-const content = document.createElement('div');
-content.innerHTML = `<h2>Hello world!</h2>`;
-const content2 = document.createElement('h2');
-content2.textContent = "hello foo!";
-popoverContainer.appendChild(content);
-popoverContainer.appendChild(content2);
 
-// debug
+// sliders
+
+// Create the smoothing count threshold slider
+new SliderControl(
+  popoverContainer,
+  'Smoothing Count Threshold',
+  toggleButton.tuner.smoothingCountThreshold,
+  1,
+  100,
+  (value: number) => toggleButton.tuner.smoothingCountThreshold = value
+);
+
+new SliderControl(
+  popoverContainer,
+  'Smoothing Threshold',
+  toggleButton.tuner.smoothingThreshold,
+  1,
+  100,
+  (value: number) => toggleButton.tuner.smoothingThreshold = value
+);
 
 const eventsToMonitor = ["tuner/note-heard"];
 

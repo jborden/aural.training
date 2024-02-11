@@ -51,8 +51,8 @@ export class AudioAnalyzer {
   //private drawNoteVisual: number | undefined;
   private previousValueToDisplay: number | string = 0;
   private smoothingCount: number = 0;
-  private smoothingThreshold: number = 5;
-  private smoothingCountThreshold: number = 5;
+  public smoothingThreshold: number = 5;
+  public smoothingCountThreshold: number = 5;
   private noteStrings: string[] = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
   private roundingValue: string = "note"; // "none", "hz", "note"
   private smoothingValue: string = "basic"; // "none", "basic", "very"
@@ -123,8 +123,7 @@ export class AudioAnalyzer {
     // this.smoothingCountThreshold = originalParameters['basic']['smoothingCountThreshold'];
 
     // we need to play with this variable
-    this.smoothingCountThreshold = 50;
-      // Check if this value has been within the given range for n iterations
+    // Check if this value has been within the given range for n iterations
     if (this.noteIsSimilarEnough()) {
       if (this.smoothingCount < this.smoothingCountThreshold) {
         this.smoothingCount++;
@@ -304,7 +303,7 @@ export class AudioAnalyzer {
 export class AudioMonitorToggleButton {
   private listening = false;
   private parentDiv: HTMLElement = null;
-  private tuner: AudioAnalyzer;
+  public tuner: AudioAnalyzer;
   public monitoring: boolean;
   
   constructor(parentDiv: HTMLElement) {
