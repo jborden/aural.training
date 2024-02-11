@@ -267,6 +267,9 @@ export class AudioAnalyzer {
           // Connect the source node to the analyzer
           this.source.connect(this.analyser);
 	  monitoring.value = true;
+	  publishEvent("tuner/monitoring", {
+	    monitoring: true
+	  })
           this.drawNote();
         })
         .catch((err) => {
@@ -288,6 +291,9 @@ export class AudioAnalyzer {
 
       cancelAnimationFrame(this.animationFrameId);
       monitoring.value = false;
+      publishEvent("tuner/monitoring", {
+	monitoring: false
+      })
     } catch (error) {
       console.error('Error during cleanup:', error);
     }

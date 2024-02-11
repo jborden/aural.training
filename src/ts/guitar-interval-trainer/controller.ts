@@ -28,7 +28,7 @@ export class IntervalTrainer {
 
     this.addEventListenerCallback = this.guessIntervalsAudioSignalListener.bind(this);
     addEventListener('tuner/note-heard', this.guessIntervalsAudioSignalListener.bind(this));
-    addEventListener("audioMonitor/start", this.newInterval.bind(this));
+    addEventListener("tuner/monitoring", this.monitoringListener.bind(this));
     this.initializeState();
     this.render();
     // This is just a quick hack because we took out audioMonitor.ts
@@ -88,6 +88,14 @@ export class IntervalTrainer {
     }
   }
 
+  private monitoringListener(event: CustomEvent) {
+    const { monitoring } = event.detail;
+    if (isElementActiveById("guitar-interval-trainer-tab") && monitoring) {
+      this.newInterval();
+    } else {
+      this.render();
+    }
+  }
   private generateCirclesHTML() {
     const requestedCount = this.requestedIntervals.length + 1;
     const playedCount = this.notesPlayed.length;
@@ -114,16 +122,22 @@ export class IntervalTrainer {
     //return circlesHTML;
     return notesHTML;
   }
+
   private render() {
-    const selectedIntervalDiv = renderCurrentInterval(this.requestedIntervals);
-    const guessHTML = renderIsGuessCorrect(this.guessIsCorrect);
-    const circlesHTML = this.generateCirclesHTML();
-    this.parentDiv.innerHTML = `<div class='text'>${selectedIntervalDiv} ${guessHTML} ${circlesHTML}</div>`;
-    this.parentDiv.append(renderReplayButton(this.playSelectedInterval.bind(this)));
+    if (this.monitoring.value) {
+      const selectedIntervalDiv = renderCurrentInterval(this.requestedIntervals);
+      const guessHTML = renderIsGuessCorrect(this.guessIsCorrect);
+      const circlesHTML = this.generateCirclesHTML();
+      this.parentDiv.innerHTML = `<div class='text'>${selectedIntervalDiv} ${guessHTML} ${circlesHTML}</div>`;
+      this.parentDiv.append(renderReplayButton(this.playSelectedInterval.bind(this)));
+    } else {
+      this.parentDiv.innerHTML = `<div class='text'>Please click 'START MIC MONITORING' to start this exerise</div>`;
+    }
   }
 
   destroy() {
-    removeEventListener('note-monitor-event/noteSeenTimeSeenMin', this.addEventListenerCallback);
+    removeEventListener('tuner/note-heard', this.guessIntervalsAudioSignalListener);
+    removeEventListener("tuner/monitoring", this.monitoringListener);
   }
 }
 

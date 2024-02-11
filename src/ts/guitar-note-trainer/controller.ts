@@ -13,15 +13,21 @@ export class GuessNotes {
   private currentNote: GuitarNote | null;
   private currentNoteTimeAsked: Date | null;
   private parentDiv: HTMLElement;
+  private monitoring: {value: boolean};
 
-  constructor(parentDiv: HTMLElement, fretBoard: FretBoard, frets?: number[], strings?: number[]) {
+  constructor(parentDiv: HTMLElement, fretBoard: FretBoard, monitoring: {value: boolean}, frets?: number[], strings?: number[]) {
     this.subFretBoard = selectNotes(fretBoard, frets, strings);
     this.guessIsCorrect = null;
     this.parentDiv = parentDiv;
-    this.setCurrentNote();
-    this.render();
+    this.monitoring = monitoring;
     this.anonymousListener = this.anonymousListener.bind(this);
     addEventListener('tuner/note-heard',this.anonymousListener);
+    addEventListener("tuner/monitoring", this.monitoringListener.bind(this));
+  }
+
+  private newNote(): void {
+    this.setCurrentNote();
+    this.render();
   }
 
   private setCurrentNote(): void {
@@ -40,7 +46,7 @@ export class GuessNotes {
   
   private guessNotesAudioSignalListener(noteHeard: NoteObserved): void {
     // check to see if the tab is active
-    if (isElementActiveById("guitar-note-trainer-tab")) {
+    if (isElementActiveById("guitar-note-trainer-tab") && this.monitoring.value) {
       //const note: GuitarNote = {note: noteObserved.note, octave: noteObserved.octave};
       
       if (noteName(noteHeard) === noteName(this.currentNote) && (noteHeard.timestamp > this.currentNoteTimeAsked)) {
@@ -57,13 +63,28 @@ export class GuessNotes {
     }
   }
 
+  private monitoringListener(event: CustomEvent) {
+    const { monitoring } = event.detail;
+    if (isElementActiveById("guitar-note-trainer-tab") && monitoring) {
+      this.newNote();
+    } else {
+      this.render();
+    }
+  }
   public destroy(): void {
     removeEventListener('tuner/note-heard',this.anonymousListener);
+    removeEventListener('tuner/monitoring', this.monitoringListener);
   }
+  
   private render(): void {
-    let selectedNoteHTML = renderCurrentNote(this.currentNote);
-    let guessHTML = renderIsGuessCorrect(this.guessIsCorrect);
-    this.parentDiv.innerHTML = `<div class='text'>${selectedNoteHTML} ${guessHTML}</div>`;
+    if (this.monitoring.value) {
+      let selectedNoteHTML = renderCurrentNote(this.currentNote);
+      let guessHTML = renderIsGuessCorrect(this.guessIsCorrect);
+      this.parentDiv.innerHTML = `<div class='text'>${selectedNoteHTML} ${guessHTML}</div>`;
+    } else {
+      this.parentDiv.innerHTML = `<div class='text'>Please click 'START MIC MONITORING' to start this exerise</div>`;
+    }
+    
   }
 
   // create a listener for note events

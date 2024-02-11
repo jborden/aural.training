@@ -44,7 +44,7 @@ const data = [
      guitarNoteTrainerDiv.id = 'guitar-note-trainer';
      const fretsRange = range(0,1);
      const fretBoard = createFretBoard(standardTuning, 12);
-     new GuessNotes(guitarNoteTrainerDiv,fretBoard,fretsRange,range(0,5));
+     new GuessNotes(guitarNoteTrainerDiv, fretBoard, monitoring, fretsRange,range(0,5));
      noteTrainerRoot.appendChild(guitarNoteTrainerDiv);
      // fretboard view
      const fretBoardDiv = document.createElement('div');
