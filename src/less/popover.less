@@ -1,0 +1,46 @@
+/* styles.css */
+.popover-icon {
+  position: fixed;
+  top: 0.10em;
+  right: 0.5em;
+  cursor: pointer;
+  color: @outline-color;
+  font-size: 2em;
+}
+
+.popover-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: @background-color;
+  border: 1px solid @outline-color;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+
+.popover-content button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+}
+
+.popover-content .close-button-times {
+  position: absolute;
+  top: 0.1em;
+  right: 0.3em;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  color: @outline-color;
+}

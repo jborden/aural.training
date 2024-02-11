@@ -11,6 +11,7 @@ import { IntervalTrainer } from "./guitar-interval-trainer/controller"
 //import { freqNote, noteFreq,freqNoteRange } from "./music/western/model"
 import { listenForEvent } from "./events/main"
 import { AudioMonitorToggleButton, monitoring } from "./tuner"
+import { PopOver } from "./popover"
 
 //exports = {startAudio, stopAudio, freqNote, noteFreq,freqNoteRange}
 
@@ -80,9 +81,20 @@ const data = [
   // ... more tabs data
 ]
 
-
+// tabs
 const container = document.getElementById('tabs-container') as HTMLElement;
 createTabs(data, container, 1);
+
+
+//popup
+const popoverContainer = document.getElementById('popover-container') as HTMLElement;
+new PopOver(popoverContainer);
+const content = document.createElement('div');
+content.innerHTML = `<h2>Hello world!</h2>`;
+const content2 = document.createElement('h2');
+content2.textContent = "hello foo!";
+popoverContainer.appendChild(content);
+popoverContainer.appendChild(content2);
 
 // debug
 
@@ -91,3 +103,4 @@ const eventsToMonitor = ["tuner/note-heard"];
 eventsToMonitor.forEach((eventName) => {
   listenForEvent(eventName, (detail: any) => `${detail.note}${detail.octave}`);
 });
+
