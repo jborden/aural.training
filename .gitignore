@@ -7,4 +7,4 @@ target/
 resources/public/js/*
 resources/public/*
 .#*
-!resources/public/css
+resources/public/css

@@ -4,11 +4,11 @@
   height: 20px;
   border-radius: 50%;
   margin-right: 5px;
-  border: 1px solid #edf2f4;
+  border: 1px solid @outline-color;
 }
 
 .circle.filled {
-  background-color: #edf2f4;
+  background-color: @outline-color;
 }
 /* from https://codepen.io/gvissing/pen/BKmmpJ */
 
@@ -29,7 +29,7 @@
   content: "";
   height: 28px;
   width: 2px;
-  background-color: #98c1d9;
+  background-color: @foreground-color;
   position: absolute;
   top: -24px;
   right: 0;
@@ -43,17 +43,17 @@
 }
 
 .quarter.note::before {
-  background-color: #98c1d9;
+  background-color: @foreground-color;
 }
 
 .note.filled {
-  background-color: #8d99ae;
+  background-color: @contrast-color;
 }
 .note.filled::before {
-  background-color: #8d99ae;
+  background-color: @contrast-color;
 }
 
 .note.filled::after {
-  background-color: #8d99ae;
+  background-color: @contrast-color;
   width: 2px;
 }

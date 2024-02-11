@@ -15,11 +15,11 @@
   /* border-radius: 5px; */
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  border-top: solid #edf2f4 1px;
-  border-left: solid #edf2f4 1px;
-  border-right:solid #edf2f4 1px;
-  background-color: #2b2d42;
-  color: #98c1d9;
+  border-top: solid @outline-color 1px;
+  border-left: solid @outline-color 1px;
+  border-right:solid @outline-color 1px;
+  background-color: @background-color;
+  color: @foreground-color;
   cursor: pointer;
 }
 
@@ -28,11 +28,11 @@
 }
 
 .active {
-  background-color: #8d99ae;
-  color:#d90429;
+  background-color: @contrast-color;
+  color: @red;
 }
 
 .tab-content {
   padding: 20px;
-  border: 1px solid #edf2f4;
+  border: 1px solid @outline-color;
 }

@@ -7,10 +7,12 @@ This is the source code for the aural.training website.
 1. `lein` must be installed
 2. `npm` must be installed
 3. `rollup` must be installed
+4. `less` must be installed
 
 ```
 npm install --global rollup
 ```
+
 # Develop
 
 Run the clojure server
@@ -32,6 +34,18 @@ Connect to the websocket with wscat
 
 ```
 wscat --connect ws://localhost:3000/ws
+```
+
+# compile css 
+
+```
+npm run css
+```
+
+# watch css
+
+```
+npm run watch
 ```
 
 # Roadmap
