@@ -23,20 +23,21 @@ export const createTabs = (data: Tab[], container: HTMLElement, defaultOpen: num
 	container.appendChild(tabsContainer);
 	container.appendChild(tabContent);
 
-	const showTabContent = (tabNumber: number) => {
-		const tabContentElement = document.createElement('div');
-		//tabContentElement.innerHTML = data[tabNumber].content();
-		tabContentElement.append(data[tabNumber].content());
+  const showTabContent = (tabNumber: number) => {
+    // activate / deactivate tabs
+    const currentActiveTab = tabsContainer.querySelector('.active');
+    if (currentActiveTab) currentActiveTab.classList.remove('active');
+    tabsContainer.children[tabNumber].classList.add('active');
+    // render the content
+    const tabContentElement = document.createElement('div');
+    //tabContentElement.innerHTML = data[tabNumber].content();
+    tabContentElement.append(data[tabNumber].content());
 
-		while (tabContent.firstChild) {
-			tabContent.removeChild(tabContent.firstChild);
-		}
-		tabContent.appendChild(tabContentElement);
-
-		const currentActiveTab = tabsContainer.querySelector('.active');
-		if (currentActiveTab) currentActiveTab.classList.remove('active');
-		tabsContainer.children[tabNumber].classList.add('active');
-	};
+    while (tabContent.firstChild) {
+      tabContent.removeChild(tabContent.firstChild);
+    }
+    tabContent.appendChild(tabContentElement);
+  };
   showTabContent(defaultOpen);
 }
 

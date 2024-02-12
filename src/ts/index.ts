@@ -74,10 +74,10 @@ const data = [
   {title: 'Voice Trainer',
    id: "voice-trainer-tab",
    content: () => {
-    const voiceTrainerDiv = document.createElement('voice');
-    voiceTrainerDiv.id = 'voice-trainer';
-    voiceGraph(voiceTrainerDiv);
-    return voiceTrainerDiv;
+     const voiceTrainerDiv = document.createElement('voice');
+     voiceTrainerDiv.id = 'voice-trainer';
+     voiceGraph(voiceTrainerDiv);
+     return voiceTrainerDiv;
   }}
   // ... more tabs data
 ]
