@@ -1,3 +1,5 @@
+import { watch } from "rollup"
+
 # Aural Training
 
 This is the source code for the aural.training website.
@@ -36,13 +38,17 @@ Connect to the websocket with wscat
 wscat --connect ws://localhost:3000/ws
 ```
 
-# compile css 
+# LESS
+
+LESS is being used for the css. The following commands will compile and watch
+
+## compile css
 
 ```
 npm run css
 ```
 
-# watch css
+## watch css
 
 ```
 npm run watch
