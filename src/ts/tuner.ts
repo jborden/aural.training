@@ -110,7 +110,7 @@ export class AudioAnalyzer {
     
     //var smoothingValue = document.querySelector('input[name="smoothing"]:checked').value
     if (autoCorrelateValue === -1) {
-      document.getElementById('note-display').innerText = 'Too quiet...';
+      document.getElementById('note-display').innerText = 'No Notes Heard';
       return;
     }
     // original default was at 'basic'
