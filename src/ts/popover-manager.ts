@@ -18,7 +18,6 @@ export class PopoverManager {
 
     // Listen to custom event for toggling visibility
     addEventListener('tuner/monitoring', (event: CustomEvent) => {
-      console.log(`monitoring: {event.detail}`);
       const monitoring = event.detail.monitoring;
       if (monitoring) {
         this.popoverActive.classList.remove("hide");

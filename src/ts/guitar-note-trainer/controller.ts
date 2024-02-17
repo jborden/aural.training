@@ -24,7 +24,7 @@ export class GuessNotes {
     this.anonymousListener = this.anonymousListener.bind(this);
     addEventListener('tuner/note-heard',this.anonymousListener);
     addEventListener("tuner/monitoring", this.monitoringListener.bind(this));
-    this.render();
+    this.newNote();
   }
 
   private newNote(): void {

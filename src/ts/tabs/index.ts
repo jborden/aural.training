@@ -4,41 +4,52 @@ export interface Tab {
 	id: string;
 }
 
-export const createTabs = (data: Tab[], container: HTMLElement, defaultOpen: number = 0) => {
-	const tabsContainer = document.createElement('div');
-	tabsContainer.classList.add('tabs-container');
-	const tabContent = document.createElement('div');
-	tabContent.classList.add('tab-content');
+export class Tabs {
+  private tabsContainer: HTMLDivElement;
+  private tabContent: HTMLDivElement;
+  private data: Tab[];
 
-	for (let i = 0; i < data.length; i++) {
-		const tab = document.createElement('div');
-		tab.classList.add('tab');
-		tab.id = data[i].id;
-		tab.innerText = data[i].title;
-		tab.addEventListener('click', () => {
-			showTabContent(i);
-		});
-		tabsContainer.appendChild(tab);
-	}
-	container.appendChild(tabsContainer);
-	container.appendChild(tabContent);
+  constructor(data: Tab[], container: HTMLElement, defaultOpen: number = 0) {
+    this.data = data;
 
-  const showTabContent = (tabNumber: number) => {
+    this.tabsContainer = document.createElement('div');
+    this.tabsContainer.classList.add('tabs-container');
+
+    this.tabContent = document.createElement('div');
+    this.tabContent.classList.add('tab-content');
+
+    for (let i = 0; i < this.data.length; i++) {
+      const tab = document.createElement('div');
+      tab.classList.add('tab');
+      tab.id = this.data[i].id;
+      tab.innerText = this.data[i].title;
+      tab.addEventListener('click', () => {
+        this.showTabContent(i);
+      });
+      this.tabsContainer.appendChild(tab);
+    }
+    container.appendChild(this.tabsContainer);
+    container.appendChild(this.tabContent);
+
+    this.showTabContent(defaultOpen);
+  }
+
+  private showTabContent(tabNumber: number) {
     // activate / deactivate tabs
-    const currentActiveTab = tabsContainer.querySelector('.active');
+    const currentActiveTab = this.tabsContainer.querySelector('.active');
     if (currentActiveTab) currentActiveTab.classList.remove('active');
-    tabsContainer.children[tabNumber].classList.add('active');
+    this.tabsContainer.children[tabNumber].classList.add('active');
+
     // render the content
     const tabContentElement = document.createElement('div');
-    //tabContentElement.innerHTML = data[tabNumber].content();
-    tabContentElement.append(data[tabNumber].content());
+    tabContentElement.append(this.data[tabNumber].content());
 
-    while (tabContent.firstChild) {
-      tabContent.removeChild(tabContent.firstChild);
+    while (this.tabContent.firstChild) {
+      this.tabContent.removeChild(this.tabContent.firstChild);
     }
-    tabContent.appendChild(tabContentElement);
-  };
-  showTabContent(defaultOpen);
+
+    this.tabContent.appendChild(tabContentElement);
+  }
 }
 
 export function isElementActiveById(elementId: string) {

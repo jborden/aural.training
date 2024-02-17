@@ -1,5 +1,5 @@
 //import {startAudio, stopAudio, audioMonitorToggleButton} from "./audioMonitor"
-import {createTabs } from "./tabs/index"
+import { Tabs } from "./tabs/index"
 import { drawGuitar } from "./guitar/view"
 import { step} from "./guitar/controller"
 import { createFretBoard, standardTuning} from "./guitar/model"
@@ -87,7 +87,7 @@ const data = [
 
 // tabs
 const container = document.getElementById('tabs-container') as HTMLElement;
-createTabs(data, container, 1);
+new Tabs(data, container, 1);
 
 // popover
 const popoverContainer = document.getElementById('popover-container') as HTMLElement;
