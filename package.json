@@ -13,6 +13,7 @@
     "dexie-observable": "^3.0.0-beta.11",
     "dexie-syncable": "^3.0.0-beta.10",
     "freelizer": "^1.0.0",
+    "less": "^4.2.0",
     "lodash-es": "^4.17.21",
     "nouislider": "^15.7.1",
     "npm-watch": "^0.11.0",
@@ -35,7 +36,7 @@
   },
   "scripts": {
     "compile": "npx rollup -c rollup.config.compile.js && echo 'Compilation complete'",
-    "css": "lessc src/less/main.less resources/public/css/main.css && echo 'CSS compiled'",
+    "css": "npx lessc src/less/main.less resources/public/css/main.css && echo 'CSS compiled'",
     "watch": "npm-watch"
   }
 }

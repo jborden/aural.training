@@ -18,6 +18,10 @@ jobs:
         npm install
         npm run compile
 
+    - name: Build CSS
+      run: |
+        npm run css
+
     - name: Build Clojure server
       run: lein with-profile +prod uberjar
 
