@@ -6,6 +6,7 @@ import { GuessNoteEvent } from "../events/types"
 import { publishEvent } from "../events/main"
 import { isElementActiveById } from "../tabs/index"
 import { NoteObserved } from "../tuner"
+import { soundMonitorTextEnable } from "../index"
 
 export class GuessNotes {
   private subFretBoard: FretBoard;
@@ -83,7 +84,7 @@ export class GuessNotes {
       let guessHTML = renderIsGuessCorrect(this.guessIsCorrect);
       this.parentDiv.innerHTML = `<div class='text'>${selectedNoteHTML} ${guessHTML}</div>`;
     } else {
-      this.parentDiv.innerHTML = `<div class='text'>Please click 'START MIC MONITORING' to start this exerise</div>`;
+      this.parentDiv.innerHTML = `<div class='text'>Please click '${soundMonitorTextEnable}' button</div>`;
     }
     
   }

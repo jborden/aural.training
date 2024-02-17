@@ -25,6 +25,9 @@ It is demo'd here: https://alexanderell.is/posts/tuner/
 
 Converted to TS by James Borden, using same MIT license
 */
+import { publishEvent } from "./events/main"
+import { soundMonitorTextDisable, soundMonitorTextEnable } from "./index"
+
 type Note = {
   note: string;
   octave: number;
@@ -33,8 +36,6 @@ type Note = {
 export type NoteObserved = Note & {
   timestamp: Date;
 }
-
-import { publishEvent } from "./events/main"
 
 export let monitoring = {value: false}
 
@@ -316,7 +317,7 @@ export class AudioMonitorToggleButton {
 
   
   public audioMonitorToggleButtonRender() {
-    let message = this.listening ? "Stop Mic Monitoring" : "Start Mic Monitoring";
+    let message = this.listening ? soundMonitorTextDisable : soundMonitorTextEnable;
     let element = document.createElement('button');
     element.innerHTML = message;
     element.classList.add('button-54');

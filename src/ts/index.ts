@@ -15,6 +15,8 @@ import { PopOver } from "./popover";
 import { PopoverManager } from "./popover-manager";
 import { SliderControl } from "./slider-control";
 
+export const soundMonitorTextEnable = "Enable Mic"
+export const soundMonitorTextDisable = "Disable Mic"
 //exports = {startAudio, stopAudio, freqNote, noteFreq,freqNoteRange}
 
 window.requestAnimationFrame(step);

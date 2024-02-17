@@ -1,3 +1,5 @@
+import { soundMonitorTextEnable } from "./index"
+
 export class PopoverManager {
   private popoverContainer: HTMLElement;
   private popoverActive: HTMLElement;
@@ -32,7 +34,7 @@ export class PopoverManager {
     this.popoverInactive.id = "popover-content-inactive";
     const inactiveMessage = document.createElement('div');
     inactiveMessage.classList.add("text");
-    inactiveMessage.innerText = "Please click 'START MIC MONITORING' to adjust settings";
+    inactiveMessage.innerText = `Please click '${soundMonitorTextEnable}' button to adjust settings`;
     this.popoverInactive.append(inactiveMessage);
     this.popoverContainer.append(this.popoverInactive);
   }

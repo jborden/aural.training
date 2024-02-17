@@ -7,7 +7,7 @@ import { playInterval, playIntervalSequence } from "../tones";
 import { GuessNoteEvent } from "../events/types";
 import { publishEvent } from "../events/main";
 import { isElementActiveById } from "../tabs/index";
-
+import { soundMonitorTextEnable } from "../index"
 export class IntervalTrainer {
   private parentDiv: HTMLElement;
   private requestedIntervals: Interval[];
@@ -131,7 +131,7 @@ export class IntervalTrainer {
       this.parentDiv.innerHTML = `<div class='text'>${selectedIntervalDiv} ${guessHTML} ${circlesHTML}</div>`;
       this.parentDiv.append(renderReplayButton(this.playSelectedInterval.bind(this)));
     } else {
-      this.parentDiv.innerHTML = `<div class='text'>Please click 'START MIC MONITORING' to start this exerise</div>`;
+      this.parentDiv.innerHTML = `<div class='text'>Please click '${soundMonitorTextEnable}' Button</div>`;
     }
   }
 
