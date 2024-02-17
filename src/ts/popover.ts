@@ -3,7 +3,13 @@ export class PopOver {
   private popoverContent: HTMLElement;
 
   constructor(popoverContent: HTMLElement) {
-     // Create popover icon element
+    // this should
+    // 1. only be active when the audio monitor
+    // is working
+    // 2. the other components should shut off because
+    // the tuner is working
+    
+    // Create popover icon element
     this.popoverIcon = document.createElement('div');
     this.popoverIcon.classList.add('popover-icon');
     this.popoverIcon.innerHTML = '&#9881;'; // Unicode for gear icon
