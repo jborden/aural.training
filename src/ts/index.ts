@@ -12,6 +12,7 @@ import { IntervalTrainer } from "./guitar-interval-trainer/controller"
 import { listenForEvent } from "./events/main"
 import { AudioMonitorToggleButton, monitoring } from "./tuner";
 import { PopOver } from "./popover";
+import { PopoverManager } from "./popover-manager";
 import { SliderControl } from "./slider-control";
 
 //exports = {startAudio, stopAudio, freqNote, noteFreq,freqNoteRange}
@@ -86,16 +87,23 @@ const data = [
 const container = document.getElementById('tabs-container') as HTMLElement;
 createTabs(data, container, 1);
 
-
-//popup
+// popover
 const popoverContainer = document.getElementById('popover-container') as HTMLElement;
 new PopOver(popoverContainer);
+const popoverManager = new PopoverManager(popoverContainer);
 
-// sliders
+// note
+const noteDisplay = document.createElement('div');
+noteDisplay.classList.add("text");
+noteDisplay.id = "note-display";
+popoverManager.getPopoverActive().append(noteDisplay);
+
+
+// Sliders
 
 // Create the smoothing count threshold slider
 new SliderControl(
-  popoverContainer,
+  popoverManager.getPopoverActive(),
   'Smoothing Count Threshold',
   toggleButton.tuner.smoothingCountThreshold,
   1,
@@ -104,7 +112,7 @@ new SliderControl(
 );
 
 new SliderControl(
-  popoverContainer,
+  popoverManager.getPopoverActive(),
   'Smoothing Threshold',
   toggleButton.tuner.smoothingThreshold,
   1,

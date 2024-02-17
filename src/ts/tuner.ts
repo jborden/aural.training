@@ -109,7 +109,7 @@ export class AudioAnalyzer {
     
     //var smoothingValue = document.querySelector('input[name="smoothing"]:checked').value
     if (autoCorrelateValue === -1) {
-      document.getElementById('note').innerText = 'Too quiet...';
+      document.getElementById('note-display').innerText = 'Too quiet...';
       return;
     }
     // original default was at 'basic'
@@ -142,7 +142,7 @@ export class AudioAnalyzer {
       this.valueToDisplay = this.valueToDisplay.toString() + ' Hz';
     }
     
-    document.getElementById('note').innerText = this.valueToDisplay;
+    document.getElementById('note-display').innerText = this.valueToDisplay;
     publishEvent("tuner/note-heard", {
       note: this.note,
       octave: this.octave,
