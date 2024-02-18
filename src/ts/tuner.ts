@@ -60,6 +60,8 @@ export class AudioAnalyzer {
   private valueToDisplay: string | number;
   private note: string | undefined;
   private octave: number | undefined;
+  private noteCounts: { [key: string]: number } = {};
+
   constructor() {
     monitoring.value = false;
   }
@@ -80,7 +82,27 @@ export class AudioAnalyzer {
     return Math.floor(Math.log2(Fn / C0_PITCH))
 
   }
-  
+
+  // Assuming this is a class method
+  private updateNoteDisplay(valueToDisplay: string) {
+    if (valueToDisplay === 'No Notes Heard') {
+      this.noteCounts = {}; // Reset note counts
+      return valueToDisplay;
+    } else {
+      if (!this.noteCounts) {
+	this.noteCounts = {}; // Initialize note counts object
+      }
+
+      // Increment count for the current note value
+      this.noteCounts[valueToDisplay] = (this.noteCounts[valueToDisplay] || 0) + 1;
+
+      // Check if count is greater than 1, then display the count
+      const count = this.noteCounts[valueToDisplay];
+      const displayedValue = count > 1 ? `${valueToDisplay}x${count}` : valueToDisplay;
+      return displayedValue;
+    }
+  }
+
   private drawNote() {
     this.animationFrameId = requestAnimationFrame(this.drawNote.bind(this));
     //requestAnimationFrame(this.drawNote.bind(this));
@@ -110,7 +132,8 @@ export class AudioAnalyzer {
     
     //var smoothingValue = document.querySelector('input[name="smoothing"]:checked').value
     if (autoCorrelateValue === -1) {
-      document.getElementById('note-display').innerText = 'No Notes Heard';
+      this.valueToDisplay = 'No Notes Heard';
+      document.getElementById('note-display').innerText = this.updateNoteDisplay(this.valueToDisplay);
       return;
     }
     // original default was at 'basic'
@@ -143,7 +166,7 @@ export class AudioAnalyzer {
       this.valueToDisplay = this.valueToDisplay.toString() + ' Hz';
     }
     
-    document.getElementById('note-display').innerText = this.valueToDisplay;
+    document.getElementById('note-display').innerText = this.updateNoteDisplay(this.valueToDisplay);
     publishEvent("tuner/note-heard", {
       note: this.note,
       octave: this.octave,
