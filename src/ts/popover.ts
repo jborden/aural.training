@@ -1,3 +1,7 @@
+import { publishEvent } from './events/main'
+
+export let popoverOpen: boolean = false;
+
 export class PopOver {
   private popoverIcon: HTMLElement;
   private popoverContent: HTMLElement;
@@ -28,9 +32,14 @@ export class PopOver {
     this.popoverContent.appendChild(closeButton);
   }
 
-   private togglePopoverContent(): void {
-    this.popoverContent.style.display = this.popoverContent.style.display === 'none' ? 'block' : 'none';
-    this.popoverIcon.style.display = this.popoverIcon.style.display === 'none' ? 'block' : 'none';
-  }
+  private togglePopoverContent(): void {
+    let isOpen = this.popoverContent.style.display === 'block';
+    this.popoverContent.style.display = isOpen ? 'none' : 'block';
+    this.popoverIcon.style.display = isOpen ? 'block' : 'none';
 
+    // set the global state of the popover
+    popoverOpen = !isOpen // isOpen is now in the opposite state
+    // Publish event based on the global state
+    publishEvent("popover/open", {open: popoverOpen})
+  }
 }

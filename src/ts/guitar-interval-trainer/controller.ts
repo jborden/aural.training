@@ -8,6 +8,8 @@ import { GuessNoteEvent } from "../events/types";
 import { publishEvent } from "../events/main";
 import { isElementActiveById } from "../tabs/index";
 import { soundMonitorTextEnable } from "../index"
+import { popoverOpen } from "../popover"
+
 export class IntervalTrainer {
   private parentDiv: HTMLElement;
   private requestedIntervals: Interval[];
@@ -17,6 +19,7 @@ export class IntervalTrainer {
   private selectedIntervals: Interval[];
   private addEventListenerCallback: (e: any) => void;
   private monitoring: {value: boolean};
+  private popoverOpen: boolean;
   
   constructor(parentDiv: HTMLElement, intervals:string[], monitoring: {value: boolean}, numberIntervals = 1) {
     this.parentDiv = parentDiv;
@@ -25,10 +28,14 @@ export class IntervalTrainer {
     this.guessIsCorrect = null;
     this.monitoring = monitoring;
     this.selectedIntervals = selectIntervals(intervals);
-
+    this.popoverOpen = popoverOpen;
     this.addEventListenerCallback = this.guessIntervalsAudioSignalListener.bind(this);
+    this.popoverOpenListener = this.popoverOpenListener.bind(this);
+
     addEventListener('tuner/note-heard', this.guessIntervalsAudioSignalListener.bind(this));
     addEventListener("tuner/monitoring", this.monitoringListener.bind(this));
+    addEventListener("popover/open", this.popoverOpenListener);
+
     this.initializeState();
     this.render();
     // This is just a quick hack because we took out audioMonitor.ts
@@ -65,7 +72,7 @@ export class IntervalTrainer {
   }
 
   guessIntervalsAudioSignalListener(e: any) {
-    if (isElementActiveById("guitar-interval-trainer-tab")) {
+    if (isElementActiveById("guitar-interval-trainer-tab") && this.monitoring.value && !this.popoverOpen) {
       this.notesPlayed.push(e.detail.note);
 
       if (this.notesPlayed.length === (this.requestedIntervals.length + 1)) {
@@ -128,16 +135,27 @@ export class IntervalTrainer {
       const selectedIntervalDiv = renderCurrentInterval(this.requestedIntervals);
       const guessHTML = renderIsGuessCorrect(this.guessIsCorrect);
       const circlesHTML = this.generateCirclesHTML();
-      this.parentDiv.innerHTML = `<div class='text'>${selectedIntervalDiv} ${guessHTML} ${circlesHTML}</div>`;
+      if (this.popoverOpen) {
+	this.parentDiv.innerHTML = `<div class='text'>Tuner Adjustment, Paused</div>`;
+      } else {
+	this.parentDiv.innerHTML = `<div class='text'>${selectedIntervalDiv} ${guessHTML} ${circlesHTML}</div>`;
+      }
       this.parentDiv.append(renderReplayButton(this.playSelectedInterval.bind(this)));
     } else {
       this.parentDiv.innerHTML = `<div class='text'>Please click '${soundMonitorTextEnable}' Button</div>`;
     }
   }
 
+  private popoverOpenListener(event: CustomEvent): void {
+    const { open } = event.detail;
+    this.popoverOpen = open;
+    this.render();
+  }
+
   destroy() {
-    removeEventListener('tuner/note-heard', this.guessIntervalsAudioSignalListener);
+    removeEventListener('tuner/note-heard', this.addEventListenerCallback);
     removeEventListener("tuner/monitoring", this.monitoringListener);
+    removeEventListener("popover/open", this.popoverOpenListener);
   }
 }
 

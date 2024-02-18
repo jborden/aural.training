@@ -7,6 +7,7 @@ import { publishEvent } from "../events/main"
 import { isElementActiveById } from "../tabs/index"
 import { NoteObserved } from "../tuner"
 import { soundMonitorTextEnable } from "../index"
+import { popoverOpen } from "../popover"
 
 export class GuessNotes {
   private subFretBoard: FretBoard;
@@ -15,6 +16,7 @@ export class GuessNotes {
   private currentNoteTimeAsked: Date | null;
   private parentDiv: HTMLElement;
   private monitoring: {value: boolean};
+  private popoverOpen: boolean;
 
   constructor(parentDiv: HTMLElement, fretBoard: FretBoard, monitoring: {value: boolean}, frets?: number[], strings?: number[]) {
     this.subFretBoard = selectNotes(fretBoard, frets, strings);
@@ -22,8 +24,12 @@ export class GuessNotes {
     this.parentDiv = parentDiv;
     this.monitoring = monitoring;
     this.anonymousListener = this.anonymousListener.bind(this);
+    this.popoverOpenListener = this.popoverOpenListener.bind(this);
+    this.popoverOpen = popoverOpen;
     addEventListener('tuner/note-heard',this.anonymousListener);
     addEventListener("tuner/monitoring", this.monitoringListener.bind(this));
+    addEventListener("popover/open", this.popoverOpenListener);
+
     this.newNote();
   }
 
@@ -48,7 +54,7 @@ export class GuessNotes {
   
   private guessNotesAudioSignalListener(noteHeard: NoteObserved): void {
     // check to see if the tab is active
-    if (isElementActiveById("guitar-note-trainer-tab") && this.monitoring.value) {
+    if (isElementActiveById("guitar-note-trainer-tab") && this.monitoring.value && !this.popoverOpen) {
       //const note: GuitarNote = {note: noteObserved.note, octave: noteObserved.octave};
       
       if (noteName(noteHeard) === noteName(this.currentNote) && (noteHeard.timestamp > this.currentNoteTimeAsked)) {
@@ -73,16 +79,22 @@ export class GuessNotes {
       this.render();
     }
   }
+
   public destroy(): void {
     removeEventListener('tuner/note-heard',this.anonymousListener);
     removeEventListener('tuner/monitoring', this.monitoringListener);
+    removeEventListener('popover/open', this.popoverOpenListener);
   }
   
   private render(): void {
     if (this.monitoring.value) {
       let selectedNoteHTML = renderCurrentNote(this.currentNote);
       let guessHTML = renderIsGuessCorrect(this.guessIsCorrect);
-      this.parentDiv.innerHTML = `<div class='text'>${selectedNoteHTML} ${guessHTML}</div>`;
+      if (this.popoverOpen) {
+	this.parentDiv.innerHTML = `<div class='text'>Tuner Adjustment, Paused</div>`;
+      } else {
+	this.parentDiv.innerHTML = `<div class='text'>${selectedNoteHTML} ${guessHTML}</div>`;
+      }
     } else {
       this.parentDiv.innerHTML = `<div class='text'>Please click '${soundMonitorTextEnable}' button</div>`;
     }
@@ -99,6 +111,11 @@ export class GuessNotes {
       this.guessNotesAudioSignalListener(detail);
     }
   }
-  
+
+  private popoverOpenListener(event: CustomEvent): void {
+    const { open } = event.detail;
+    this.popoverOpen = open;
+    this.render();
+  }
 
 }
