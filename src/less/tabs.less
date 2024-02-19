@@ -23,13 +23,16 @@
   cursor: pointer;
 }
 
-.tab:hover {
-  background-color: #ddd;
+@media (hover: hover) {
+  .tab:hover {
+    background-color: @hover-color;
+    color: @background-color;
+  }
 }
 
 .active {
   background-color: @outline-color;
-  color: @foreground-color;
+  color: @background-color;
 }
 
 .tab-content {

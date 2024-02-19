@@ -8,6 +8,12 @@
   font-size: 2em;
 }
 
+@media (hover: hover) {
+  .popover-icon:hover {
+    color: @hover-color;
+  }
+}
+
 .popover-content {
   position: fixed;
   top: 50%;
@@ -46,6 +52,12 @@
   line-height: 1;
   padding: 0;
   color: @outline-color;
+}
+
+@media (hover: hover) {
+  .popover-content .close-button-times:hover {
+    color: @hover-color;
+  }
 }
 
 #popover-content-inactive {

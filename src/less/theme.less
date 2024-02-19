@@ -20,7 +20,7 @@
 @foreground-color: #a69cac;
 @contrast-color: #161b33;
 @outline-color: #474973;
-
+@hover-color: @foreground-color;
 
 @red: #ef233c;
 
@@ -91,9 +91,15 @@ body {
   left: 5px;
 }
 
-.button-54:hover {
-  background-color: #ddd
+@media (hover: hover) {
+    .button-54:hover {
+        background-color: @hover-color;
+    }
 }
+
+// .button-54:hover {
+//   background-color: @hover-color;
+// }
 
 @media (min-width: 768px) {
   .button-54 {
