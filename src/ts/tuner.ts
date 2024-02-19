@@ -61,6 +61,7 @@ export class AudioAnalyzer {
   private note: string | undefined;
   private octave: number | undefined;
   private noteCounts: { [key: string]: number } = {};
+  private notesNotHeard: string  = "NO NOTES HEARD";
 
   constructor() {
     monitoring.value = false;
@@ -83,9 +84,8 @@ export class AudioAnalyzer {
 
   }
 
-  // Assuming this is a class method
   private updateNoteDisplay(valueToDisplay: string) {
-    if (valueToDisplay === 'No Notes Heard') {
+    if (valueToDisplay === this.notesNotHeard) {
       this.noteCounts = {}; // Reset note counts
       return valueToDisplay;
     } else {
@@ -102,6 +102,19 @@ export class AudioAnalyzer {
       return displayedValue;
     }
   }
+
+  private updateLastNoteDisplay(previousValue: string, newValue: string): string {
+    if (previousValue === this.notesNotHeard) {
+      return '';
+    }
+    // Compare the first two characters of the previous and new values
+    const prevPrefix = previousValue.substring(0, 2);
+    const newPrefix = newValue.substring(0, 2);
+
+    // Return the previous value if the prefixes are different, otherwise return the new value
+    return prevPrefix !== newPrefix ? previousValue : newValue;
+  }
+
 
   private drawNote() {
     this.animationFrameId = requestAnimationFrame(this.drawNote.bind(this));
@@ -132,8 +145,13 @@ export class AudioAnalyzer {
     
     //var smoothingValue = document.querySelector('input[name="smoothing"]:checked').value
     if (autoCorrelateValue === -1) {
-      this.valueToDisplay = 'No Notes Heard';
+      this.valueToDisplay = this.notesNotHeard;
+      const previousValue = document.getElementById('note-display').innerText;
       document.getElementById('note-display').innerText = this.updateNoteDisplay(this.valueToDisplay);
+      if (previousValue != this.notesNotHeard) {
+	document.getElementById('previous-note-display').innerText = previousValue;
+      }
+
       return;
     }
     // original default was at 'basic'
@@ -165,8 +183,11 @@ export class AudioAnalyzer {
     if (typeof(this.valueToDisplay) == 'number') {
       this.valueToDisplay = this.valueToDisplay.toString() + ' Hz';
     }
-    
-    document.getElementById('note-display').innerText = this.updateNoteDisplay(this.valueToDisplay);
+
+    const newValue = this.updateNoteDisplay(this.valueToDisplay);
+    const previousValue = document.getElementById('note-display').innerText;
+    document.getElementById('note-display').innerText = newValue;
+    document.getElementById('previous-note-display').innerText = this.updateLastNoteDisplay(previousValue, newValue);
     publishEvent("tuner/note-heard", {
       note: this.note,
       octave: this.octave,

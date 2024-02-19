@@ -94,11 +94,16 @@ const popoverContainer = document.getElementById('popover-container') as HTMLEle
 new PopOver(popoverContainer);
 const popoverManager = new PopoverManager(popoverContainer);
 
-// note
+// note display
 const noteDisplay = document.createElement('div');
 noteDisplay.classList.add("text");
 noteDisplay.id = "note-display";
 popoverManager.getPopoverActive().append(noteDisplay);
+
+const previousNoteDisplay = document.createElement('div');
+previousNoteDisplay.classList.add("text");
+previousNoteDisplay.id = "previous-note-display";
+popoverManager.getPopoverActive().append(previousNoteDisplay);
 
 
 // Sliders
