@@ -16,11 +16,20 @@
 /* @contrast-color: #b56576; */
 /* @outline-color: #e56b6f; */
 
-@background-color: #0d0c1d;
-@foreground-color: #a69cac;
-@contrast-color: #161b33;
-@outline-color: #474973;
+
+// Purple Theme
+// @background-color: #0d0c1d;
+// @foreground-color: #a69cac;
+// @contrast-color: #161b33;
+// @outline-color: #474973;
+// @hover-color: @foreground-color;
+
+@background-color: oklch(0.3114 0.021 285.75);
+@foreground-color: oklch(0.91 0.008 246.75);
+@outline-color: oklch(0.78 0.016 246.75);
+@contrast-color: oklch(0.78 0.016 246.75 / 0.7);
 @hover-color: @foreground-color;
+
 
 @red: #ef233c;
 
@@ -73,7 +82,7 @@ body {
   letter-spacing: 2px;
   text-decoration: none;
   text-transform: uppercase;
-  color: @outline-color;;
+  color: @outline-color;
   background-color: @background-color;
   cursor: pointer;
   border: 3px solid;
@@ -86,14 +95,23 @@ body {
 }
 
 .button-54:active {
-  box-shadow: 0px 0px 0px 0px;
+  box-shadow: 0px 0px 0px 0px !important;
+  color: @outline-color !important;
+  background-color: @background-color !important;
   top: 5px;
   left: 5px;
 }
 
 @media (hover: hover) {
     .button-54:hover {
-        background-color: @hover-color;
+      background-color: @hover-color;
+      color: @background-color;
+      border: 3px solid @outline-color;
+      box-shadow: 1px 1px 0px 0px @outline-color, 2px 2px 0px 0px @outline-color, 3px 3px 0px 0px @outline-color, 4px 4px 0px 0px @outline-color, 5px 5px 0px 0px @outline-color;
+
+    }
+    .button-54 span:hover {
+      color: @background-color;
     }
 }
 
