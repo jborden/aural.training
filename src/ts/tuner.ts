@@ -54,6 +54,8 @@ export class AudioAnalyzer {
   private smoothingCount: number = 0;
   public smoothingThreshold: number = 5;
   public smoothingCountThreshold: number = 5;
+  public rootMeanSquareCutoff: number = 0.010;
+  public autoCorrelateThreshold: number = 0.2;
   private noteStrings: string[] = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
   private roundingValue: string = "note"; // "none", "hz", "note"
   private smoothingValue: string = "basic"; // "none", "basic", "very"
@@ -219,14 +221,18 @@ export class AudioAnalyzer {
     // it essentially gives us the threshold at where a note is detected.
     // The problem is that lower notes will need a lower threshold
     // we might have to make this value dependent upon note asked!
-    if (rootMeanSquare < 0.1) {
+    // BUT.. if you increase this value,  there is a large lag
+    // between when the audio monitor is started and when a note
+    // is first detected!
+    if (rootMeanSquare < this.rootMeanSquareCutoff) {
       return -1;
     }
 
     // Find a range in the buffer where the values are below a given threshold.
     let r1 = 0;
     let r2 = SIZE - 1;
-    const threshold = 0.2;
+    // this has no discernable effect, for values 0.002 to 20!
+    const threshold = this.autoCorrelateThreshold;
 
     // Walk up for r1
     for (let i = 0; i < SIZE / 2; i++) {

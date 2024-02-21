@@ -15,15 +15,16 @@ export class SliderControl {
   private mainElement: HTMLElement;
   private sliderElement: TargetElement;
   private labelElement: HTMLElement;
+  private steps: number;
   
-  
-  constructor(container: HTMLElement, label: string, initialValue: number, rangeMin: number, rangeMax: number, onUpdate: Function) {
+  constructor(container: HTMLElement, label: string, initialValue: number, rangeMin: number, rangeMax: number, onUpdate: Function, steps: number = 1) {
     this.container = container;
     this.label = label;
     this.initialValue = initialValue;
     this.rangeMin = rangeMin;
     this.rangeMax = rangeMax;
     this.onUpdate = onUpdate;
+    this.steps = steps;
     this.createSlider();
   }
 
@@ -47,7 +48,7 @@ export class SliderControl {
 	'min': this.rangeMin,
 	'max': this.rangeMax
       },
-      step: 1,
+      step: this.steps,
       tooltips: true,
       // pips: {
       // 	mode: PipsMode.Range,

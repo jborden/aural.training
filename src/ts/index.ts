@@ -127,6 +127,28 @@ new SliderControl(
   (value: number) => toggleButton.tuner.smoothingThreshold = value
 );
 
+new SliderControl(
+  popoverManager.getPopoverActive(),
+  'Root Mean Square Cutoff',
+  toggleButton.tuner.rootMeanSquareCutoff,
+  0.01,
+  1,
+  (value: number) => toggleButton.tuner.rootMeanSquareCutoff = value,
+  0.01
+);
+
+
+new SliderControl(
+  popoverManager.getPopoverActive(),
+  'Auto Correlate Threshold',
+  toggleButton.tuner.autoCorrelateThreshold,
+  0.001,
+  0.100,
+  (value: number) => toggleButton.tuner.autoCorrelateThreshold = value,
+  0.001 // this seems to be too small for SlideControl
+);
+
+
 const eventsToMonitor = ["tuner/note-heard"];
 
 eventsToMonitor.forEach((eventName) => {
